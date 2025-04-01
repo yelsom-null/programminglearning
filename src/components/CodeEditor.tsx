@@ -1,53 +1,57 @@
 import React from 'react';
-import CodeMirror from '@uiw/react-codemirror';
-import { javascript } from '@codemirror/lang-javascript';
+import Editor from '@monaco-editor/react';
 
 interface CodeEditorProps {
   value: string;
   onChange: (value: string) => void;
-  language?: string;
-  height?: string;
-  onMount?: (editor: any) => void;
   darkMode?: boolean;
 }
 
 const CodeEditor: React.FC<CodeEditorProps> = ({
   value,
   onChange,
-  language = 'javascript',
-  height = '100%',
-  onMount,
-  darkMode = false
+  darkMode = true
 }) => {
+  // Handle value change from Monaco
+  const handleEditorChange = (value: string | undefined) => {
+    if (value !== undefined) {
+      onChange(value);
+    }
+  };
+
   return (
     <div 
       className="code-editor-container"
       style={{ 
-        height: '100%',
+        height: '400px',
         width: '100%',
         overflow: 'hidden',
-        display: 'grid',
-        minHeight: 0,
+        position: 'relative',
+        border: '1px solid #ccc',
+        borderRadius: '4px',
       }}
     >
-      <CodeMirror
+      <Editor
+        height="400px"
+        defaultLanguage="javascript"
+        defaultValue={value}
         value={value}
-        height="100%"
-        width="100%"
-        theme={darkMode ? 'dark' : 'light'}
-        onChange={onChange}
-        extensions={[javascript()]}
-        style={{ 
-          height: '100%', 
-          minHeight: 0,
-          flex: 1,
-        }}
-        basicSetup={{
-          lineNumbers: true,
-          highlightActiveLineGutter: true,
-          highlightActiveLine: true,
-          foldGutter: false,
-          autocompletion: true
+        onChange={handleEditorChange}
+        theme={darkMode ? 'vs-dark' : 'light'}
+        options={{
+          minimap: { enabled: false },
+          scrollBeyondLastLine: false,
+          fontSize: 14,
+          fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+          automaticLayout: true,
+          tabSize: 2,
+          wordWrap: 'on',
+          lineNumbers: 'on',
+          glyphMargin: false,
+          folding: true,
+          lineDecorationsWidth: 10,
+          renderWhitespace: 'none',
+          cursorSmoothCaretAnimation: 'on',
         }}
       />
     </div>

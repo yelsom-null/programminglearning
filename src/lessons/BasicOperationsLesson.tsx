@@ -293,8 +293,6 @@ let remainder = x % y;
             <CodeEditor
               value={code}
               onChange={handleCodeChange}
-              language="javascript"
-              height="450px"
               darkMode={darkMode}
             />
             {error && (

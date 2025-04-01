@@ -249,32 +249,21 @@ const App: React.FC = () => {
             <div className="header-wrapper">
               {/* Header Left */}
               <div className="header-left d-flex align-items-center gap-4">
-                {/* Mobile menu toggle */}
-                <a 
-                  href="#" 
-                  className="nxl-head-mobile-toggler" 
-                  id="mobile-collapse"
-                  onClick={(e) => {
-                    e.preventDefault();
-                  }}
-                >
-                  <div className="hamburger hamburger--arrowturn">
-                    <div className="hamburger-box">
-                      <div className="hamburger-inner"></div>
-                    </div>
-                  </div>
-                </a>
-                
-                {/* Navigation toggle */}
-                <div className="nxl-navigation-toggle">
+                {/* Single hamburger button for sidebar toggle */}
+                <div className="nxl-sidebar-toggle">
                   <a 
                     href="#" 
                     onClick={(e) => {
                       e.preventDefault();
                       toggleSidebar();
                     }}
+                    className="sidebar-toggle-btn"
                   >
-                    <i data-feather={isSidebarOpen ? "align-left" : "arrow-right"}></i>
+                    <div className="hamburger hamburger--squeeze">
+                      <div className="hamburger-box">
+                        <div className="hamburger-inner"></div>
+                      </div>
+                    </div>
                   </a>
                 </div>
                 

@@ -232,8 +232,6 @@ name = name + " Smith";
             <CodeEditor
               value={code}
               onChange={handleCodeChange}
-              language="javascript"
-              height="300px"
               darkMode={darkMode}
             />
             {error && (

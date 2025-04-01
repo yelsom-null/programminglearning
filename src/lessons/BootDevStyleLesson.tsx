@@ -158,6 +158,10 @@ console.log(isEven(7));`,
     setCode(exercises[index].codeTemplate);
   };
 
+  const handleCodeChange = (newCode: string) => {
+    setCode(newCode);
+  };
+
   return (
     <div className="bootdev-lesson-container">
       <div className="bootdev-lesson-header">
@@ -273,9 +277,7 @@ console.log(sum); // Outputs: 8`}
             <div className="bootdev-code-editor">
               <CodeEditor
                 value={code}
-                onChange={setCode}
-                language="javascript"
-                height="250px"
+                onChange={handleCodeChange}
                 darkMode={darkMode}
               />
             </div>

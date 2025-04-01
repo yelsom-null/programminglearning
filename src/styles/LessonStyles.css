@@ -395,24 +395,115 @@
 
 /* CodeMirror - Fill available space */
 .cm-editor {
-  height: 450px;
+  height: 100% !important;
+  min-height: 200px;
 }
 
 .cm-editor .cm-scroller {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 0.875rem;
+  font-size: 14px;
   line-height: 1.6;
+  overflow: auto;
 }
 
 .cm-editor .cm-gutters {
-  background-color: var(--bg-code);
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.4);
+  border-right: 1px solid rgba(128, 128, 128, 0.3);
+  color: var(--cm-line-number);
 }
 
 /* Style active line */
 .cm-editor .cm-activeLine {
-  background-color: var(--bg-highlight);
+  background-color: var(--cm-active-line-bg);
+}
+
+/* Style the content area */
+.cm-editor .cm-content {
+  padding: 8px 0;
+  width: 100%;
+}
+
+/* Make line numbers more visible */
+.cm-editor .cm-lineNumbers .cm-gutterElement {
+  padding: 0 8px 0 4px;
+  color: var(--cm-line-number);
+}
+
+/* Improve syntax highlighting clarity */
+.cm-editor .cm-line {
+  padding: 0 8px;
+}
+
+/* Style selection for better visibility */
+.cm-editor .cm-selectionBackground {
+  background-color: var(--cm-selection-bg) !important;
+}
+
+/* Ensure highlight colors work properly in both themes */
+.dark-theme .cm-editor .cm-keyword {
+  color: #569CD6;
+}
+
+.dark-theme .cm-editor .cm-string {
+  color: #CE9178;
+}
+
+.dark-theme .cm-editor .cm-comment {
+  color: #6A9955;
+  font-style: italic;
+}
+
+.dark-theme .cm-editor .cm-property {
+  color: #9CDCFE;
+}
+
+.dark-theme .cm-editor .cm-variable {
+  color: #9CDCFE;
+}
+
+.dark-theme .cm-editor .cm-function {
+  color: #DCDCAA;
+}
+
+.dark-theme .cm-editor .cm-number {
+  color: #B5CEA8;
+}
+
+.dark-theme .cm-editor .cm-atom {
+  color: #569CD6;
+}
+
+/* Light theme syntax highlighting adjustments */
+:not(.dark-theme) .cm-editor .cm-keyword {
+  color: #0000FF;
+}
+
+:not(.dark-theme) .cm-editor .cm-string {
+  color: #A31515;
+}
+
+:not(.dark-theme) .cm-editor .cm-comment {
+  color: #008000;
+  font-style: italic;
+}
+
+:not(.dark-theme) .cm-editor .cm-property {
+  color: #001080;
+}
+
+:not(.dark-theme) .cm-editor .cm-variable {
+  color: #001080;
+}
+
+:not(.dark-theme) .cm-editor .cm-function {
+  color: #795E26;
+}
+
+:not(.dark-theme) .cm-editor .cm-number {
+  color: #098658;
+}
+
+:not(.dark-theme) .cm-editor .cm-atom {
+  color: #0000FF;
 }
 
 /* Lesson Footer - Full width */
@@ -1224,4 +1315,127 @@
 .class-property-value {
   color: var(--text-primary);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* CodeMirror syntax highlighting enhancements */
+/* Keywords */
+.cm-keyword {
+  color: #569CD6 !important;
+}
+
+/* Strings */
+.cm-string {
+  color: #CE9178 !important;
+}
+
+/* Comments */
+.cm-comment {
+  color: #6A9955 !important;
+  font-style: italic;
+}
+
+/* Numbers */
+.cm-number {
+  color: #B5CEA8 !important;
+}
+
+/* Properties/variables */
+.cm-property {
+  color: #9CDCFE !important;
+}
+
+/* Variable names */
+.cm-variableName {
+  color: #9CDCFE !important;
+}
+
+/* Function names */
+.cm-function {
+  color: #DCDCAA !important;
+}
+
+/* Operators */
+.cm-operator {
+  color: #D4D4D4 !important;
+}
+
+/* Boolean, null, undefined */
+.cm-atom {
+  color: #569CD6 !important;
+}
+
+/* Parentheses, brackets, etc. */
+.cm-brackets {
+  color: #D4D4D4 !important;
+}
+
+/* Light theme syntax colors */
+:not(.dark-theme) .cm-keyword {
+  color: #0000FF !important;
+}
+
+:not(.dark-theme) .cm-string {
+  color: #A31515 !important;
+}
+
+:not(.dark-theme) .cm-comment {
+  color: #008000 !important;
+}
+
+:not(.dark-theme) .cm-number {
+  color: #098658 !important;
+}
+
+:not(.dark-theme) .cm-property,
+:not(.dark-theme) .cm-variableName {
+  color: #001080 !important;
+}
+
+:not(.dark-theme) .cm-function {
+  color: #795E26 !important;
+}
+
+/* CodeMirror editor height and sizing */
+.cm-editor {
+  height: 100% !important;
+  min-height: 200px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+}
+
+/* Monaco editor specific styles */
+.monaco-editor {
+  height: 400px !important;
+  max-height: 400px !important;
+  min-height: 400px !important;
+  overflow: hidden !important;
+}
+
+.code-editor-container {
+  height: 400px !important;
+  max-height: 400px !important;
+  min-height: 400px !important;
+  overflow: hidden !important;
+  margin-bottom: 16px;
+  display: block;
+  position: relative;
+}
+
+/* Monaco specific container fixes */
+.monaco-editor .overflow-guard {
+  height: 400px !important;
+  max-height: 400px !important;
+}
+
+/* Prevent layout issues with Monaco editor */
+.monaco-editor,
+.monaco-editor-background,
+.monaco-editor .inputarea.ime-input {
+  height: 400px !important;
+}
+
+/* Override any conflicting CSS */
+.bootdev-code-editor,
+.interactive-panel .code-editor-container {
+  height: 400px !important;
+  max-height: 400px !important;
 } 

@@ -16,12 +16,14 @@
   background-color: var(--bg-primary);
   border-right: 1px solid var(--border-color);
   z-index: 1000;
-  transition: all 0.3s ease;
+  transition: width 0.3s ease, opacity 0.2s ease;
   overflow-y: auto;
 }
 
 .nxl-navigation-close {
-  width: 70px;
+  width: 0;
+  overflow: hidden;
+  border-right: 0;
 }
 
 .nxl-navigation-close .nxl-mtext,
@@ -36,7 +38,7 @@
 }
 
 .nxl-navigation-close .logo-sm {
-  display: block;
+  display: none;
 }
 
 .nxl-header {
@@ -48,23 +50,23 @@
   background-color: var(--bg-primary);
   border-bottom: 1px solid var(--border-color);
   z-index: 999;
-  transition: all 0.3s ease;
+  transition: margin-left 0.3s ease, left 0.3s ease;
 }
 
 .nxl-navigation-close ~ .nxl-header {
-  left: 70px;
+  left: 0;
 }
 
 .nxl-main-content {
   margin-left: 280px;
   margin-top: 70px;
   padding: 0;
-  transition: all 0.3s ease;
+  transition: margin-left 0.3s ease, left 0.3s ease;
   min-height: calc(100vh - 70px);
 }
 
 .nxl-navigation-close ~ .nxl-main-content {
-  margin-left: 70px;
+  margin-left: 0;
 }
 
 .navbar-wrapper {
@@ -236,4 +238,128 @@
   border-radius: 0;
   border-left: 0;
   border-right: 0;
+}
+
+/* Add styles for the hamburger menu button */
+.sidebar-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.sidebar-toggle-btn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Hamburger menu styles */
+.hamburger {
+  padding: 10px;
+  display: inline-block;
+  cursor: pointer;
+  transition-property: opacity, filter;
+  transition-duration: 0.15s;
+  transition-timing-function: linear;
+  font: inherit;
+  color: inherit;
+  text-transform: none;
+  background-color: transparent;
+  border: 0;
+  margin: 0;
+  overflow: visible;
+}
+
+.hamburger:hover {
+  opacity: 0.7;
+}
+
+.hamburger-box {
+  width: 25px;
+  height: 20px;
+  display: inline-block;
+  position: relative;
+}
+
+.hamburger-inner {
+  display: block;
+  top: 50%;
+  margin-top: -2px;
+}
+
+.hamburger-inner, .hamburger-inner::before, .hamburger-inner::after {
+  width: 25px;
+  height: 2px;
+  background-color: currentColor;
+  border-radius: 4px;
+  position: absolute;
+  transition-property: transform;
+  transition-duration: 0.15s;
+  transition-timing-function: ease;
+}
+
+.hamburger-inner::before, .hamburger-inner::after {
+  content: "";
+  display: block;
+}
+
+.hamburger-inner::before {
+  top: -8px;
+}
+
+.hamburger-inner::after {
+  bottom: -8px;
+}
+
+/* Squeeze animation */
+.hamburger--squeeze .hamburger-inner {
+  transform: rotate(45deg);
+  transition-delay: 0.12s;
+  transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.hamburger--squeeze .hamburger-inner::before {
+  top: 0;
+  opacity: 0;
+  transition: top 0.075s ease, opacity 0.075s 0.12s ease;
+}
+
+.hamburger--squeeze .hamburger-inner::after {
+  bottom: 0;
+  transform: rotate(-90deg);
+  transition: bottom 0.075s ease, transform 0.075s 0.12s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.nxl-navigation-close .hamburger--squeeze .hamburger-inner {
+  transform: rotate(0);
+  transition-delay: 0s;
+  transition-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+
+.nxl-navigation-close .hamburger--squeeze .hamburger-inner::before {
+  top: -8px;
+  opacity: 1;
+  transition: top 0.075s 0.12s ease, opacity 0.075s ease;
+}
+
+.nxl-navigation-close .hamburger--squeeze .hamburger-inner::after {
+  bottom: -8px;
+  transform: rotate(0);
+  transition: bottom 0.075s 0.12s ease, transform 0.075s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+
+/* Logo styles for different sidebar states */
+.logo-lg {
+  display: block;
+}
+
+.logo-sm {
+  display: none;
+}
+
+/* Make sure the sidebar is collapsed by default */
+.nxl-navigation {
+  transition: all 0.3s ease;
 } 

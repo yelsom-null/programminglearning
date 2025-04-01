@@ -655,8 +655,6 @@ console.log(globalVar);    // Works!
               <CodeEditor
                 value={code}
                 onChange={setCode}
-                language="javascript"
-                height="250px"
                 darkMode={darkMode}
               />
             </div>
