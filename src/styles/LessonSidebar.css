@@ -1,0 +1,168 @@
+/* LessonSidebar.css - Styles for the sidebar navigation with chapters and lessons */
+
+.lesson-sidebar {
+  width: 280px;
+  height: 100%;
+  background-color: var(--sidebar-bg, #1a1f36);
+  overflow-y: auto;
+  border-right: 1px solid var(--border-color, #2a3048);
+  color: var(--text-primary, #e6e7eb);
+  display: flex;
+  flex-direction: column;
+}
+
+.lesson-sidebar.dark {
+  --sidebar-bg: #1a1f36;
+  --sidebar-item-hover: #2a3048;
+  --sidebar-item-active: #3b82f6;
+  --sidebar-item-active-bg: rgba(59, 130, 246, 0.15);
+  --text-primary: #e6e7eb;
+  --text-secondary: #9ca3af;
+  --border-color: #2a3048;
+  --lesson-available: #22c55e;
+  --lesson-in-progress: #f59e0b;
+  --lesson-coming-soon: #6b7280;
+}
+
+.lesson-sidebar.light {
+  --sidebar-bg: #f8f9fa;
+  --sidebar-item-hover: #eaeaea;
+  --sidebar-item-active: #3b82f6;
+  --sidebar-item-active-bg: rgba(59, 130, 246, 0.1);
+  --text-primary: #333;
+  --text-secondary: #6b7280;
+  --border-color: #e0e0e0;
+  --lesson-available: #16a34a;
+  --lesson-in-progress: #f59e0b;
+  --lesson-coming-soon: #9ca3af;
+}
+
+.sidebar-header {
+  padding: 1.5rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.chapter-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.chapter-item {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.chapter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.chapter-header:hover {
+  background-color: var(--sidebar-item-hover);
+}
+
+.chapter-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.chapter-number {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--sidebar-item-active);
+  min-width: 1.5rem;
+}
+
+.chapter-title {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.expand-icon {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.lesson-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.lesson-item {
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-left: 3px solid transparent;
+  display: flex;
+  align-items: center;
+}
+
+.lesson-item:hover {
+  background-color: var(--sidebar-item-hover);
+}
+
+.lesson-item.active {
+  background-color: var(--sidebar-item-active-bg);
+  border-left-color: var(--sidebar-item-active);
+}
+
+.lesson-item.coming-soon {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.lesson-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.lesson-status-icon {
+  font-size: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.available .lesson-status-icon {
+  color: var(--lesson-available);
+}
+
+.in-progress .lesson-status-icon {
+  color: var(--lesson-in-progress);
+}
+
+.coming-soon .lesson-status-icon {
+  color: var(--lesson-coming-soon);
+}
+
+.lesson-title {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+  .lesson-sidebar {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+  }
+} 

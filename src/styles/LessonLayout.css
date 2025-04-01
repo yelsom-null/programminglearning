@@ -1,0 +1,102 @@
+/* LessonLayout.css - Styles for the main lesson layout with sidebar */
+
+.lesson-layout {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.lesson-layout.dark {
+  --bg-primary: #121212;
+  --border-color: #333;
+}
+
+.lesson-layout.light {
+  --bg-primary: #f8f9fa;
+  --border-color: #e0e0e0;
+}
+
+.lesson-layout-sidebar {
+  height: 100%;
+  transition: transform 0.3s ease, width 0.3s ease;
+  position: relative;
+}
+
+.lesson-layout-sidebar.closed {
+  transform: translateX(-100%);
+  width: 0;
+}
+
+.lesson-layout-content {
+  flex: 1;
+  height: 100%;
+  overflow-y: auto;
+  background-color: var(--bg-primary);
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar-toggle {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 100;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary, #333);
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-size: 1.2rem;
+  display: flex; /* Show on all screen sizes */
+}
+
+/* Additional toggle for when sidebar is closed - fixed to the left side */
+.sidebar-collapsed-toggle {
+  position: fixed;
+  top: 5rem;
+  left: 0.5rem;
+  z-index: 100;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-left: none;
+  color: var(--text-primary, #333);
+  width: 1.5rem;
+  height: 3rem;
+  border-radius: 0 4px 4px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+  transition: left 0.3s ease;
+}
+
+.sidebar-collapsed-toggle.hidden {
+  left: -2rem;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .lesson-layout-sidebar {
+    position: absolute;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    bottom: 0;
+  }
+  
+  .lesson-layout-sidebar.open {
+    width: 280px;
+  }
+  
+  .lesson-layout-content {
+    margin-left: 0;
+  }
+} 

@@ -1,0 +1,342 @@
+/* HomePage.css - Boot.dev inspired styles */
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: var(--text-primary, #333);
+  background-color: var(--bg-primary, #f8f9fa);
+  overflow-y: auto;
+  min-height: 0; /* Fix for flexbox scrolling issues */
+}
+
+.home-container.dark {
+  --bg-primary: #121212;
+  --bg-secondary: #1e1e1e;
+  --bg-card: #242424;
+  --text-primary: #e0e0e0;
+  --text-secondary: #b0b0b0;
+  --border-color: #333;
+  --highlight-color: #3b82f6;
+  --status-available: #22c55e;
+  --status-in-progress: #f59e0b;
+  --status-coming-soon: #64748b;
+}
+
+.home-container.light {
+  --bg-primary: #f8f9fa;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --border-color: #e0e0e0;
+  --highlight-color: #3b82f6;
+  --status-available: #22c55e;
+  --status-in-progress: #f59e0b;
+  --status-coming-soon: #64748b;
+}
+
+/* Header styles */
+.home-header {
+  padding: 3rem 2rem;
+  text-align: center;
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.home-header h1 {
+  font-size: 2.5rem;
+  margin: 0 0 1rem 0;
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.course-description {
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.course-stats {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  margin-top: 2rem;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--highlight-color);
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+
+/* Curriculum styles */
+.curriculum-container {
+  padding: 3rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.curriculum-container h2 {
+  font-size: 1.8rem;
+  margin: 0 0 2rem 0;
+  color: var(--text-primary);
+  font-weight: 600;
+  text-align: center;
+}
+
+.curriculum-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.lesson-card {
+  background-color: var(--bg-card);
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-color);
+  width: 100%;
+}
+
+.lesson-card.status-available {
+  cursor: pointer;
+}
+
+.lesson-card.status-available:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.lesson-card.status-coming-soon {
+  opacity: 0.7;
+  filter: grayscale(30%);
+}
+
+.lesson-card-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 1.25rem;
+}
+
+.lesson-card-header {
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.lesson-info {
+  flex: 1;
+}
+
+.lesson-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  border-top: 1px solid var(--border-color);
+  padding-top: 1.25rem;
+}
+
+.chapter-number {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.lesson-status {
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.lesson-status.status-available {
+  background-color: rgba(34, 197, 94, 0.1);
+  color: var(--status-available);
+}
+
+.lesson-status.status-in-progress {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: var(--status-in-progress);
+}
+
+.lesson-status.status-coming-soon {
+  background-color: rgba(100, 116, 139, 0.1);
+  color: var(--status-coming-soon);
+}
+
+.lesson-title {
+  font-size: 1.4rem;
+  margin: 0 0 0.75rem 0;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.lesson-description {
+  margin: 0 0 1.5rem 0;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  flex-grow: 1;
+}
+
+.status-indicator {
+  font-size: 1.5rem;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.status-indicator.status-available {
+  color: var(--status-available);
+}
+
+.status-indicator.status-in-progress {
+  color: var(--status-in-progress);
+}
+
+.status-indicator.status-coming-soon {
+  color: var(--status-coming-soon);
+}
+
+.start-button {
+  background-color: var(--highlight-color);
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.start-button:hover {
+  background-color: #2563eb;
+}
+
+/* Footer styles */
+.home-footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  padding: 3rem 2rem;
+  margin-top: auto;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-content h3 {
+  font-size: 1.5rem;
+  margin: 0 0 2rem 0;
+  color: var(--text-primary);
+  font-weight: 600;
+  text-align: center;
+}
+
+.approach-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.approach-item {
+  text-align: center;
+}
+
+.approach-item h4 {
+  font-size: 1.1rem;
+  margin: 0 0 0.75rem 0;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.approach-item p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .course-stats {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .curriculum-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .approach-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .home-header {
+    padding: 2rem 1rem;
+  }
+  
+  .home-header h1 {
+    font-size: 2rem;
+  }
+  
+  .lesson-card-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .lesson-card-header {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+/* Add styles for lesson count */
+.lesson-count {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.available-lessons {
+  background-color: rgba(34, 197, 94, 0.1);
+  color: var(--status-available);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+} 
