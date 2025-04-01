@@ -1162,10 +1162,12 @@
 
 /* Variables Card Styling */
 .variable-card {
-  height: 100%;
+  height: auto;
   transition: transform 0.2s ease;
   border: none;
   box-shadow: var(--shadow-sm);
+  margin-bottom: 1rem;
+  max-width: 100%;
 }
 
 .variable-card:hover {
@@ -1175,30 +1177,36 @@
 
 .variable-card .card-header {
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   border-bottom: none;
+  padding: 0.5rem 0.75rem;
+}
+
+.variable-card .card-body {
+  padding: 0.75rem;
 }
 
 .variable-card .card-title {
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   color: var(--text-tertiary);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
   font-weight: 500;
 }
 
 .variable-card .card-text {
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
   word-break: break-word;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8rem;
 }
 
 .variable-card .variable-assigned,
 .variable-card .variable-value {
   background-color: var(--bg-tertiary);
-  padding: var(--space-2);
+  padding: 0.35rem 0.5rem;
   border-radius: 0.25rem;
-  font-size: 0.9rem;
-  min-height: 2rem;
+  font-size: 0.8rem;
+  min-height: 1.5rem;
   display: flex;
   align-items: center;
 }
@@ -1206,11 +1214,12 @@
 .variable-type-container {
   display: flex;
   justify-content: flex-end;
+  margin-top: 0.5rem;
 }
 
 .variable-type-badge {
-  font-size: 0.75rem;
-  padding: 0.25rem 0.5rem;
+  font-size: 0.65rem;
+  padding: 0.15rem 0.4rem;
   border-radius: 1rem;
   font-weight: 500;
   color: white;

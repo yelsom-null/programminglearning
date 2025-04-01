@@ -687,11 +687,11 @@ console.log(globalVar);    // Works!
             <div className="bootdev-variables-panel" style={{ width: "100%" }}>
               <h3>Variables</h3>
               {Object.entries(runtimeValues).length > 0 ? (
-                <Row xs={1} sm={2} md={3} className="g-3">
+                <Row xs={1} className="g-3 justify-content-center">
                   {Object.entries(runtimeValues).map(([name, value]) => {
                     const type = getValueType(value);
                     return (
-                      <Col key={name}>
+                      <Col key={name} className="col-md-6">
                         <Card className={`variable-card type-${type}`}>
                           <Card.Header className="variable-name d-flex justify-content-between align-items-center">
                             {name}
