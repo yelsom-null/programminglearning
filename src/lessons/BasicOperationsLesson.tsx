@@ -19,26 +19,44 @@ interface BasicOperationsLessonProps {
 
 const BasicOperationsLesson: React.FC<BasicOperationsLessonProps> = ({ darkMode = false }) => {
   const [code, setCode] = useState<string>(
-`// Try these arithmetic operations
-let x = 5;
-let y = 3;
+`// Task Management App - Part 2: Task Operations
+// Let's perform calculations on our task data
 
-// Addition
-let sum = x + y;
+// Task 1
+let task1Name = "Complete JavaScript tutorial";
+let task1Hours = 3.5;
+let task1Progress = 25; // percentage
+let task1Priority = 2; // 1=low, 2=medium, 3=high
 
-// Subtraction
-let difference = x - y;
+// Task 2
+let task2Name = "Build task manager app";
+let task2Hours = 5;
+let task2Progress = 10; // percentage
+let task2Priority = 3; // 1=low, 2=medium, 3=high
 
-// Multiplication
-let product = x * y;
+// Calculate total time required
+let totalHours = task1Hours + task2Hours;
 
-// Division
-let quotient = x / y;
+// Calculate average progress
+let averageProgress = (task1Progress + task2Progress) / 2;
 
-// Remainder (modulus)
-let remainder = x % y;
+// Calculate remaining hours for task 1
+let task1RemainingHours = task1Hours * (100 - task1Progress) / 100;
 
-// Try different operations and see how they work!
+// Calculate priority score (higher means do it first)
+let task1Score = task1Priority * (100 - task1Progress) / 100;
+let task2Score = task2Priority * (100 - task2Progress) / 100;
+
+// Which task has higher priority score?
+let highPriorityTask = task1Score > task2Score ? task1Name : task2Name;
+
+// Display task information
+console.log("Total project time: " + totalHours + " hours");
+console.log("Average progress: " + averageProgress + "%");
+console.log("Task 1 remaining time: " + task1RemainingHours.toFixed(1) + " hours");
+console.log("High priority task: " + highPriorityTask);
+
+// Try modifying these calculations or creating your own!
 `
   );
   
@@ -175,99 +193,115 @@ let remainder = x % y;
   return (
     <div className="lesson-container">
       <div className="lesson-header">
-        <h1>Lesson 3: Basic Operations and Expressions</h1>
-        <div className="lesson-controls">
-          <label className="auto-execute-toggle">
-            <input 
-              type="checkbox" 
-              checked={isAutoExecute} 
-              onChange={() => setIsAutoExecute(!isAutoExecute)} 
-            />
-            Auto-Execute Code
-          </label>
-          {!isAutoExecute && (
-            <button 
-              className="execute-button" 
-              onClick={executeCode}
-            >
-              Run Code
-            </button>
-          )}
+        <h1>Lesson 2: Basic Operations for Tasks</h1>
+        <div className="lesson-meta">
+          <div className="chapter-info">
+            <span className="chapter-title">Chapter 1: Task Manager Fundamentals</span>
+            <div className="lesson-navigation">
+              <a 
+                href="/lesson/variables-intro" 
+                className="chapter-nav-button" 
+                title="Previous: Variables"
+              >
+                ← Previous Lesson
+              </a>
+              <span className="lesson-indicator">Lesson 2 of 4</span>
+              <a 
+                href="/lesson/functions" 
+                className="chapter-nav-button" 
+                title="Next: Functions"
+              >
+                Next Lesson →
+              </a>
+            </div>
+          </div>
         </div>
       </div>
 
       <div className="lesson-content">
         <div className="explanation-panel">
-          <h2>Arithmetic Operations</h2>
+          <h2>Building a Task Manager: Operations</h2>
           <p className="compact">
-            Programming languages let you perform calculations using familiar 
-            mathematical operations:
+            Building on the first lesson, we're now going to perform calculations on our 
+            task data. In the demo app, you saw how tasks had progress percentages, priority 
+            levels, and time estimates. Let's learn how to calculate these values.
           </p>
           
+          <div className="bootdev-info-box compact">
+            <h4>Project Progress</h4>
+            <p>In Lesson 1, we created variables for our tasks. Now we're adding operations to:</p>
+            <ul className="compact">
+              <li>Calculate time remaining for tasks</li>
+              <li>Determine priority scores to decide what to work on next</li>
+              <li>Find average progress across multiple tasks</li>
+              <li>Make decisions based on these calculations</li>
+            </ul>
+          </div>
+          
           <div className="operations-grid" style={{ 
-            display: 'grid', 
-            gridTemplateColumns: '38.2% 61.8%',
+           
             gap: '1rem',
             margin: '1rem 0'
           }}>
             <div>
+              <h3>Task Calculations</h3>
               <ul>
-                <li><strong>Addition (+)</strong>: Adds values together</li>
-                <li><strong>Subtraction (-)</strong>: Finds the difference between values</li>
-                <li><strong>Multiplication (*)</strong>: Multiplies values</li>
-                <li><strong>Division (/)</strong>: Divides values</li>
-                <li><strong>Remainder (%)</strong>: Returns what's left after division</li>
+                <li><strong>Time estimates</strong>: Calculate total and remaining time</li>
+                <li><strong>Progress tracking</strong>: Calculate completion percentages</li>
+                <li><strong>Priority management</strong>: Determine which tasks to focus on</li>
+                <li><strong>Deadline handling</strong>: Calculate days remaining</li>
               </ul>
             </div>
             
             <div>
-              <h3>Expressions</h3>
+              <h3>Task Operations Example</h3>
               <p className="compact">
-                An expression is a combination of values, variables, and operators that 
-                evaluates to a single value. For example:
+                For our task manager, we'll use operations to calculate helpful metrics:
               </p>
-              <pre className="code-example">let result = 2 + 3 * 4;</pre>
+              <pre className="code-example">
+// Calculate remaining hours
+let remainingHours = totalHours * (100 - progressPercent) / 100;</pre>
             </div>
           </div>
           
-          <h3>Operator Precedence</h3>
+          <h3>Project Context</h3>
           <p className="compact">
-            Like in mathematics, some operations happen before others:
+            In our task manager, operations help us:
           </p>
           
           <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: '38.2% 61.8%',
+            
             gap: '1rem',
             margin: '1rem 0'
           }}>
             <div>
               <ol>
-                <li>Operations in parentheses happen first: <code>(2 + 3) * 4</code></li>
-                <li>Multiplication and division happen before addition and subtraction</li>
-                <li>When operators have the same precedence, they evaluate from left to right</li>
+                <li>Prioritize which tasks to work on first</li>
+                <li>Track progress toward project completion</li>
+                <li>Estimate remaining time requirements</li>
+                <li>Group and filter tasks based on properties</li>
               </ol>
             </div>
             
             <div className="operator-examples">
               <div className="example">
-                <h4>Example 1:</h4>
-                <pre className="code-example">let result = 2 + 3 * 4;</pre>
-                <p>Evaluates to 14 (not 20) because multiplication happens first</p>
+                <h4>Project Progress:</h4>
+                <pre className="code-example">// Calculate overall project progress
+let projectProgress = (task1Progress + task2Progress) / 2;</pre>
               </div>
               
               <div className="example">
-                <h4>Example 2:</h4>
-                <pre className="code-example">let result = (2 + 3) * 4;</pre>
-                <p>Evaluates to 20 because parentheses group the addition</p>
+                <h4>Priority Scoring:</h4>
+                <pre className="code-example">// Higher score = higher priority
+let priorityScore = priority * (daysLeft / totalDays);</pre>
               </div>
             </div>
           </div>
           
           <h3>Try It Yourself!</h3>
           <p className="compact">
-            Edit the code on the right to experiment with different operations 
-            and expressions. Watch how the values change!
+            Edit the code on the right to create more useful task calculations. 
+            Consider what metrics would be helpful in managing tasks.
           </p>
           
           <div style={{ 
@@ -277,13 +311,13 @@ let remainder = x % y;
             margin: '1rem 0'
           }}>
             <div>
-              <strong>Challenge 1:</strong> Calculate the area of a rectangle (length × width)
+              <strong>Challenge 1:</strong> Calculate a deadline score based on due dates
             </div>
             <div>
-              <strong>Challenge 2:</strong> Convert temperature from Celsius to Fahrenheit (C × 9/5 + 32)
+              <strong>Challenge 2:</strong> Create a formula to balance priority and effort required
             </div>
             <div>
-              <strong>Challenge 3:</strong> Create a complex expression using parentheses
+              <strong>Challenge 3:</strong> Calculate how many tasks can be completed in a given time period
             </div>
           </div>
         </div>
@@ -306,7 +340,7 @@ let remainder = x % y;
             <h3>Variable Values</h3>
             {Object.keys(runtimeValues).length === 0 ? (
               <div className="empty-state">
-                No variables created yet. Try running the code!
+                No variables created yet.
               </div>
             ) : (
               <div className="variables-list">
@@ -316,7 +350,7 @@ let remainder = x % y;
                     const assignedValue = assignedValues[name] || 'unknown';
                     
                     return (
-                      <Col key={name} className="col-md-6">
+                      <Col key={name} className="">
                         <Card className={`variable-card type-${type}`}>
                           <Card.Header className="variable-name d-flex justify-content-between align-items-center">
                             {name}
@@ -424,75 +458,6 @@ let remainder = x % y;
                 ))}
               </div>
             )}
-          </div>
-        </div>
-      </div>
-
-      <div className="lesson-footer">
-        <div className="exercise-section">
-          <h3>Exercises</h3>
-          <div className="exercise-list">
-            <div className="exercise-item">
-              <h4>Exercise 1: Rectangle Calculator</h4>
-              <p>Calculate the area and perimeter of a rectangle.</p>
-              <button className="load-exercise" onClick={() => setCode(
-`// Exercise 1: Rectangle Calculator
-let length = 5;
-let width = 3;
-
-// Calculate the area (length × width)
-let area;
-
-// Calculate the perimeter (2 × length + 2 × width)
-let perimeter;
-
-// Display the results
-console.log("Rectangle dimensions: " + length + " × " + width);
-console.log("Area: ");
-console.log("Perimeter: ");`
-              )}>Load Exercise</button>
-            </div>
-            
-            <div className="exercise-item">
-              <h4>Exercise 2: Temperature Converter</h4>
-              <p>Convert temperature from Celsius to Fahrenheit.</p>
-              <button className="load-exercise" onClick={() => setCode(
-`// Exercise 2: Temperature Converter
-let celsius = 25;
-
-// Convert to Fahrenheit: (C × 9/5) + 32
-let fahrenheit;
-
-// Display the result
-console.log(celsius + "°C is equal to " + fahrenheit + "°F");`
-              )}>Load Exercise</button>
-            </div>
-            
-            <div className="exercise-item">
-              <h4>Exercise 3: Expression Evaluator</h4>
-              <p>Practice with different expressions and operator precedence.</p>
-              <button className="load-exercise" onClick={() => setCode(
-`// Exercise 3: Expression Evaluator
-// Evaluate each expression and store the result
-
-// Expression 1: Simple arithmetic
-let result1 = 10 + 5 * 2;
-
-// Expression 2: With parentheses
-let result2 = (10 + 5) * 2;
-
-// Expression 3: Mixed operations
-let result3 = 20 / 4 + 3 * 2;
-
-// Expression 4: Create your own complex expression
-let result4;
-
-// Display all results
-console.log("Result 1: " + result1);
-console.log("Result 2: " + result2);
-console.log("Result 3: " + result3);`
-              )}>Load Exercise</button>
-            </div>
           </div>
         </div>
       </div>

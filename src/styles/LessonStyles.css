@@ -83,17 +83,101 @@
 /* Lesson header - Stick to top */
 .lesson-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: var(--space-3) var(--space-4);
-  background-color: var(--bg-primary);
-  border-bottom: 1px solid var(--border-color);
+  align-items: center;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--border-color, #e2e8f0);
 }
 
 .lesson-header h1 {
-  font-size: 1.25rem;
-  font-weight: 600;
   margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.lesson-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.chapter-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.chapter-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-secondary, #4b5563);
+}
+
+.lesson-navigation {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 5px;
+}
+
+.lesson-indicator {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-tertiary, #64748b);
+}
+
+.chapter-nav-button {
+  padding: 6px 12px;
+  background-color: #e2e8f0;
+  color: #334155;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.chapter-nav-button:hover:not(:disabled) {
+  background-color: #cbd5e1;
+}
+
+.chapter-nav-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dark .chapter-nav-button {
+  background-color: #334155;
+  color: #e2e8f0;
+}
+
+.dark .chapter-nav-button:hover:not(:disabled) {
+  background-color: #475569;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .lesson-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .lesson-meta {
+    width: 100%;
+    align-items: flex-start;
+  }
+  
+  .chapter-info {
+    align-items: flex-start;
+  }
 }
 
 .lesson-controls {
@@ -132,18 +216,50 @@
 
 /* Main content area - Grow to fill space */
 .lesson-content {
-  display: grid;
-  grid-template-columns: 38.2% 61.8%; /* Golden ratio */
-  flex: 1;
+  display: flex;
+  height: calc(100vh - 150px); /* Adjust based on header height */
   overflow: hidden;
 }
 
 /* Explanation panel - Optimize padding */
 .explanation-panel {
-  padding: var(--space-4);
+  flex: 1;
+  height: 100%;
   overflow-y: auto;
+  padding: 20px;
   background-color: var(--bg-primary);
   border-right: 1px solid var(--border-color);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+/* Hide scrollbars by default but show when hovering/scrolling */
+.explanation-panel::-webkit-scrollbar,
+.interactive-panel::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background-color: transparent;
+}
+
+.explanation-panel::-webkit-scrollbar-thumb,
+.interactive-panel::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 4px;
+}
+
+.explanation-panel:hover::-webkit-scrollbar-thumb,
+.interactive-panel:hover::-webkit-scrollbar-thumb,
+.explanation-panel:active::-webkit-scrollbar-thumb,
+.interactive-panel:active::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Dark theme scrollbar adjustments */
+.dark-theme .explanation-panel:hover::-webkit-scrollbar-thumb,
+.dark-theme .interactive-panel:hover::-webkit-scrollbar-thumb,
+.dark-theme .explanation-panel:active::-webkit-scrollbar-thumb,
+.dark-theme .interactive-panel:active::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 /* Reduce spacing in headings */
@@ -226,24 +342,26 @@
   font-size: 0.875rem;
 }
 
-/* Interactive Panel - Responsive layout with direct values display */
+/* Interactive Panel - scrollable container for all content */
 .interactive-panel {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-3);
-  background-color: var(--bg-secondary);
+  flex: 1;
+  height: 100%;
   overflow-y: auto;
+  padding: 20px;
+  background-color: var(--bg-secondary);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
 }
 
-/* Code editor container */
+/* Code editor container - fixed height without scroll */
 .code-editor-container {
+  height: 400px;
+  overflow: hidden;
   position: relative;
   border: 1px solid var(--border-color);
   border-radius: 0.25rem;
-  overflow: hidden;
   background-color: var(--bg-code);
-  margin-bottom: 0; /* Remove margin to place variables panel right underneath */
+  margin-bottom: 20px;
 }
 
 /* Variables Panel - Placed directly below editor */
@@ -344,14 +462,14 @@
 /* Responsive grid adjustments */
 @media (max-width: 1024px) {
   .lesson-content {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
+    flex-direction: column;
+    height: auto;
   }
   
-  .explanation-panel {
-    border-right: none;
-    border-bottom: 1px solid var(--border-color);
-    max-height: 40vh;
+  .explanation-panel, .interactive-panel {
+    width: 100%;
+    height: auto;
+    max-height: 50vh;
   }
 }
 
@@ -1447,4 +1565,136 @@
 .interactive-panel .code-editor-container {
   height: 400px !important;
   max-height: 400px !important;
+}
+
+/* Chapter Navigation */
+.chapter-navigation {
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.chapter-navigation h2 {
+  font-size: 1.4rem;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.chapter-nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--space-3);
+}
+
+.chapter-nav-button {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: var(--space-2) var(--space-3);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.chapter-nav-button:hover:not([disabled]) {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.chapter-nav-button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.chapter-lesson-indicator {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* Make chapter navigation responsive */
+@media (max-width: 768px) {
+  .chapter-nav-buttons {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  
+  .chapter-nav-button {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Demo Panel Styles */
+.demo-panel {
+  background-color: var(--bg-secondary);
+  overflow-y: auto;
+  padding: var(--space-4);
+}
+
+.demo-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--space-4);
+  background-color: var(--bg-primary);
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+}
+
+.demo-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 var(--space-3) 0;
+  color: var(--text-primary);
+}
+
+.demo-description {
+  color: var(--text-secondary);
+  margin-bottom: var(--space-4);
+}
+
+.demo-explanation {
+  margin-top: var(--space-6);
+  padding: var(--space-4);
+  background-color: var(--bg-highlight);
+  border-radius: 8px;
+  border-left: 4px solid var(--border-highlight);
+}
+
+.demo-explanation p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Responsive adjustments for demo */
+@media (max-width: 768px) {
+  .demo-container {
+    padding: var(--space-2);
+  }
+  
+  .task-manager-demo {
+    max-width: 100%;
+    margin: 0;
+  }
+}
+
+/* Visualization panel - fixed height without its own scroll */
+.visualization-panel {
+  height: auto;
+  overflow: visible;
+  padding: 15px;
+  background-color: var(--bg-primary);
+  border-radius: 0.25rem;
+  border: 1px solid var(--border-color);
+  margin-bottom: 20px;
+}
+
+/* Remove the separate scrolling from visualization content */
+.visualization-scroll-container {
+  height: auto;
+  overflow: visible;
 } 

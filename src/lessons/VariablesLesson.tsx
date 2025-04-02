@@ -3,7 +3,7 @@ import CodeEditor from '../components/CodeEditor';
 import { 
   evaluateCodeSafely, 
   evaluateCodeWithAI, 
-  isStringifiedClassInstance, 
+  isStringifiedClassInstance,
   parseStringifiedClass 
 } from '../utils/codeAnalysis';
 import '../styles/LessonStyles.css';
@@ -11,44 +11,108 @@ import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Badge from 'react-bootstrap/Badge';
+import VariablesCheckpointSystem from '../components/VariablesCheckpointSystem';
+import VariablesModuleContent from '../components/VariablesModuleContent';
 
 interface VariablesLessonProps {
   darkMode?: boolean;
 }
 
 const VariablesLesson: React.FC<VariablesLessonProps> = ({ darkMode = false }) => {
-  const [code, setCode] = useState<string>(
-`// Try changing these variables and see what happens!
-let name = "Alex";
-let age = 25;
-let isStudent = true;
+  // Define the initial code samples for each module
+  const initialCodeByModule = {
+    1: `// Task Management App - Variables Basics
+// Variables are containers for storing data values
 
-// You can also change the values after declaring them
-age = age + 1;
-name = name + " Smith";
+// Create your task variables below:
 
-// Try adding your own variables below
+
+
+
+`,
+    2: `// Task Management App - Variable Types
+// In this module, you'll explore different types of variables for tasks.
+
+// You'll build on what you learned in Module 1 by creating
+// variables with different data types for your task.
+
+// The code editor is empty - follow the module instructions to create:
+// - String variables (for text)
+// - Number variables (for quantities)
+// - Boolean variables (for true/false states)
+
+`,
+    3: `// Task Management App - Variable Manipulation
+// In this module, you'll learn how to update and modify variables.
+
+// First, set up some initial task state:
+let taskName = "Create project plan";
+let progress = 40;
+let estimatedHours = 6;
+let isCompleted = false;
+
+// Display initial state
+console.log("Task: " + taskName);
+console.log("Current progress: " + progress + "%");
+console.log("Initial estimate: " + estimatedHours + " hours");
+
+// Follow the module instructions to update these variables
+// and create formulas to track task progress.
+
+`,
+    4: `// Task Management App - Multiple Tasks
+// In this module, you'll manage variables for multiple tasks.
+
+// Follow the module instructions to:
+// 1. Create variables for multiple tasks
+// 2. Compare tasks based on their properties
+// 3. Calculate overall progress
+// 4. Create a task summary report
+
 `
-  );
+  };
   
+  // Add the ability to preserve variables between modules
+  const [variablesByModule, setVariablesByModule] = useState<Record<number, Record<string, any>>>({
+    1: {},
+    2: {},
+    3: {},
+    4: {}
+  });
+  
+  const [currentModule, setCurrentModule] = useState(1);
+  const [code, setCode] = useState('');
   const [runtimeValues, setRuntimeValues] = useState<Record<string, any>>({});
   const [consoleOutput, setConsoleOutput] = useState<any[]>([]);
   const [executionPath, setExecutionPath] = useState<string[]>([]);
   const [activeStep, setActiveStep] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
-  const [isAutoExecute, setIsAutoExecute] = useState<boolean>(true);
   
-  // Handle code changes for CodeMirror
+  // Only set the initial code the first time component loads
+  useEffect(() => {
+    setCode(initialCodeByModule[1]);
+    // We only want this to run once when the component mounts
+  }, []);
+  
+  // Store variables when module is completed
+  useEffect(() => {
+    if (Object.keys(runtimeValues).length > 0) {
+      setVariablesByModule(prev => ({
+        ...prev,
+        [currentModule]: runtimeValues
+      }));
+    }
+  }, [runtimeValues, currentModule]);
+  
+  // Handle code changes and track modifications
   const handleCodeChange = (value: string) => {
     setCode(value);
   };
   
   // Auto-execute code when it changes (for real-time feedback)
   React.useEffect(() => {
-    if (isAutoExecute) {
-      executeCode();
-    }
-  }, [code, isAutoExecute]);
+    executeCode();
+  }, [code]);
 
   const executeCode = async () => {
     setError(null);
@@ -160,71 +224,44 @@ name = name + " Smith";
   return (
     <div className="lesson-container">
       <div className="lesson-header">
-        <h1>Lesson 2: Variables and Data Types</h1>
-        <div className="lesson-controls">
-          <label className="auto-execute-toggle">
-            <input 
-              type="checkbox" 
-              checked={isAutoExecute} 
-              onChange={() => setIsAutoExecute(!isAutoExecute)} 
-            />
-            Auto-Execute Code
-          </label>
-          {!isAutoExecute && (
-            <button 
-              className="execute-button" 
-              onClick={executeCode}
-            >
-              Run Code
-            </button>
-          )}
+        <h1>Lesson 1: Building with Variables</h1>
+        <div className="lesson-meta">
+          <div className="chapter-info">
+            <span className="chapter-title">Chapter 1: Task Manager Fundamentals</span>
+            <div className="lesson-navigation">
+              <button 
+                className="chapter-nav-button" 
+                disabled={true}
+                title="This is the first lesson"
+              >
+                ← Previous Lesson
+              </button>
+              <span className="lesson-indicator">Lesson 1 of 4</span>
+              <a 
+                href="/lesson/basic-operations" 
+                className="chapter-nav-button" 
+                title="Next: Basic Operations"
+              >
+                Next Lesson →
+              </a>
+            </div>
+          </div>
         </div>
       </div>
 
       <div className="lesson-content">
         <div className="explanation-panel">
-          <h2>What are Variables?</h2>
-          <p>
-            Variables are like labeled containers that store data in your program. 
-            They let you save information to use later.
-          </p>
+         
           
-          <h3>Creating Variables</h3>
-          <p>
-            In JavaScript, we create variables using <code>let</code>, <code>const</code>, or <code>var</code>.
-            Here's how to create a variable:
-          </p>
-          <pre className="code-example">let name = "Alex";</pre>
-          
-          <h3>Data Types</h3>
-          <p>Variables can store different types of data:</p>
-          <ul>
-            <li><strong>Strings</strong>: Text values in quotes - <code>"Hello"</code></li>
-            <li><strong>Numbers</strong>: Numeric values - <code>42</code>, <code>3.14</code></li>
-            <li><strong>Booleans</strong>: True/false values - <code>true</code>, <code>false</code></li>
-            <li><strong>Objects</strong>: Collections of related values</li>
-            <li><strong>Arrays</strong>: Lists of values</li>
-            <li><strong>Undefined</strong>: When a variable has no value assigned</li>
-          </ul>
-          
-          <h3>Changing Variable Values</h3>
-          <p>
-            After creating a variable, you can change its value:
-          </p>
-          <pre className="code-example">
-            let score = 0;
-            score = 10; // Now score is 10
-          </pre>
-          
-          <h3>Try It Yourself!</h3>
-          <p>
-            Edit the code on the right. Watch how the variables change in real-time!
-          </p>
-          <ul>
-            <li>Try changing the values of the existing variables</li>
-            <li>Add your own new variables</li>
-            <li>Try different data types</li>
-          </ul>
+          {/* Module Content Component */}
+          <VariablesModuleContent 
+            moduleId={currentModule}
+            darkMode={darkMode}
+            code={code}
+            onCodeChange={handleCodeChange}
+            runtimeValues={runtimeValues}
+            consoleOutput={consoleOutput}
+          />
         </div>
 
         <div className="interactive-panel">
@@ -247,14 +284,14 @@ name = name + " Smith";
               <div className="memory-containers">
                 {Object.keys(runtimeValues).length === 0 ? (
                   <div className="empty-state">
-                    No variables created yet. Try running the code!
+                    No variables created yet.
                   </div>
                 ) : (
-                  <Row xs={1} className="g-3 justify-content-center">
+                  <Row xs={1} className="g-3 justify-content-center display-flow">
                     {Object.entries(runtimeValues).map(([name, value]) => {
                       const type = getValueType(value);
                       return (
-                        <Col key={name} className="col-md-6">
+                        <Col key={name} className="">
                           <Card className={`variable-card type-${type}`}>
                             <Card.Header className="variable-name d-flex justify-content-between align-items-center">
                               {name}
@@ -348,60 +385,6 @@ name = name + " Smith";
                   ))}
                 </div>
               )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="lesson-footer">
-        <div className="exercise-section">
-          <h3>Exercises</h3>
-          <div className="exercise-list">
-            <div className="exercise-item">
-              <h4>Exercise 1: Personal Profile</h4>
-              <p>Create variables for a person's profile including name, age, and occupation.</p>
-              <button className="load-exercise" onClick={() => setCode(
-`// Exercise 1: Create variables for a person's profile
-let name = "";
-let age = 0;
-let occupation = "";
-
-// Now assign values to each variable
-
-
-// Try changing their values
-
-
-// Print a greeting using these variables
-console.log("Hello!");
-`
-              )}>Load Exercise</button>
-            </div>
-            
-            <div className="exercise-item">
-              <h4>Exercise 2: Game Stats</h4>
-              <p>Create variables to track a player's score, lives, and level in a game.</p>
-              <button className="load-exercise" onClick={() => setCode(
-`// Exercise 2: Game Stats
-// Create and set variables for a player's:
-// - score
-// - lives
-// - level
-
-
-// Increase the score by 100
-
-
-// Remove one life
-
-
-// Level up the player
-
-
-// Display the current stats
-console.log("Game stats:");
-`
-              )}>Load Exercise</button>
             </div>
           </div>
         </div>

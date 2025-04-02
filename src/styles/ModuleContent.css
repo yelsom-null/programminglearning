@@ -1,0 +1,624 @@
+/* Module Content Styles */
+.module-content {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  color: var(--text-primary, #1e293b);
+  overflow-y: auto;
+  padding-right: 20px;
+  margin-bottom: 20px;
+
+}
+
+.module-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.module-container h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--primary-color, #4a6cf7);
+}
+
+.module-section {
+  margin-bottom: 30px;
+  padding: 0 5px;
+}
+
+.module-section h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 15px 0;
+  color: var(--text-primary, #1e293b);
+}
+
+.module-section p {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0 0 15px 0;
+  color: var(--text-secondary, #4b5563);
+}
+
+.module-section ul, .module-section ol {
+  margin: 0 0 15px 0;
+  padding-left: 20px;
+  line-height: 1.6;
+}
+
+.module-section li {
+  margin-bottom: 8px;
+  color: var(--text-secondary, #4b5563);
+}
+
+.concept-box {
+  background-color: rgba(74, 108, 247, 0.1);
+  border-left: 4px solid var(--primary-color, #4a6cf7);
+  padding: 15px 20px;
+  margin: 20px 0;
+  border-radius: 4px;
+}
+
+.concept-box h4 {
+  margin: 0 0 10px 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary, #1e293b);
+}
+
+.concept-box ul {
+  margin-bottom: 0;
+}
+
+.code-comparison {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.code-example {
+  background-color: var(--bg-secondary, #f8fafc);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.code-example h4 {
+  background-color: var(--bg-tertiary, #f1f5f9);
+  margin: 0;
+  padding: 10px 15px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  color: var(--text-primary, #1e293b);
+}
+
+.code-example pre {
+  margin: 0;
+  padding: 15px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  overflow-x: auto;
+  background-color: var(--bg-primary, #ffffff);
+  color: var(--text-primary, #1e293b);
+}
+
+.code-example p {
+  margin: 0;
+  padding: 10px 15px;
+  font-size: 0.875rem;
+  color: var(--text-secondary, #4b5563);
+  background-color: var(--bg-tertiary, #f1f5f9);
+  border-top: 1px solid var(--border-color, #e2e8f0);
+}
+
+.concept-note {
+  background-color: rgba(245, 158, 11, 0.1);
+  border-left: 4px solid var(--warning-color, #f59e0b);
+  padding: 15px 20px;
+  margin: 20px 0;
+  border-radius: 4px;
+}
+
+.concept-note p {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--text-secondary, #4b5563);
+}
+
+.concept-note strong {
+  color: var(--warning-color, #f59e0b);
+}
+
+.demo-explanation {
+  background-color: var(--bg-secondary, #f8fafc);
+  border: 1px solid var(--border-color, #e2e8f0);
+  padding: 15px 20px;
+  margin: 15px 0;
+  border-radius: 6px;
+}
+
+.demo-explanation p {
+  margin: 0 0 10px 0;
+  font-size: 0.9375rem;
+  color: var(--text-secondary, #4b5563);
+}
+
+.demo-explanation ol, .demo-explanation ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.practice-editor {
+  margin: 20px 0;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border-color, #e2e8f0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.practice-tasks {
+  background-color: rgba(16, 185, 129, 0.1);
+  border-left: 4px solid var(--success-color, #10b981);
+  padding: 15px 20px;
+  margin: 20px 0;
+  border-radius: 4px;
+}
+
+.practice-tasks h4 {
+  margin: 0 0 10px 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--success-color, #10b981);
+}
+
+.practice-tasks ol {
+  margin-bottom: 0;
+}
+
+.module-summary {
+  background-color: var(--bg-secondary, #f8fafc);
+  border: 1px solid var(--border-color, #e2e8f0);
+  padding: 20px;
+  margin-top: 30px;
+  border-radius: 8px;
+}
+
+.module-summary h3 {
+  margin: 0 0 15px 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary, #1e293b);
+}
+
+.module-summary p {
+  margin: 0 0 10px 0;
+  font-size: 0.9375rem;
+  color: var(--text-secondary, #4b5563);
+}
+
+.module-summary ul {
+  margin-bottom: 15px;
+}
+
+.module-summary p:last-child {
+  margin-bottom: 0;
+}
+
+.module-not-found {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.125rem;
+  color: var(--text-secondary, #4b5563);
+  font-style: italic;
+}
+
+/* Dark Mode Adjustments */
+.dark-theme .module-content {
+  --bg-primary: #121826;
+  --bg-secondary: #1e293b; 
+  --bg-tertiary: #2d3748;
+  --text-primary: #f8fafc;
+  --text-secondary: #e2e8f0;
+  --text-tertiary: #94a3b8;
+  --border-color: #2d3748;
+  --success-color: #10b981;
+  --error-color: #ef4444;
+  --warning-color: #f59e0b;
+  --primary-color: #4a6cf7;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .module-content {
+    padding-right: 10px;
+  }
+  
+  .code-comparison {
+    grid-template-columns: 1fr;
+  }
+  
+  .module-container h2 {
+    font-size: 1.5rem;
+  }
+  
+  .module-section h3 {
+    font-size: 1.125rem;
+  }
+}
+
+/* Task instruction display */
+.current-task {
+  background-color: #f0f7ff;
+  border-left: 4px solid #0066cc;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.current-task h3 {
+  margin-top: 0;
+  color: #0066cc;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.task-instruction {
+  font-size: 1.1rem;
+  color: #000000;
+  font-weight: 600;
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+
+/* For dark mode */
+.dark .current-task {
+  background-color: #1e2738;
+  border-left-color: #5a9de6;
+}
+
+.dark .current-task h3 {
+  color: #5a9de6;
+}
+
+.dark .task-instruction {
+  color: #ffffff;
+}
+
+/* Make feedback more prominent */
+.feedback-message {
+  padding: 10px 15px;
+  margin: 15px 0;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.feedback-message.success {
+  background-color: #e7f7e7;
+  border-left: 4px solid #4caf50;
+  color: #2e7d32;
+}
+
+.feedback-message.error {
+  background-color: #ffeded;
+  border-left: 4px solid #f44336;
+  color: #c62828;
+}
+
+.dark .feedback-message.success {
+  background-color: #1e3524;
+  color: #81c784;
+}
+
+.dark .feedback-message.error {
+  background-color: #3b1e1e;
+  color: #ef9a9a;
+}
+
+/* Module navigation combining chapter and step navigation */
+.module-navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #f8fafc;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+
+.dark .module-navigation {
+  background-color: #1e293b;
+  border-color: #2d3748;
+}
+
+.chapter-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chapter-nav h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.dark .chapter-nav h4 {
+  color: #f8fafc;
+}
+
+.chapter-nav-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.chapter-nav-button {
+  padding: 6px 12px;
+  background-color: #e2e8f0;
+  color: #334155;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.chapter-nav-button:hover:not(:disabled) {
+  background-color: #cbd5e1;
+}
+
+.chapter-nav-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dark .chapter-nav-button {
+  background-color: #334155;
+  color: #e2e8f0;
+}
+
+.dark .chapter-nav-button:hover:not(:disabled) {
+  background-color: #475569;
+}
+
+.chapter-lesson-indicator {
+  font-size: 0.9rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.dark .chapter-lesson-indicator {
+  color: #94a3b8;
+}
+
+/* Update step navigation to match the design */
+.step-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 15px;
+}
+
+.dark .step-navigation {
+  border-top-color: #2d3748;
+}
+
+.step-navigation button {
+  padding: 6px 12px;
+  background-color: #e2e8f0;
+  color: #334155;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.step-navigation button:hover:not(:disabled) {
+  background-color: #cbd5e1;
+}
+
+.step-navigation button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dark .step-navigation button {
+  background-color: #334155;
+  color: #e2e8f0;
+}
+
+.dark .step-navigation button:hover:not(:disabled) {
+  background-color: #475569;
+}
+
+.step-indicator {
+  font-size: 0.9rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.dark .step-indicator {
+  color: #94a3b8;
+}
+
+/* Module header with combined title and navigation */
+.module-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--border-color, #e2e8f0);
+}
+
+.module-title-area {
+  display: flex;
+  flex-direction: column;
+}
+
+.module-title-area h2 {
+  margin: 0 0 8px 0;
+  padding: 0;
+  border-bottom: none;
+}
+
+.chapter-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.chapter-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-secondary, #4b5563);
+}
+
+.lesson-indicator {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-tertiary, #64748b);
+}
+
+.lesson-navigation {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* Responsive adjustments for module header */
+@media (max-width: 768px) {
+  .module-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .lesson-navigation {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+/* Hint button styling */
+.hint-container {
+  margin: 12px 0;
+}
+
+.hint-button {
+  background-color: #f0f4f8;
+  border: 1px solid #d0d7de;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  color: #0969da;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.hint-button:hover {
+  background-color: #e6ebf1;
+}
+
+.dark .hint-button {
+  background-color: #1e293b;
+  border-color: #334155;
+  color: #60a5fa;
+}
+
+.dark .hint-button:hover {
+  background-color: #283548;
+}
+
+.hint-content {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #f8fafc;
+  border-left: 3px solid #0969da;
+}
+
+.dark .hint-content {
+  background-color: #1e293b;
+  border-left-color: #60a5fa;
+}
+
+/* Bootstrap Card customization for concept boxes */
+.concept-card {
+  border-left: 4px solid var(--primary-color, #4a6cf7) !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  border-radius: 6px !important;
+  overflow: hidden;
+  margin-bottom: 1.5rem !important;
+}
+
+.concept-card .card-header {
+  background-color: rgba(74, 108, 247, 0.1);
+  border-bottom: 1px solid rgba(74, 108, 247, 0.2);
+  font-weight: 600;
+  font-size: 1.125rem;
+  padding: 0.75rem 1.25rem;
+  color: var(--text-primary, #1e293b);
+}
+
+.concept-card .card-body {
+  padding: 1.25rem;
+  background-color: #ffffff;
+}
+
+/* Dark mode styles for bootstrap cards */
+.dark-theme .concept-card {
+  border-left-color: var(--primary-color, #4a6cf7) !important;
+}
+
+.dark-theme .concept-card .card-header {
+  background-color: rgba(74, 108, 247, 0.2);
+  border-bottom-color: rgba(74, 108, 247, 0.3);
+  color: var(--text-primary, #f8fafc);
+}
+
+.dark-theme .concept-card .card-body {
+  background-color: var(--bg-secondary, #1e293b);
+  color: var(--text-secondary, #e2e8f0);
+}
+
+/* Module summary card */
+.module-summary.card {
+  border-radius: 8px !important;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+  margin-top: 2rem;
+}
+
+.module-summary .card-header {
+  background-color: var(--bg-tertiary, #f1f5f9);
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary, #1e293b);
+}
+
+.dark-theme .module-summary.card {
+  background-color: var(--bg-secondary, #1e293b);
+}
+
+.dark-theme .module-summary .card-header {
+  background-color: var(--bg-tertiary, #2d3748);
+  border-bottom-color: var(--border-color, #2d3748);
+  color: var(--text-primary, #f8fafc);
+}
+
+.dark-theme .module-summary .card-body {
+  background-color: var(--bg-secondary, #1e293b);
+  color: var(--text-secondary, #e2e8f0);
+} 

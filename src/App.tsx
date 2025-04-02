@@ -12,6 +12,7 @@ import VariablesLesson from './lessons/VariablesLesson';
 import BasicOperationsLesson from './lessons/BasicOperationsLesson';
 import BootDevStyleLesson from './lessons/BootDevStyleLesson';
 import BootDevVariablesLesson from './lessons/BootDevVariablesLesson';
+import TaskManagerDemoLesson from './lessons/TaskManagerDemoLesson';
 import curriculum, { Chapter, Lesson } from './data/curriculum';
 
 const App: React.FC = () => {
@@ -95,7 +96,26 @@ const App: React.FC = () => {
     
     // Map lesson IDs to their respective components
     switch (lessonId) {
+      // Task manager demo
+      case 'task-manager-demo':
+        return <TaskManagerDemoLesson darkMode={darkMode} />;
+        
       // Basic lessons
+      case 'variables-intro':
+        return <VariablesLesson darkMode={darkMode} />;
+        
+      case 'basic-operations':
+        return <BasicOperationsLesson darkMode={darkMode} />;
+      
+      // Function lessons
+      case 'boot-dev-style':
+        return <BootDevStyleLesson darkMode={darkMode} />;
+      
+      // Complete system
+      case 'boot-dev-variables':
+        return <BootDevVariablesLesson darkMode={darkMode} />;
+      
+      // Original curriculum lessons
       case 'basic-types':
       case 'let-and-const':
       case 'why-javascript':
@@ -113,16 +133,6 @@ const App: React.FC = () => {
       case 'function-parameters':
       case 'return-values':
         return <BootDevStyleLesson darkMode={darkMode} />;
-      
-      // Other specific mappings
-      case 'variables-intro':
-        return <VariablesLesson darkMode={darkMode} />;
-      case 'basic-operations':
-        return <BasicOperationsLesson darkMode={darkMode} />;
-      case 'boot-dev-style':
-        return <BootDevStyleLesson darkMode={darkMode} />;
-      case 'boot-dev-variables':
-        return <BootDevVariablesLesson darkMode={darkMode} />;
       
       default:
         // For any unmapped lesson, show the LessonPlaceholder component

@@ -12,25 +12,71 @@ interface BootDevStyleLessonProps {
 
 const BootDevStyleLesson: React.FC<BootDevStyleLessonProps> = ({ darkMode = false }) => {
   const [code, setCode] = useState<string>(
-`// Let's learn about JavaScript functions!
-function greet(name) {
-  return "Hello, " + name + "!";
+`// Task Management App - Part 3: Task Functions
+// Let's create functions to manage our tasks
+
+// Our task collection
+const tasks = [
+  { id: 1, name: "Complete JavaScript tutorial", completed: false, priority: "high", hours: 3.5, progress: 25 },
+  { id: 2, name: "Build task manager app", completed: false, priority: "medium", hours: 5, progress: 10 }
+];
+
+// Function to add a new task
+function addTask(name, priority = "medium", hours = 1) {
+  const newTask = {
+    id: tasks.length + 1,
+    name: name,
+    completed: false,
+    priority: priority,
+    hours: hours,
+    progress: 0
+  };
+  tasks.push(newTask);
+  return newTask;
 }
 
-// Call the function with your name
-const message = greet("world");
-
-// Let's create another function
-function addNumbers(a, b) {
-  return a + b;
+// Function to mark a task as complete
+function completeTask(taskId) {
+  for (let i = 0; i < tasks.length; i++) {
+    if (tasks[i].id === taskId) {
+      tasks[i].completed = true;
+      tasks[i].progress = 100;
+      return tasks[i];
+    }
+  }
+  return null; // Task not found
 }
 
-// Try calling this function
-const sum = addNumbers(5, 3);
+// Function to update task progress
+function updateProgress(taskId, newProgress) {
+  // Find the task with the given id
+  for (let i = 0; i < tasks.length; i++) {
+    if (tasks[i].id === taskId) {
+      tasks[i].progress = newProgress;
+      // If progress is 100%, mark as completed
+      if (newProgress >= 100) {
+        tasks[i].completed = true;
+        tasks[i].progress = 100;
+      }
+      return tasks[i];
+    }
+  }
+  return null; // Task not found
+}
 
-// You can see the results in the output panel
-console.log(message);
-console.log("Sum:", sum);
+// Let's use our functions
+addTask("Create project documentation", "low", 2);
+updateProgress(1, 50); // Update first task progress to 50%
+completeTask(2);       // Mark second task as complete
+
+// Display all tasks
+console.log("All Tasks:");
+for (let i = 0; i < tasks.length; i++) {
+  const status = tasks[i].completed ? "Completed" : "In Progress";
+  console.log(\`\${tasks[i].id}. \${tasks[i].name} (\${status}) - \${tasks[i].progress}% complete\`);
+}
+
+// Try adding more tasks or creating new task management functions!
 `
   );
   
@@ -38,7 +84,6 @@ console.log("Sum:", sum);
   const [consoleOutput, setConsoleOutput] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isAutoExecute, setIsAutoExecute] = useState<boolean>(true);
-  const [activeExercise, setActiveExercise] = useState<number>(0);
   
   useEffect(() => {
     if (isAutoExecute) {
@@ -106,58 +151,6 @@ console.log("Sum:", sum);
     return `${value}`;
   };
 
-  const exercises = [
-    {
-      title: "Creating a Function",
-      description: "Create a function that takes a person's name and returns a greeting.",
-      codeTemplate: 
-`// Create a function called 'sayHello' that takes a name parameter
-// and returns "Hello, [name]!"
-
-// Your code here
-
-
-// Test your function
-console.log(sayHello("JavaScript"));`,
-      hint: "Remember to use the 'function' keyword, include parameters, and use the return keyword."
-    },
-    {
-      title: "Function with Multiple Parameters",
-      description: "Create a function that calculates the area of a rectangle.",
-      codeTemplate:
-`// Create a function called 'calculateArea' that takes width and height parameters
-// and returns the area (width * height)
-
-// Your code here
-
-
-// Test your function with different values
-console.log(calculateArea(5, 3));
-console.log(calculateArea(7, 2));`,
-      hint: "Multiply the width and height parameters and return the result."
-    },
-    {
-      title: "Function with Conditional Logic",
-      description: "Create a function that determines if a number is even or odd.",
-      codeTemplate:
-`// Create a function called 'isEven' that takes a number parameter
-// and returns true if the number is even, false if it's odd
-
-// Your code here
-
-
-// Test your function with different values
-console.log(isEven(4));
-console.log(isEven(7));`,
-      hint: "Use the modulo operator (%) to check if a number is divisible by 2."
-    }
-  ];
-
-  const loadExercise = (index: number) => {
-    setActiveExercise(index);
-    setCode(exercises[index].codeTemplate);
-  };
-
   const handleCodeChange = (newCode: string) => {
     setCode(newCode);
   };
@@ -165,7 +158,7 @@ console.log(isEven(7));`,
   return (
     <div className="bootdev-lesson-container">
       <div className="bootdev-lesson-header">
-        <h1>JavaScript Functions</h1>
+        <h1>Building a Task Manager: Functions</h1>
         <div className="bootdev-lesson-controls">
           <label className="auto-execute-toggle">
             <input 
@@ -189,91 +182,122 @@ console.log(isEven(7));`,
       <div className="bootdev-lesson-content">
         <div className="bootdev-theory-panel">
           <div className="bootdev-lesson-section">
-            <h2>Functions in JavaScript</h2>
+            <div className="chapter-navigation">
+              <h2>Chapter 2: Advanced Task Management</h2>
+              <div className="chapter-nav-buttons">
+                <a 
+                  href="/lesson/basic-operations" 
+                  className="chapter-nav-button" 
+                  title="Previous: Operations"
+                >
+                  ← Previous Lesson
+                </a>
+                <span className="chapter-lesson-indicator">Lesson 3 of 4</span>
+                <a 
+                  href="/lesson/boot-dev-variables" 
+                  className="chapter-nav-button" 
+                  title="Next: Complete System"
+                >
+                  Next Lesson →
+                </a>
+              </div>
+            </div>
+            
+            <h2>Building a Task Manager: Functions</h2>
             <p>
-              Functions are reusable blocks of code that perform a specific task. They help make 
-              your code more organized and maintainable.
+              We've learned about task variables and operations. Now it's time to organize 
+              our code into reusable functions. In the task manager demo, you saw how tasks 
+              could be added, deleted, and updated - we'll create functions for each of these actions.
             </p>
+            
+            <div className="bootdev-info-box">
+              <h4>Moving Closer to Our Goal</h4>
+              <p>
+                Remember the task manager demo? With these functions, we're getting closer 
+                to creating that complete application. We're writing code that:
+              </p>
+              <ul>
+                <li>Adds new tasks to our task list</li>
+                <li>Updates task progress</li>
+                <li>Marks tasks as complete</li>
+                <li>Organizes tasks according to priority</li>
+              </ul>
+            </div>
             
             <div className="bootdev-code-example">
               <pre>
-{`function functionName(parameter1, parameter2) {
-  // Code to be executed
-  return result;
+{`// Function to add a task
+function addTask(name, priority) {
+  // Function body - the code to execute
+  const newTask = { name, priority };
+  return newTask;  // Return the created task
 }`}
               </pre>
             </div>
             
-            <h3>Key Concepts</h3>
+            <h3>Key Task Functions</h3>
             <ul>
-              <li><strong>Function Declaration:</strong> Uses the <code>function</code> keyword</li>
-              <li><strong>Parameters:</strong> Values the function accepts</li>
-              <li><strong>Return Statement:</strong> What the function gives back</li>
-              <li><strong>Function Call:</strong> How you use the function</li>
+              <li><strong>Task Creation</strong>: Functions to add new tasks</li>
+              <li><strong>Task Updates</strong>: Functions to modify existing tasks</li>
+              <li><strong>Task Completion</strong>: Functions to mark tasks as done</li>
+              <li><strong>Task Filtering</strong>: Functions to find specific tasks</li>
             </ul>
             
             <div className="bootdev-info-box">
-              <h4>Why Use Functions?</h4>
+              <h4>Function Benefits in Our Task Manager</h4>
               <ul>
-                <li>Reuse code without repeating it</li>
-                <li>Break down complex problems into smaller parts</li>
-                <li>Make your code easier to test and debug</li>
+                <li><strong>Reusability</strong>: Use the same code to process many tasks</li>
+                <li><strong>Organization</strong>: Group related operations together</li>
+                <li><strong>Modularity</strong>: Build complex features from simpler functions</li>
+                <li><strong>Maintainability</strong>: Easier to change behavior in one place</li>
               </ul>
             </div>
             
+            <h3>Project Progression</h3>
+            <p>We're building our task manager step by step:</p>
+            <ol>
+              <li>Lesson 1: Define task variables</li>
+              <li>Lesson 2: Task calculations and operations</li>
+              <li>Lesson 3: Create task management functions (current lesson)</li>
+              <li>Lesson 4: Build a complete task system with objects and arrays</li>
+            </ol>
+            
             <h3>Examples</h3>
             <div className="bootdev-code-example">
-              <h4>Simple Function</h4>
+              <h4>Update Task Status</h4>
               <pre>
-{`function greet(name) {
-  return "Hello, " + name + "!";
-}
-
-// Calling the function
-const greeting = greet("World");
-console.log(greeting); // Outputs: "Hello, World!"`}
+{`function completeTask(taskId) {
+  // Find the task by id and update it
+  for (let i = 0; i < tasks.length; i++) {
+    if (tasks[i].id === taskId) {
+      tasks[i].completed = true;
+      return true;
+    }
+  }
+  return false;  // Task not found
+}`}
               </pre>
             </div>
             
             <div className="bootdev-code-example">
-              <h4>Function with Multiple Parameters</h4>
+              <h4>Calculate Task Metrics</h4>
               <pre>
-{`function add(a, b) {
-  return a + b;
-}
-
-const sum = add(5, 3);
-console.log(sum); // Outputs: 8`}
+{`function getCompletionRate() {
+  let completed = 0;
+  for (let i = 0; i < tasks.length; i++) {
+    if (tasks[i].completed) {
+      completed++;
+    }
+  }
+  return (completed / tasks.length) * 100;
+}`}
               </pre>
             </div>
           </div>
         </div>
 
         <div className="bootdev-practice-panel">
-          <div className="bootdev-editor-section">
-            <div className="bootdev-tabs">
-              {exercises.map((exercise, index) => (
-                <button
-                  key={index}
-                  className={`bootdev-tab ${activeExercise === index ? 'active' : ''}`}
-                  onClick={() => loadExercise(index)}
-                >
-                  Exercise {index + 1}
-                </button>
-              ))}
-            </div>
-            
-            <div className="bootdev-exercise-instructions">
-              <h3>{exercises[activeExercise].title}</h3>
-              <p>{exercises[activeExercise].description}</p>
-              <div className="bootdev-hint">
-                <details>
-                  <summary>Hint</summary>
-                  <p>{exercises[activeExercise].hint}</p>
-                </details>
-              </div>
-            </div>
-            
+          <div className="bootdev-editor-section">            
             <div className="bootdev-code-editor">
               <CodeEditor
                 value={code}
@@ -314,7 +338,7 @@ console.log(sum); // Outputs: 8`}
                   {Object.entries(runtimeValues).map(([name, value]) => {
                     const type = getValueType(value);
                     return (
-                      <Col key={name} className="col-md-6">
+                      <Col key={name} className="">
                         <Card className={`variable-card type-${type}`}>
                           <Card.Header className="variable-name d-flex justify-content-between align-items-center">
                             {name}

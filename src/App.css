@@ -214,7 +214,7 @@ html, body, #root {
   border-left: 3px solid #3498db;
   font-size: 0.95rem;
   line-height: 1.5;
-  max-height: 300px;
+
   overflow-y: auto;
 }
 
@@ -882,7 +882,7 @@ h2 {
 .step-content {
   font-family: monospace;
   white-space: pre-wrap;
-  max-height: 150px;
+  margin-top: 4px;
   overflow-y: auto;
   color: var(--text-secondary);
 }

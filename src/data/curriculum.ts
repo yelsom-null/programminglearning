@@ -18,9 +18,76 @@ export interface Chapter {
 
 const curriculum: Chapter[] = [
   {
-    id: 'javascript-variables',
-    title: 'Variables',
+    id: 'task-manager-demo',
+    title: 'Task Manager Project',
     order: 1,
+    description: 'Interactive showcase of the task management application you will build',
+    status: 'available',
+    lessons: [
+      {
+        id: 'task-manager-demo',
+        title: 'Project Overview',
+        description: 'Preview the complete task manager app and understand what you will be building',
+        order: 1,
+        status: 'available',
+        route: '/lesson/task-manager-demo'
+      }
+    ]
+  },
+  {
+    id: 'task-manager-fundamentals',
+    title: 'Task Manager Fundamentals',
+    order: 2,
+    description: 'Learn to build a simple task management application starting with the basics',
+    status: 'available',
+    lessons: [
+      {
+        id: 'variables-intro',
+        title: 'Task Variables',
+        description: 'Define variables to represent tasks and their properties',
+        order: 1,
+        status: 'available',
+        route: '/lesson/variables-intro'
+      },
+      {
+        id: 'basic-operations',
+        title: 'Task Operations',
+        description: 'Perform calculations on task data to gain insights',
+        order: 2,
+        status: 'available',
+        route: '/lesson/basic-operations'
+      }
+    ]
+  },
+  {
+    id: 'advanced-task-management',
+    title: 'Advanced Task Management',
+    order: 3,
+    description: 'Build more complex task management features using functions and classes',
+    status: 'available',
+    lessons: [
+      {
+        id: 'boot-dev-style',
+        title: 'Task Functions',
+        description: 'Create functions to manage task operations',
+        order: 1,
+        status: 'available',
+        route: '/lesson/boot-dev-style'
+      },
+      {
+        id: 'boot-dev-variables',
+        title: 'Complete Task System',
+        description: 'Build a complete task management system with classes',
+        order: 2,
+        status: 'available',
+        route: '/lesson/boot-dev-variables'
+      }
+    ]
+  },
+  {
+    id: 'javascript-variables',
+    title: 'JavaScript Variables',
+    order: 4,
     description: 'Learn the basic syntax of JavaScript and how to declare variables',
     status: 'available',
     lessons: [
@@ -85,7 +152,7 @@ const curriculum: Chapter[] = [
   {
     id: 'javascript-functions',
     title: 'Functions',
-    order: 2,
+    order: 5,
     description: 'Learn about the different ways to create and execute functions in JavaScript',
     status: 'available',
     lessons: [
@@ -118,7 +185,7 @@ const curriculum: Chapter[] = [
   {
     id: 'javascript-objects',
     title: 'Objects',
-    order: 3,
+    order: 6,
     description: 'Objects are one of the most-used JS structures, learn to master them',
     status: 'coming-soon',
     lessons: [
@@ -143,7 +210,7 @@ const curriculum: Chapter[] = [
   {
     id: 'javascript-classes',
     title: 'Classes',
-    order: 4,
+    order: 7,
     description: 'Learn about classes in JavaScript and how they differ from POJOs and the classes in other languages',
     status: 'coming-soon',
     lessons: [
