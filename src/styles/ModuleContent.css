@@ -4,7 +4,6 @@
   color: var(--text-primary, #1e293b);
   overflow-y: auto;
   padding-right: 20px;
-  margin-bottom: 20px;
 
 }
 
@@ -99,7 +98,7 @@
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 0.875rem;
   line-height: 1.6;
-  overflow-x: auto;
+  /* overflow-x: auto; */
   background-color: var(--bg-primary, #ffffff);
   color: var(--text-primary, #1e293b);
 }

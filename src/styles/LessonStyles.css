@@ -320,18 +320,7 @@
   position: relative;
 }
 
-.code-example pre {
-  margin: 0;
-  padding: 1.25rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 0.875rem;
-  line-height: 1.6;
-  overflow-x: auto;
-  background-color: var(--bg-primary, #ffffff);
-  color: var(--text-primary, #1e293b);
-  border-radius: 0;
-  border: none;
-}
+
 
 /* Add code title bar */
 .code-example::before {
@@ -882,14 +871,6 @@
   color: var(--text-code);
 }
 
-.bootdev-code-example pre {
-  margin: 0;
-  padding: var(--space-4);
-  overflow-x: auto;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 0.9rem;
-  line-height: 1.6;
-}
 
 .bootdev-info-box {
   background-color: var(--bg-highlight);
@@ -926,12 +907,7 @@
   min-height: 300px;
 }
 
-.bootdev-tabs {
-  display: flex;
-  gap: var(--space-2);
-  margin-bottom: var(--space-3);
-  overflow-x: auto;
-}
+
 
 .bootdev-tab {
   background-color: var(--bg-tertiary);
@@ -1865,16 +1841,6 @@
   overflow: hidden;
 }
 
-.placeholder-content .code-example pre {
-  margin: 0;
-  padding: 1.25rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 0.875rem;
-  line-height: 1.6;
-  overflow-x: auto;
-  background-color: var(--bg-primary, #ffffff);
-  color: var(--text-primary, #1e293b);
-}
 
 .placeholder-content .concept-section {
   background-color: rgba(74, 108, 247, 0.1);
@@ -2058,7 +2024,7 @@
   font-family: monospace;
   font-size: 0.9rem;
   line-height: 1.5;
-  overflow-x: auto;
+  /* overflow-x: auto; */
 }
 
 .concept-card .btn-secondary {
@@ -2121,7 +2087,7 @@
   background-color: #f8f9fa;
   padding: 1rem;
   border-radius: 4px;
-  overflow-x: auto;
+  /* overflow-x: auto; */
   line-height: 1.5;
   font-size: 0.9rem;
   border: 1px solid rgba(0, 0, 0, 0.125);

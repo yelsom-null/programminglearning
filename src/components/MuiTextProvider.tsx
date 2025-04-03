@@ -3,7 +3,7 @@ import { Typography, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 // Styled component for code blocks
-const CodeText = styled(Box)(({ theme }) => ({
+const CodeText = styled('code')(({ theme }) => ({
   fontFamily: '"Courier New", Courier, monospace',
   backgroundColor: 'rgba(0, 0, 0, 0.05)',
   padding: '2px 4px',
@@ -39,7 +39,7 @@ const MuiTextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
         case 'small':
           return <Typography variant="caption" component="small">{props.children}</Typography>;
         case 'code':
-          return <CodeText component="code">{props.children}</CodeText>;
+          return <CodeText>{props.children}</CodeText>;
         default:
           // For other elements, just process their children
           return React.cloneElement(child, {

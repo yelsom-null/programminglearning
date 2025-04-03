@@ -6,14 +6,100 @@ import {
   isStringifiedClassInstance,
   parseStringifiedClass 
 } from '../utils/codeAnalysis';
-import '../styles/LessonStyles.css';
-import Card from 'react-bootstrap/Card';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Badge from 'react-bootstrap/Badge';
+import { 
+  Typography, 
+  Box, 
+  Card, 
+  CardContent, 
+  CardHeader, 
+  Chip,
+  Paper,
+  useTheme,
+  Divider,
+  Container,
+  Button,
+  IconButton
+} from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useParams, Link } from 'react-router-dom';
-import curriculum from '../data/curriculum';
-import Button from 'react-bootstrap/Button';
+import curriculum, { Chapter, Lesson } from '../data/curriculum';
+import TeachingConcept from '../components/TeachingConcept';
+
+// LessonNav component to reuse across all lessons
+interface LessonNavProps {
+  title: string;
+  lessonNumber: number;
+  totalLessons: number;
+  onPrevious?: () => void;
+  onNext?: () => void;
+  hasPrevious?: boolean;
+  hasNext?: boolean;
+}
+
+const LessonNav: React.FC<LessonNavProps> = ({
+  title,
+  lessonNumber,
+  totalLessons,
+  onPrevious,
+  onNext,
+  hasPrevious = true,
+  hasNext = true
+}) => {
+  const theme = useTheme();
+
+  return (
+    <Box 
+      sx={{
+        display: 'flex',
+        flexDirection: { xs: 'column', sm: 'row' },
+        alignItems: { xs: 'flex-start', sm: 'center' },
+        justifyContent: 'space-between',
+        mb: 4,
+        pb: 2,
+        borderBottom: `1px solid ${theme.palette.divider}`
+      }}
+    >
+      <Box>
+        <Typography variant="caption" color="text.secondary" gutterBottom display="block">
+          Lesson {lessonNumber} of {totalLessons}
+        </Typography>
+        <Typography variant="h4" component="h1" fontWeight="bold">
+          {title}
+        </Typography>
+      </Box>
+
+      <Box 
+        sx={{ 
+          display: 'flex', 
+          gap: 1, 
+          mt: { xs: 2, sm: 0 }
+        }}
+      >
+        <Button
+          startIcon={<ArrowBackIcon />}
+          variant="outlined"
+          onClick={onPrevious}
+          disabled={!hasPrevious}
+          size="small"
+          sx={{ minWidth: '100px' }}
+        >
+          Previous
+        </Button>
+        <Button
+          endIcon={<ArrowForwardIcon />}
+          variant="contained"
+          onClick={onNext}
+          disabled={!hasNext}
+          size="small"
+          sx={{ minWidth: '100px' }}
+        >
+          Next
+        </Button>
+      </Box>
+    </Box>
+  );
+};
 
 interface UndefinedLessonProps {
   darkMode?: boolean;
@@ -22,6 +108,8 @@ interface UndefinedLessonProps {
 const UndefinedLesson: React.FC<UndefinedLessonProps> = ({ 
   darkMode = false
 }) => {
+  const theme = useTheme();
+  
   // Initial code sample
   const initialCode = `// Understanding Undefined vs Undeclared Variables for Task Management
 
@@ -199,11 +287,11 @@ console.log("Task duration:", getTaskDuration(newTask));
       case 'string': return 'success';
       case 'number': return 'primary';
       case 'boolean': return 'warning';
-      case 'array': return 'danger';
+      case 'array': return 'error';
       case 'object': return 'info';
-      case 'class': return 'purple';
+      case 'class': return 'secondary';
       case 'function': return 'secondary';
-      default: return 'light';
+      default: return 'default';
     }
   };
 
@@ -247,129 +335,135 @@ console.log("Task duration:", getTaskDuration(newTask));
     return `${value}`;
   };
 
-  return (
-    <div className="lesson-container">
-      <div className="lesson-header">
-        <h1>Lesson 6: Undefined and Undeclared Variables</h1>
-        <div className="lesson-meta">
-          <div className="chapter-info">
-            <span className="chapter-title">Chapter 1: Task Manager Fundamentals</span>
-            <div className="lesson-navigation">
-              {(() => {
-                // Find current lesson in curriculum
-                const currentLessonId = "undefined-undeclared";
-                
-                let prevLesson = null;
-                let nextLesson = null;
-                let currentChapter = null;
-                let currentLessonIndex = -1;
-                
-                // Find current chapter and lesson
-                for (const chapter of curriculum) {
-                  const lessonIndex = chapter.lessons.findIndex(l => l.id === currentLessonId);
-                  if (lessonIndex !== -1) {
-                    currentChapter = chapter;
-                    currentLessonIndex = lessonIndex;
-                    
-                    // Get previous lesson
-                    if (lessonIndex > 0) {
-                      prevLesson = chapter.lessons[lessonIndex - 1];
-                    } else {
-                      // Look for last lesson in previous chapter
-                      const chapterIndex = curriculum.findIndex(c => c.id === chapter.id);
-                      if (chapterIndex > 0) {
-                        const prevChapter = curriculum[chapterIndex - 1];
-                        prevLesson = prevChapter.lessons[prevChapter.lessons.length - 1];
-                      }
-                    }
-                    
-                    // Get next lesson
-                    if (lessonIndex < chapter.lessons.length - 1) {
-                      nextLesson = chapter.lessons[lessonIndex + 1];
-                    } else {
-                      // Look for first lesson in next chapter
-                      const chapterIndex = curriculum.findIndex(c => c.id === chapter.id);
-                      if (chapterIndex < curriculum.length - 1) {
-                        const nextChapter = curriculum[chapterIndex + 1];
-                        nextLesson = nextChapter.lessons[0];
-                      }
-                    }
-                    
-                    break;
-                  }
-                }
-                
-                return (
-                  <>
-                    {prevLesson ? (
-                      <Link 
-                        to={prevLesson.route}
-                        className="chapter-nav-button"
-                        title={`Previous: ${prevLesson.title}`}
-                      >
-                        ← Previous Lesson
-                      </Link>
-                    ) : (
-                      <button 
-                        className="chapter-nav-button" 
-                        disabled={true}
-                        title="This is the first lesson"
-                      >
-                        ← Previous Lesson
-                      </button>
-                    )}
-                    
-                    <span className="lesson-indicator">
-                      {currentChapter && currentLessonIndex !== -1 
-                        ? `Lesson ${currentLessonIndex + 1} of ${currentChapter.lessons.length}`
-                        : "Lesson"}
-                    </span>
-                    
-                    {nextLesson ? (
-                      <Link 
-                        to={nextLesson.route}
-                        className="chapter-nav-button"
-                        title={`Next: ${nextLesson.title}`}
-                      >
-                        Next Lesson →
-                      </Link>
-                    ) : (
-                      <button 
-                        className="chapter-nav-button" 
-                        disabled={true}
-                        title="This is the last lesson"
-                      >
-                        Next Lesson →
-                      </button>
-                    )}
-                  </>
-                );
-              })()}
-            </div>
-          </div>
-        </div>
-      </div>
+  // Navigation handlers
+  const handlePreviousLesson = () => {
+    // Find current lesson in curriculum
+    const currentLessonId = "undefined-undeclared";
+    
+    let prevLesson = null;
+    let currentChapter = null;
+    
+    // Find current chapter and lesson
+    for (const chapter of curriculum) {
+      const lessonIndex = chapter.lessons.findIndex(l => l.id === currentLessonId);
+      if (lessonIndex !== -1) {
+        currentChapter = chapter;
+        
+        // Get previous lesson
+        if (lessonIndex > 0) {
+          prevLesson = chapter.lessons[lessonIndex - 1];
+        } else {
+          // Look for last lesson in previous chapter
+          const chapterIndex = curriculum.findIndex(c => c.id === chapter.id);
+          if (chapterIndex > 0) {
+            const prevChapter = curriculum[chapterIndex - 1];
+            prevLesson = prevChapter.lessons[prevChapter.lessons.length - 1];
+          }
+        }
+        
+        break;
+      }
+    }
+    
+    if (prevLesson && prevLesson.route) {
+      window.location.href = prevLesson.route;
+    }
+  };
 
-      <div className="lesson-content">
-        <div className="explanation-panel">
-          <h2>Undefined vs. Undeclared Variables</h2>
-          <p>
-            In JavaScript, understanding the difference between undefined and undeclared variables
-            is crucial for building robust task management applications.
-          </p>
-          
-          <h3>Undefined Variables</h3>
-          <p>
-            A variable is <strong>undefined</strong> when it has been declared but not assigned a value.
-            This is a legitimate state in JavaScript and is represented by the special value <code>undefined</code>.
-          </p>
-          
-          <Card className="concept-card mb-4">
-            <Card.Header as="h4">Undefined Variables</Card.Header>
-            <Card.Body>
-              <p>Variables that have been declared but not yet assigned a value:</p>
-              <div className="code-block">
-{`// Declaring variables without assigning values
+  const handleNextLesson = () => {
+    // Find current lesson in curriculum
+    const currentLessonId = "undefined-undeclared";
+    
+    let nextLesson = null;
+    let currentChapter = null;
+    
+    // Find current chapter and lesson
+    for (const chapter of curriculum) {
+      const lessonIndex = chapter.lessons.findIndex(l => l.id === currentLessonId);
+      if (lessonIndex !== -1) {
+        currentChapter = chapter;
+        
+        // Get next lesson
+        if (lessonIndex < chapter.lessons.length - 1) {
+          nextLesson = chapter.lessons[lessonIndex + 1];
+        } else {
+          // Look for first lesson in next chapter
+          const chapterIndex = curriculum.findIndex(c => c.id === chapter.id);
+          if (chapterIndex < curriculum.length - 1) {
+            const nextChapter = curriculum[chapterIndex + 1];
+            nextLesson = nextChapter.lessons[0];
+          }
+        }
+        
+        break;
+      }
+    }
+    
+    if (nextLesson && nextLesson.route) {
+      window.location.href = nextLesson.route;
+    }
+  };
+
+  // Find current lesson information for navigation
+  const currentLessonId = "undefined-undeclared";
+  let currentLessonIndex = -1;
+  let totalLessons = 0;
+  let hasPrevious = false;
+  let hasNext = false;
+  
+  // Find current chapter and lesson
+  for (const chapter of curriculum) {
+    const lessonIndex = chapter.lessons.findIndex(l => l.id === currentLessonId);
+    if (lessonIndex !== -1) {
+      currentLessonIndex = lessonIndex;
+      totalLessons = chapter.lessons.length;
+      hasPrevious = lessonIndex > 0 || curriculum.findIndex(c => c.id === chapter.id) > 0;
+      hasNext = lessonIndex < chapter.lessons.length - 1 || 
+                curriculum.findIndex(c => c.id === chapter.id) < curriculum.length - 1;
+      break;
+    }
+  }
+
+  return (
+    <Box sx={{ p: 3, width: '100%' }}>
+      <LessonNav
+        title="Undefined and Undeclared Variables"
+        lessonNumber={currentLessonIndex + 1}
+        totalLessons={totalLessons || 12}
+        onPrevious={handlePreviousLesson}
+        onNext={handleNextLesson}
+        hasPrevious={hasPrevious}
+        hasNext={hasNext}
+      />
+
+      <Box sx={{ 
+        display: 'flex', 
+        flexDirection: { xs: 'column', md: 'row' }, 
+        gap: 2,
+        width: '100%'
+      }}>
+        <Box sx={{ 
+          flex: { md: '0 0 50%' }, 
+          width: { xs: '100%', md: '50%' }, 
+          pr: { md: 2 }
+        }}>
+          <TeachingConcept
+            title="Understanding Undefined Variables"
+            subtitle="Variables declared but not assigned a value"
+            conceptNumber={1}
+            blocks={[
+              {
+                type: 'text',
+                content: 'In JavaScript, understanding the difference between undefined and undeclared variables is crucial for building robust task management applications.'
+              },
+              {
+                type: 'text',
+                content: 'A variable is undefined when it has been declared but not assigned a value. This is a legitimate state in JavaScript and is represented by the special value undefined.'
+              },
+              {
+                type: 'code',
+                caption: 'Variables that have been declared but not yet assigned a value:',
+                content: `// Declaring variables without assigning values
 let taskName;     // undefined
 let dueDate;      // undefined
 let isCompleted;  // undefined
@@ -381,230 +475,351 @@ if (taskName === undefined) {
   console.log("Task name has not been set yet");
 }
 
-// Alternative check for undefined
+// Alternative check for undefined (safer)
 if (typeof taskName === "undefined") {
   console.log("Task name has not been set yet");
-}`}
-              </div>
-            </Card.Body>
-          </Card>
+}`
+              }
+            ]}
+          />
           
-          <h3>Common Undefined Scenarios in Task Management</h3>
-          <p>
-            There are several situations where you'll encounter <code>undefined</code> values:
-          </p>
-          
-          <Card className="concept-card mb-4">
-            <Card.Header as="h4">When You'll Encounter undefined</Card.Header>
-            <Card.Body>
-              <p>Common scenarios that produce undefined values in task management:</p>
-              <div className="code-block">
-{`// 1. Function parameters that aren't provided
-function createTask(title, dueDate) {
-  console.log("Due date:", dueDate);  // undefined if not provided
-}
-createTask("New task");  // Only passing the first parameter
-
-// 2. Object properties that don't exist
-let task = { title: "Review code" };
-console.log(task.dueDate);  // undefined (property doesn't exist)
-
-// 3. Functions without a return statement
-function processTask(task) {
-  // No return statement
-}
-let result = processTask({});
-console.log(result);  // undefined
-
-// 4. Accessing array elements that don't exist
-let tasks = ["Task 1", "Task 2"];
-console.log(tasks[5]);  // undefined (index out of bounds)`}
-              </div>
-            </Card.Body>
-          </Card>
-          
-          <h3>Undeclared Variables</h3>
-          <p>
-            An <strong>undeclared</strong> variable is one that has never been declared with
-            <code>let</code>, <code>const</code>, or <code>var</code>. Using undeclared variables
-            causes errors and can lead to unexpected behavior.
-          </p>
-          
-          <Card className="concept-card mb-4">
-            <Card.Header as="h4">Undeclared Variables</Card.Header>
-            <Card.Body>
-              <p>Variables that have never been declared with let, const, or var:</p>
-              <div className="code-block">
-{`// This would cause a ReferenceError:
-// console.log(undeclaredVar);  // ReferenceError
-
-// Common mistake: forgetting to declare variables in functions
-function incorrectFunction() {
-  taskStatus = "In Progress";  // Missing let/const/var
-  // This creates a global variable if not in strict mode!
-}
-
-// Using "use strict" to catch undeclared variables
-function strictModeFunction() {
-  "use strict";
-  // Uncommenting the next line would cause an error in strict mode
-  // taskPriority = "High";  // ReferenceError
-}`}
-              </div>
-            </Card.Body>
-          </Card>
-          
-          <h3>Safely Checking for Existence</h3>
-          <p>
-            When you're not sure if a variable exists at all (it might be undeclared),
-            you should use the <code>typeof</code> operator:
-          </p>
-          
-          <Card className="concept-card mb-4">
-            <Card.Header as="h4">Safe Existence Checking</Card.Header>
-            <Card.Body>
-              <p>Using typeof to safely check for variables that might not exist:</p>
-              <div className="code-block">
-{`// Safe way to check for undefined/undeclared variables
-if (typeof possiblyUndeclaredVar === "undefined") {
-  console.log("Variable is undefined or not declared");
-}
-
-// This works because typeof returns "undefined" for both
-// undefined variables and undeclared variables (without error)`}
-              </div>
-            </Card.Body>
-          </Card>
-          
-          <h3>Best Practices for Task Management</h3>
-          <p>
-            To avoid issues with undefined and undeclared variables in your task management app:
-          </p>
-          <ul>
-            <li>Always initialize variables with default values</li>
-            <li>Use <code>let</code> or <code>const</code> for all declarations</li>
-            <li>Add <code>"use strict";</code> to catch undeclared variables</li>
-            <li>Use defensive programming to check for undefined values</li>
-            <li>Provide default values for function parameters</li>
-          </ul>
-          
-          <Card className="concept-card mb-4">
-            <Card.Header as="h4">Best Practices</Card.Header>
-            <Card.Body>
-              <p>Follow these patterns to avoid undefined-related issues:</p>
-              <div className="code-block">
-{`// Best practices example for task management
-"use strict";  // Catch undeclared variables
-
-// Initialize with sensible default values
-let taskName = "";
-let dueDate = null;
-let priority = "medium";
-let tags = [];
-
-// Default parameters for functions
-function createTask(name, options = {}) {
+          <TeachingConcept
+            title="Common Undefined Scenarios"
+            subtitle="When you'll encounter undefined in task management"
+            conceptNumber={2}
+            blocks={[
+              {
+                type: 'text',
+                content: 'There are several situations where you\'ll encounter undefined values in task management applications:'
+              },
+              {
+                type: 'code',
+                caption: 'Common scenarios that produce undefined values:',
+                content: `// 1. Missing function parameters
+function createTask(title, priority, dueDate) {
+  console.log("Priority:", priority);   // undefined if not provided
+  console.log("Due date:", dueDate);    // undefined if not provided
+  
+  // Use default values for undefined parameters
   return {
-    id: Date.now(),
-    name,
-    priority: options.priority || "medium",
-    dueDate: options.dueDate || null,
-    completed: false
+    title: title || "Untitled Task",
+    priority: priority || "Medium",
+    dueDate: dueDate || null
   };
 }
 
-// Safe property access
-function getTaskDuration(task) {
-  if (task && typeof task.duration !== "undefined") {
-    return task.duration;
-  }
-  return 0;  // Default value
-}`}
-              </div>
-            </Card.Body>
-          </Card>
-          
-          <p>
-            Try working with the code editor to experiment with undefined and undeclared variables!
-          </p>
-        </div>
+// Call with missing parameters
+let task = createTask("Fix login bug");
+// priority and dueDate will be undefined
 
-        <div className="interactive-panel">
-          <div className="code-editor-container">
+// 2. Accessing object properties that don't exist
+console.log(task.description);  // undefined (property doesn't exist)
+
+// 3. Functions without a return statement
+function processTask(task) {
+  console.log("Processing:", task.title);
+  // No return statement
+}
+let result = processTask(task);  // result will be undefined`
+              },
+              {
+                type: 'warning',
+                caption: 'Potential Bugs',
+                content: 'Unchecked undefined values can lead to unexpected behavior. Always check that values exist before using them in critical operations.'
+              }
+            ]}
+          />
+          
+          <TeachingConcept
+            title="Undeclared Variables vs. Undefined"
+            subtitle="The key difference and why it matters"
+            conceptNumber={3}
+            blocks={[
+              {
+                type: 'text',
+                content: 'An undeclared variable is completely different from an undefined one. Undeclared variables have never been created with let, const, or var and will cause ReferenceErrors when accessed.'
+              },
+              {
+                type: 'code',
+                caption: 'Undeclared variables cause runtime errors:',
+                content: `// Proper variable declaration
+let taskName;  // undefined but declared
+
+// Trying to access an undeclared variable
+try {
+  // This will cause an error
+  console.log(undeclaredVar);  // ReferenceError
+} catch (error) {
+  console.log("Error:", error.name);  // "ReferenceError"
+}
+
+// Common mistake - creating accidental globals
+function setupTask() {
+  taskStatus = "In Progress";  // Missing let/const/var!
+  // Creates a global variable (or error in strict mode)
+}
+
+// Using strict mode to prevent accidental globals
+function strictModeExample() {
+  "use strict";
+  try {
+    // This causes an error in strict mode
+    taskPriority = "High";  // ReferenceError
+  } catch (error) {
+    console.log("Strict mode prevents globals");
+  }
+}`
+              },
+              {
+                type: 'tip',
+                caption: 'Best Practice',
+                content: 'Always use "use strict" in your JavaScript to catch undeclared variable assignments. Also use ESLint or similar tools to detect these issues during development.'
+              }
+            ]}
+          />
+          
+          <TeachingConcept
+            title="Working with Undefined in Task Management"
+            subtitle="Practical techniques for handling undefined values"
+            conceptNumber={4}
+            blocks={[
+              {
+                type: 'text',
+                content: 'There are several ways to safely work with potentially undefined values in task management applications:'
+              },
+              {
+                type: 'code',
+                caption: 'Safe handling of undefined values:',
+                content: `// 1. Default values with the || operator (beware of falsy values)
+function getTaskTitle(task) {
+  return task.title || "Untitled Task";
+  // Warning: returns "Untitled" if title is "" or 0
+}
+
+// 2. Nullish coalescing operator (??) - better for numbers and strings
+function getTaskPriority(task) {
+  return task.priority ?? "Medium";
+  // Only uses "Medium" if priority is null or undefined
+}
+
+// 3. Optional chaining for nested properties
+function getSubtaskCount(task) {
+  return task.subtasks?.length ?? 0;
+  // Safe access even if subtasks doesn't exist
+}
+
+// 4. Defensive checking for function parameters
+function updateTask(taskId, updates) {
+  if (typeof taskId === "undefined") {
+    throw new Error("Task ID is required");
+  }
+  
+  // Process updates...
+}
+
+// 5. Default values for function parameters (ES6)
+function createNewTask(title = "Untitled", priority = "Medium") {
+  // Parameters have defaults if undefined
+  return { title, priority };
+}`
+              },
+              {
+                type: 'note',
+                caption: 'Modern JavaScript',
+                content: 'ES6+ provides elegant solutions for undefined values with optional chaining (?.), nullish coalescing (??), and default parameters that make your code more robust.'
+              }
+            ]}
+          />
+        </Box>
+
+        <Box sx={{ 
+          flex: { md: '0 0 50%' }, 
+          width: { xs: '100%', md: '50%' }, 
+          pl: { md: 2 }
+        }}>
+          <Paper elevation={3} sx={{ 
+            mb: 3, 
+            overflow: 'hidden',
+            position: 'relative',
+            flexShrink: 0,
+            height: '400px',
+            display: 'flex',
+            flexDirection: 'column',
+            border: '1px solid',
+            borderColor: 'divider'
+          }}>
+            <Box sx={{ 
+              position: 'relative',
+              width: '100%',
+              height: '100%',
+              overflow: 'hidden',
+              flex: 1
+            }}>
             <CodeEditor
               value={code}
               onChange={handleCodeChange}
               darkMode={darkMode}
+              name="undefined_editor"
             />
+            </Box>
             {error && (
-              <div className="error-message">
+              <Box sx={{ 
+                p: 2, 
+                color: 'error.main', 
+                bgcolor: 'error.light', 
+                borderTop: '1px solid',
+                borderColor: 'error.main' 
+              }}>
                 {error}
-              </div>
+              </Box>
             )}
-          </div>
+          </Paper>
 
-          <div className="visualization-panel">
-            <h3>Variable Values</h3>
-            <div className="visualization-scroll-container">
-              <div className="memory-containers">
-                {Object.keys(runtimeValues).length === 0 ? (
-                  <div className="empty-state">
+          <Paper elevation={3} sx={{ p: 2 }}>
+            <Typography variant="h5" gutterBottom color="primary">
+              Variable Values
+            </Typography>
+            <Box>
+              {Object.keys(runtimeValues).length === 0 ? (
+                <Box sx={{ 
+                  textAlign: 'center', 
+                  p: 4, 
+                  bgcolor: 'background.paper', 
+                  borderRadius: 1,
+                  border: '1px dashed',
+                  borderColor: 'divider'
+                }}>
+                  <Typography variant="body1" color="text.secondary">
                     No variables created yet.
-                  </div>
-                ) : (
-                  <Row xs={1} className="g-3 justify-content-center display-flow">
-                    {Object.entries(runtimeValues).map(([name, value]) => {
-                      const type = getValueType(value);
-                      return (
-                        <Col key={name} className="">
-                          <Card className={`variable-card type-${type}`}>
-                            <Card.Header className="variable-name d-flex justify-content-between align-items-center">
-                              {name}
-                              {value?.aiDescription && (
-                                <Badge bg="info" pill title={value.aiDescription}>
-                                  <i className="bi bi-magic"></i> AI
-                                </Badge>
-                              )}
-                            </Card.Header>
-                            <Card.Body>
-                              <Card.Title>{getTypeExplanation(type)}</Card.Title>
-                              <Card.Text className="variable-value">{formatValue(value)}</Card.Text>
-                              
-                              <div className="variable-type-container mt-2">
-                                <span className={`variable-type-badge bg-${getTypeColor(type)}`}>
-                                  {getTypeExplanation(type)}
-                                </span>
-                              </div>
-                              
-                              {value?.aiDescription && (
-                                <div className="ai-explanation mt-2">
-                                  <small className="text-muted">{value.aiDescription}</small>
-                                </div>
-                              )}
-                            </Card.Body>
-                          </Card>
-                        </Col>
-                      );
-                    })}
-                  </Row>
-                )}
-              </div>
+                  </Typography>
+                </Box>
+              ) : (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                  {Object.entries(runtimeValues).map(([name, value]) => {
+                    const type = getValueType(value);
+                    const typeColor = getTypeColor(type);
+                    
+                    return (
+                      <Box 
+                        key={name} 
+                        sx={{ 
+                          flex: { xs: '1 1 100%', sm: '1 1 calc(50% - 8px)' }, 
+                          maxWidth: { xs: '100%', sm: 'calc(50% - 8px)' }
+                        }}
+                      >
+                        <Card 
+                          variant="outlined" 
+                          sx={{ 
+                            borderTop: 3, 
+                            borderColor: `${typeColor}.main`,
+                            height: '100%'
+                          }}
+                        >
+                          <CardHeader
+                            title={
+                              <Typography variant="h6">
+                                {name}
+                              </Typography>
+                            }
+                            subheader={
+                              <Typography variant="caption" color="text.secondary">
+                                {getTypeExplanation(type)}
+                              </Typography>
+                            }
+                            action={
+                              value?.aiDescription ? (
+                                <Chip
+                                  label="AI"
+                                  size="small"
+                                  color="info"
+                                  icon={<span>✨</span>}
+                                  title={value.aiDescription}
+                                />
+                              ) : null
+                            }
+                            sx={{ pb: 0 }}
+                          />
+                          <CardContent>
+                            <Box 
+                              sx={{ 
+                                p: 1, 
+                                mb: 1,
+                                bgcolor: 'action.hover', 
+                                borderRadius: 1, 
+                                fontFamily: 'Consolas, Monaco, "Courier New", monospace',
+                                fontSize: '0.9rem',
+                                overflowX: 'auto'
+                              }}
+                            >
+                              {formatValue(value)}
+                            </Box>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Chip
+                                label={getTypeExplanation(type)}
+                                size="small"
+                                color={typeColor as any}
+                                variant="outlined"
+                              />
+                            </Box>
+                            {value?.aiDescription && (
+                              <Box sx={{ 
+                                mt: 2, 
+                                p: 1, 
+                                bgcolor: 'info.lighter', 
+                                borderRadius: 1,
+                                borderLeft: '4px solid',
+                                borderColor: 'info.main'
+                              }}>
+                                <Typography variant="caption" color="text.secondary">
+                                  {value.aiDescription}
+                                </Typography>
+                              </Box>
+                            )}
+                          </CardContent>
+                        </Card>
+                      </Box>
+                    );
+                  })}
+                </Box>
+              )}
 
               {consoleOutput.length > 0 && (
-                <div className="console-output">
-                  <h3>Console Output</h3>
-                  {consoleOutput.map((output, index) => (
-                    <div key={index} className="console-line">
-                      {formatValue(output)}
-                    </div>
-                  ))}
-                </div>
+                <Box sx={{ mt: 4 }}>
+                  <Paper variant="outlined" sx={{ p: 2, bgcolor: darkMode ? 'grey.900' : 'grey.100' }}>
+                    <Typography variant="h6" gutterBottom color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <span>⌨️</span> Console Output
+                    </Typography>
+                    {consoleOutput.map((output, index) => (
+                      <Box 
+                        key={index} 
+                        sx={{ 
+                          mb: 1, 
+                          pb: 1, 
+                          borderBottom: index < consoleOutput.length - 1 ? '1px dashed' : 'none',
+                          borderColor: 'divider'
+                        }}
+                      >
+                        <Typography 
+                          variant="body2" 
+                          sx={{ 
+                            fontFamily: 'Consolas, Monaco, "Courier New", monospace',
+                            whiteSpace: 'pre-wrap',
+                            wordBreak: 'break-word'
+                          }} 
+                          color="text.primary"
+                        >
+                          {formatValue(output)}
+                        </Typography>
+                      </Box>
+                    ))}
+                  </Paper>
+                </Box>
               )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+            </Box>
+          </Paper>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

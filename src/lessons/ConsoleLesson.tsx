@@ -6,16 +6,102 @@ import {
   isStringifiedClassInstance,
   parseStringifiedClass 
 } from '../utils/codeAnalysis';
-import '../styles/LessonStyles.css';
-import { Card, CardHeader, CardContent, Typography, Grid, Chip, Box } from '@mui/material';
-import Badge from 'react-bootstrap/Badge';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
+import { 
+  Typography, 
+  Box, 
+  Card, 
+  CardContent, 
+  CardHeader, 
+  Chip,
+  Paper,
+  useTheme,
+  Divider,
+  Container,
+  Button,
+  IconButton
+} from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useParams, Link } from 'react-router-dom';
-import curriculum from '../data/curriculum';
+import curriculum, { Chapter, Lesson } from '../data/curriculum';
 import CodeBlock from '../components/CodeBlock';
 import ConceptCard from '../components/ConceptCard';
+import TeachingConcept from '../components/TeachingConcept';
+
+// LessonNav component to reuse across all lessons
+interface LessonNavProps {
+  title: string;
+  lessonNumber: number;
+  totalLessons: number;
+  onPrevious?: () => void;
+  onNext?: () => void;
+  hasPrevious?: boolean;
+  hasNext?: boolean;
+}
+
+const LessonNav: React.FC<LessonNavProps> = ({
+  title,
+  lessonNumber,
+  totalLessons,
+  onPrevious,
+  onNext,
+  hasPrevious = true,
+  hasNext = true
+}) => {
+  const theme = useTheme();
+
+  return (
+    <Box 
+      sx={{
+        display: 'flex',
+        flexDirection: { xs: 'column', sm: 'row' },
+        alignItems: { xs: 'flex-start', sm: 'center' },
+        justifyContent: 'space-between',
+        mb: 4,
+        pb: 2,
+        borderBottom: `1px solid ${theme.palette.divider}`
+      }}
+    >
+      <Box>
+        <Typography variant="caption" color="text.secondary" gutterBottom display="block">
+          Lesson {lessonNumber} of {totalLessons}
+        </Typography>
+        <Typography variant="h4" component="h1" fontWeight="bold">
+          {title}
+        </Typography>
+      </Box>
+
+      <Box 
+        sx={{ 
+          display: 'flex', 
+          gap: 1, 
+          mt: { xs: 2, sm: 0 }
+        }}
+      >
+        <Button
+          startIcon={<ArrowBackIcon />}
+          variant="outlined"
+          onClick={onPrevious}
+          disabled={!hasPrevious}
+          size="small"
+          sx={{ minWidth: '100px' }}
+        >
+          Previous
+        </Button>
+        <Button
+          endIcon={<ArrowForwardIcon />}
+          variant="contained"
+          onClick={onNext}
+          disabled={!hasNext}
+          size="small"
+          sx={{ minWidth: '100px' }}
+        >
+          Next
+        </Button>
+      </Box>
+    </Box>
+  );
+};
 
 interface ConsoleLessonProps {
   darkMode?: boolean;
@@ -24,6 +110,8 @@ interface ConsoleLessonProps {
 const ConsoleLesson: React.FC<ConsoleLessonProps> = ({ 
   darkMode = false
 }) => {
+  const theme = useTheme();
+  
   // Initial code sample
   const initialCode = `// Console Logging for Task Management
 // Use console methods to output task information
@@ -151,11 +239,11 @@ console.timeEnd("Task Processing Time");
       case 'string': return 'success';
       case 'number': return 'primary';
       case 'boolean': return 'warning';
-      case 'array': return 'danger';
+      case 'array': return 'error';
       case 'object': return 'info';
-      case 'class': return 'purple';
+      case 'class': return 'secondary';
       case 'function': return 'secondary';
-      default: return 'light';
+      default: return 'default';
     }
   };
 
@@ -205,132 +293,135 @@ console.timeEnd("Task Processing Time");
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
+  // Navigation handlers
+  const handlePreviousLesson = () => {
+    // Find current lesson in curriculum
+    const currentLessonId = "console";
+    
+    let prevLesson = null;
+    let currentChapter = null;
+    
+    // Find current chapter and lesson
+    for (const chapter of curriculum) {
+      const lessonIndex = chapter.lessons.findIndex(l => l.id === currentLessonId);
+      if (lessonIndex !== -1) {
+        currentChapter = chapter;
+        
+        // Get previous lesson
+        if (lessonIndex > 0) {
+          prevLesson = chapter.lessons[lessonIndex - 1];
+        } else {
+          // Look for last lesson in previous chapter
+          const chapterIndex = curriculum.findIndex(c => c.id === chapter.id);
+          if (chapterIndex > 0) {
+            const prevChapter = curriculum[chapterIndex - 1];
+            prevLesson = prevChapter.lessons[prevChapter.lessons.length - 1];
+          }
+        }
+        
+        break;
+      }
+    }
+    
+    if (prevLesson && prevLesson.route) {
+      window.location.href = prevLesson.route;
+    }
+  };
+
+  const handleNextLesson = () => {
+    // Find current lesson in curriculum
+    const currentLessonId = "console";
+    
+    let nextLesson = null;
+    let currentChapter = null;
+    
+    // Find current chapter and lesson
+    for (const chapter of curriculum) {
+      const lessonIndex = chapter.lessons.findIndex(l => l.id === currentLessonId);
+      if (lessonIndex !== -1) {
+        currentChapter = chapter;
+        
+        // Get next lesson
+        if (lessonIndex < chapter.lessons.length - 1) {
+          nextLesson = chapter.lessons[lessonIndex + 1];
+        } else {
+          // Look for first lesson in next chapter
+          const chapterIndex = curriculum.findIndex(c => c.id === chapter.id);
+          if (chapterIndex < curriculum.length - 1) {
+            const nextChapter = curriculum[chapterIndex + 1];
+            nextLesson = nextChapter.lessons[0];
+          }
+        }
+        
+        break;
+      }
+    }
+    
+    if (nextLesson && nextLesson.route) {
+      window.location.href = nextLesson.route;
+    }
+  };
+
+  // Find current lesson information for navigation
+  const currentLessonId = "console";
+  let currentLessonIndex = -1;
+  let totalLessons = 0;
+  let hasPrevious = false;
+  let hasNext = false;
+  
+  // Find current chapter and lesson
+  for (const chapter of curriculum) {
+    const lessonIndex = chapter.lessons.findIndex(l => l.id === currentLessonId);
+    if (lessonIndex !== -1) {
+      currentLessonIndex = lessonIndex;
+      totalLessons = chapter.lessons.length;
+      hasPrevious = lessonIndex > 0 || curriculum.findIndex(c => c.id === chapter.id) > 0;
+      hasNext = lessonIndex < chapter.lessons.length - 1 || 
+                curriculum.findIndex(c => c.id === chapter.id) < curriculum.length - 1;
+      break;
+    }
+  }
+
   return (
-    <div className="lesson-container">
-      <div className="lesson-header">
-        <Typography variant="h3" component="h1" gutterBottom>Lesson 2: Console Logging Task Variables</Typography>
-        <div className="lesson-meta">
-          <div className="chapter-info">
-            <Typography variant="subtitle1" gutterBottom>Chapter 1: Task Manager Fundamentals</Typography>
-            <div className="lesson-navigation">
-              {(() => {
-                // Find current lesson in curriculum
-                const currentLessonId = "console";
-                
-                let prevLesson = null;
-                let nextLesson = null;
-                let currentChapter = null;
-                let currentLessonIndex = -1;
-                
-                // Find current chapter and lesson
-                for (const chapter of curriculum) {
-                  const lessonIndex = chapter.lessons.findIndex(l => l.id === currentLessonId);
-                  if (lessonIndex !== -1) {
-                    currentChapter = chapter;
-                    currentLessonIndex = lessonIndex;
-                    
-                    // Get previous lesson
-                    if (lessonIndex > 0) {
-                      prevLesson = chapter.lessons[lessonIndex - 1];
-                    } else {
-                      // Look for last lesson in previous chapter
-                      const chapterIndex = curriculum.findIndex(c => c.id === chapter.id);
-                      if (chapterIndex > 0) {
-                        const prevChapter = curriculum[chapterIndex - 1];
-                        prevLesson = prevChapter.lessons[prevChapter.lessons.length - 1];
-                      }
-                    }
-                    
-                    // Get next lesson
-                    if (lessonIndex < chapter.lessons.length - 1) {
-                      nextLesson = chapter.lessons[lessonIndex + 1];
-                    } else {
-                      // Look for first lesson in next chapter
-                      const chapterIndex = curriculum.findIndex(c => c.id === chapter.id);
-                      if (chapterIndex < curriculum.length - 1) {
-                        const nextChapter = curriculum[chapterIndex + 1];
-                        nextLesson = nextChapter.lessons[0];
-                      }
-                    }
-                    
-                    break;
-                  }
-                }
-                
-                return (
-                  <>
-                    {prevLesson ? (
-                      <Link 
-                        to={prevLesson.route}
-                        className="chapter-nav-button"
-                        title={`Previous: ${prevLesson.title}`}
-                      >
-                        <Typography variant="button">← Previous Lesson</Typography>
-                      </Link>
-                    ) : (
-                      <button 
-                        className="chapter-nav-button" 
-                        disabled={true}
-                        title="This is the first lesson"
-                      >
-                        <Typography variant="button">← Previous Lesson</Typography>
-                      </button>
-                    )}
-                    
-                    <Typography variant="body2" className="lesson-indicator">
-                      {currentChapter && currentLessonIndex !== -1 
-                        ? `Lesson ${currentLessonIndex + 1} of ${currentChapter.lessons.length}`
-                        : "Lesson"}
-                    </Typography>
-                    
-                    {nextLesson ? (
-                      <Link 
-                        to={nextLesson.route}
-                        className="chapter-nav-button"
-                        title={`Next: ${nextLesson.title}`}
-                      >
-                        <Typography variant="button">Next Lesson →</Typography>
-                      </Link>
-                    ) : (
-                      <button 
-                        className="chapter-nav-button" 
-                        disabled={true}
-                        title="This is the last lesson"
-                      >
-                        <Typography variant="button">Next Lesson →</Typography>
-                      </button>
-                    )}
-                  </>
-                );
-              })()}
-            </div>
-          </div>
-        </div>
-      </div>
+    <Box sx={{ p: 3, width: '100%' }}>
+      <LessonNav
+        title="Console Logging Task Variables"
+        lessonNumber={currentLessonIndex + 1}
+        totalLessons={totalLessons || 12}
+        onPrevious={handlePreviousLesson}
+        onNext={handleNextLesson}
+        hasPrevious={hasPrevious}
+        hasNext={hasNext}
+      />
 
-      <div className="lesson-content">
-        <div className="explanation-panel">
-          <Typography variant="h4" gutterBottom>Console Logging for Task Management</Typography>
-
-          <Typography variant="body1" paragraph>
-            The console is a powerful debugging tool that allows you to output information about your tasks
-            and track the execution of your code. It's essential for developing and maintaining a task management system.
-          </Typography>
-          
-          <Typography variant="h5" gutterBottom sx={{ mt: 4, mb: 2 }}>
-            Basic Console Usage
-          </Typography>
-          <Typography variant="body1" paragraph>
-            The <Box component="code" sx={{ backgroundColor: 'rgba(0,0,0,0.05)', px: 0.5 }}>console.log()</Box> method is the most commonly used console method. 
-            It outputs a message to the web console:
-          </Typography>
-          
-          <ConceptCard title="Basic Console Logging">
-            <Typography variant="body1" gutterBottom>
-              The simplest way to output information is with console.log():
-            </Typography>
-            <CodeBlock>
-// Basic console.log
+      <Box sx={{ 
+        display: 'flex', 
+        flexDirection: { xs: 'column', md: 'row' }, 
+        gap: 2,
+        width: '100%'
+      }}>
+        <Box sx={{ 
+          flex: { md: '0 0 50%' }, 
+          width: { xs: '100%', md: '50%' }, 
+          pr: { md: 2 }
+        }}>
+          <TeachingConcept
+            title="Introduction to Console Logging"
+            subtitle="Using the console for task management debugging"
+            conceptNumber={1}
+            blocks={[
+              {
+                type: 'text',
+                content: 'The console is a powerful debugging tool that allows you to output information about your tasks and track the execution of your code. It\'s essential for developing and maintaining a task management system.'
+              },
+              {
+                type: 'text',
+                content: 'The console.log() method is the most commonly used console method. It outputs a message to the web console:'
+              },
+              {
+                type: 'code',
+                caption: 'Basic console logging:',
+                content: `// Basic console.log
 console.log("Hello, Task Manager!");
 
 // Logging variables
@@ -349,23 +440,24 @@ console.log(taskName, isCompleted, dueDate);
 // Logging with descriptive labels
 console.log("Task:", taskName);
 console.log("Completed:", isCompleted);
-console.log("Due Date:", dueDate);
-            </CodeBlock>
-          </ConceptCard>
+console.log("Due Date:", dueDate);`
+              }
+            ]}
+          />
           
-          <Typography variant="h5" gutterBottom sx={{ mt: 4, mb: 2 }}>
-            Enhanced Console Methods
-          </Typography>
-          <Typography variant="body1" paragraph>
-            The console object provides specialized methods for different types of output:
-          </Typography>
-          
-          <ConceptCard title="Different Console Methods">
-            <Typography variant="body1" gutterBottom>
-              Using various console methods to style your debug output:
-            </Typography>
-            <CodeBlock>
-{`// Error logging for debugging issues
+          <TeachingConcept
+            title="Enhanced Console Methods"
+            subtitle="Specialized console tools for different output types"
+            conceptNumber={2}
+            blocks={[
+              {
+                type: 'text',
+                content: 'The console object provides specialized methods for different types of output:'
+              },
+              {
+                type: 'code',
+                caption: 'Different console methods for various purposes:',
+                content: `// Error logging for debugging issues
 console.error("Task deletion failed!");
 
 // Warning logging for potential issues
@@ -387,216 +479,268 @@ console.groupEnd();
 // Timing operations
 console.time("taskOperation");
 // ... code that takes time to execute ...
-console.timeEnd("taskOperation"); // Outputs: taskOperation: 1234ms`}
-            </CodeBlock>
-          </ConceptCard>
+console.timeEnd("taskOperation"); // Outputs: taskOperation: 1234ms`
+              }
+            ]}
+          />
           
-          <Typography variant="h5" gutterBottom sx={{ mt: 4, mb: 2 }}>
-            Logging Objects and Data Structures
-          </Typography>
-          <Typography variant="body1" paragraph>
-            When working with tasks, you'll often need to inspect complex data structures:
-          </Typography>
-          
-          <ConceptCard title="Logging Complex Data">
-            <Typography variant="body1" gutterBottom>
-              How to examine complex objects and arrays in the console:
-            </Typography>
-            <CodeBlock>
-{`// Create a task object
+          <TeachingConcept
+            title="Logging Complex Data Structures"
+            subtitle="Working with objects and arrays in the console"
+            conceptNumber={3}
+            blocks={[
+              {
+                type: 'text',
+                content: 'When working with tasks, you\'ll often need to inspect complex data structures:'
+              },
+              {
+                type: 'code',
+                caption: 'Console methods for handling objects and arrays:',
+                content: `// Task object logging
 let task = {
   id: 42,
-  title: "Complete project documentation",
-  description: "Write user guide and API documentation",
-  completed: false,
-  priority: "high",
-  dueDate: "2023-12-15",
+  name: "Implement login",
+  assignee: "Sarah",
+  dueDate: "2023-09-15",
   subtasks: [
-    { id: 1, title: "Outline document structure", completed: true },
-    { id: 2, title: "Write API endpoints section", completed: false },
-    { id: 3, title: "Add code examples", completed: false }
+    { id: 1, name: "Design UI", completed: true },
+    { id: 2, name: "Write API integration", completed: false }
   ]
 };
 
-// Logging the entire object
-console.log(task);  // Shows expandable object in browser console
+// Basic object logging
+console.log(task);
 
-// Using console.table for tabular data (like arrays)
-console.table(task.subtasks);  // Displays a nice table view
+// Using console.table for structured data
+console.table(task);
 
-// Inspecting objects with console.dir
-console.dir(task);  // Shows interactive object with expandable properties
+// Using console.table for arrays of objects (subtasks)
+console.table(task.subtasks);
 
-// Using destructuring for targeted logging
-const { title, priority, dueDate } = task;
-console.log("Task overview:", { title, priority, dueDate });`}
-            </CodeBlock>
-          </ConceptCard>
+// Inspecting nested properties
+console.log("Subtasks:", task.subtasks);
+console.log("First subtask:", task.subtasks[0]);
+
+// Destructuring for selective logging
+const { id, name, assignee } = task;
+console.log("Task basics:", id, name, assignee);
+
+// JSON formatting for cleaner output in larger objects
+console.log(JSON.stringify(task, null, 2));`
+              }
+            ]}
+          />
           
-          <Typography variant="h5" gutterBottom sx={{ mt: 4, mb: 2 }}>
-            Formatting Console Output
-          </Typography>
-          <Typography variant="body1" paragraph>
-            For better readability, you can format your console output:
-          </Typography>
-          
-          <ConceptCard title="Console Output Formatting">
-            <Typography variant="body1" gutterBottom>
-              Adding style and structure to your console messages:
-            </Typography>
-            <CodeBlock>
-{`// String formatting with %s, %d, %f, etc.
-let taskCount = 5;
-let completionRate = 0.8;
-console.log("There are %d tasks with a %.1f%% completion rate", 
-            taskCount, completionRate * 100);
-// "There are 5 tasks with a 80.0% completion rate"
+          <TeachingConcept
+            title="Console for Task Management"
+            subtitle="Practical applications in task tracking applications"
+            conceptNumber={4}
+            blocks={[
+              {
+                type: 'text',
+                content: 'The console is especially useful for task management applications:'
+              },
+              {
+                type: 'text',
+                content: `
+• Debugging task creation, updates and status changes
+• Tracking application performance with console.time()
+• Organizing related logs with console.group()
+• Displaying task data in tabular format using console.table()
+• Using different console methods to distinguish between normal operations, warnings, and errors`
+              },
+              {
+                type: 'tip',
+                caption: 'Try it yourself',
+                content: 'Try out the console methods in the code editor to see how you can use them for your task management app!'
+              }
+            ]}
+          />
+        </Box>
 
-// CSS styling in browser consoles
-console.log("%cTask Manager", "color: blue; font-size: 20px; font-weight: bold;");
-console.log("%cHigh Priority Task!", "color: red; background: yellow; padding: 5px;");
-
-// Conditional logging based on task status
-function logTaskStatus(task) {
-  if (task.completed) {
-    console.log("%c✓ %s", "color: green; font-weight: bold", task.title);
-  } else if (new Date(task.dueDate) < new Date()) {
-    console.log("%c! %s", "color: red; font-weight: bold", task.title);
-  } else {
-    console.log("%c○ %s", "color: gray", task.title);
-  }
-}
-
-// Example usage:
-logTaskStatus({ title: "Completed task", completed: true });
-logTaskStatus({ title: "Overdue task", completed: false, dueDate: "2023-01-01" });
-logTaskStatus({ title: "Future task", completed: false, dueDate: "2023-12-31" });`}
-            </CodeBlock>
-          </ConceptCard>
-          
-          <Typography variant="h5" gutterBottom sx={{ mt: 4, mb: 2 }}>
-            Best Practices for Console Logging in Task Management
-          </Typography>
-          <Typography variant="body1" paragraph>
-            Here are some tips for effective logging in your task management application:
-          </Typography>
-          
-          <ConceptCard title="Console Logging Best Practices">
-            <Typography variant="body1" gutterBottom>
-              Follow these guidelines for effective logging in your application:
-            </Typography>
-            <CodeBlock>
-{`// Use descriptive labels for better readability
-console.log("Task Created:", newTask);
-
-// Log task state changes
-function updateTaskStatus(taskId, newStatus) {
-  console.log(\`Task \${taskId} status changed to \${newStatus}\`);
-  // Implementation...
-}
-
-// Conditional logging based on environment
-const DEBUG = true;
-function debugLog(...messages) {
-  if (DEBUG) {
-    console.log("[DEBUG]", ...messages);
-  }
-}
-debugLog("Processing task queue:", taskQueue);
-
-// Remove or disable console logs in production
-// In production build process:
-// if (process.env.NODE_ENV === 'production') {
-//   console.log = () => {};
-// }`}
-            </CodeBlock>
-          </ConceptCard>
-          
-          <Typography variant="body1" paragraph>
-            Try using these console methods in the code editor to understand how they work in practice!
-          </Typography>
-        </div>
-
-        <div className="interactive-panel">
-          <div className="code-editor-container">
+        <Box sx={{ 
+          flex: { md: '0 0 50%' }, 
+          width: { xs: '100%', md: '50%' }, 
+          pl: { md: 2 }
+        }}>
+          <Paper elevation={3} sx={{ 
+            mb: 3, 
+            overflow: 'hidden',
+            position: 'relative',
+            height: '400px',
+            display: 'flex',
+            flexDirection: 'column',
+            border: '1px solid',
+            borderColor: 'divider',
+            flexShrink: 0,
+            flex: '0 0 400px'
+          }}>
             <CodeEditor
               value={code}
               onChange={handleCodeChange}
               darkMode={darkMode}
+              name="console_editor"
             />
             {error && (
-              <div className="error-message">
+              <Box sx={{ 
+                p: 2, 
+                color: 'error.main', 
+                bgcolor: 'error.light', 
+                borderTop: '1px solid',
+                borderColor: 'error.main',
+                width: '100%',
+                flexShrink: 0
+              }}>
                 {error}
-              </div>
+              </Box>
             )}
-          </div>
+          </Paper>
 
-          <div className="visualization-panel">
-            <Typography variant="h5" gutterBottom>Variable Values</Typography>
-            <div className="visualization-scroll-container">
-              <div className="memory-containers">
-                {Object.keys(runtimeValues).length === 0 ? (
-                  <div className="empty-state">
-                    <Typography variant="body1">No variables created yet.</Typography>
-                  </div>
-                ) : (
-                  <Row xs={1} className="g-3 justify-content-center display-flow">
-                    {Object.entries(runtimeValues).map(([name, value]) => {
-                      const type = getValueType(value);
-                      return (
-                        <Col key={name} className="">
-                          <Card className={`variable-card type-${type}`}>
-                            <CardHeader className="variable-name d-flex justify-content-between align-items-center">
-                              {name}
-                              {value?.aiDescription && (
-                                <Badge bg="info" pill title={value.aiDescription}>
-                                  <i className="bi bi-magic"></i> AI
-                                </Badge>
-                              )}
-                            </CardHeader>
-                            <CardContent>
-                              <Typography variant="h6">{getTypeExplanation(type)}</Typography>
-                              <Typography variant="body1" className="variable-value">{formatValue(value)}</Typography>
-                              
-                              <div className="variable-type-container mt-2">
-                                <span className={`variable-type-badge bg-${getTypeColor(type)}`}>
-                                  {getTypeExplanation(type)}
-                                </span>
-                              </div>
-                              
-                              {value?.aiDescription && (
-                                <div className="ai-explanation mt-2">
-                                  <Typography variant="caption" color="text.secondary">
-                                    {value.aiDescription}
-                                  </Typography>
-                                </div>
-                              )}
-                            </CardContent>
-                          </Card>
-                        </Col>
-                      );
-                    })}
-                  </Row>
-                )}
-              </div>
+          <Paper elevation={3} sx={{ p: 2 }}>
+            <Typography variant="h5" gutterBottom color="primary">
+              Variable Values
+            </Typography>
+            <Box>
+              {Object.keys(runtimeValues).length === 0 ? (
+                <Box sx={{ 
+                  textAlign: 'center', 
+                  p: 4, 
+                  bgcolor: 'background.paper', 
+                  borderRadius: 1,
+                  border: '1px dashed',
+                  borderColor: 'divider'
+                }}>
+                  <Typography variant="body1" color="text.secondary">
+                    No variables created yet.
+                  </Typography>
+                </Box>
+              ) : (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                  {Object.entries(runtimeValues).map(([name, value]) => {
+                    const type = getValueType(value);
+                    const typeColor = getTypeColor(type);
+                    
+                    return (
+                      <Box 
+                        key={name} 
+                        sx={{ 
+                          flex: { xs: '1 1 100%', sm: '1 1 calc(50% - 8px)' }, 
+                          maxWidth: { xs: '100%', sm: 'calc(50% - 8px)' }
+                        }}
+                      >
+                        <Card 
+                          variant="outlined" 
+                          sx={{ 
+                            borderTop: 3, 
+                            borderColor: `${typeColor}.main`,
+                            height: '100%'
+                          }}
+                        >
+                          <CardHeader
+                            title={
+                              <Typography variant="h6">
+                                {name}
+                              </Typography>
+                            }
+                            subheader={
+                              <Typography variant="caption" color="text.secondary">
+                                {getTypeExplanation(type)}
+                              </Typography>
+                            }
+                            action={
+                              value?.aiDescription ? (
+                                <Chip
+                                  label="AI"
+                                  size="small"
+                                  color="info"
+                                  icon={<span>✨</span>}
+                                  title={value.aiDescription}
+                                />
+                              ) : null
+                            }
+                            sx={{ pb: 0 }}
+                          />
+                          <CardContent>
+                            <Box 
+                              sx={{ 
+                                p: 1, 
+                                mb: 1,
+                                bgcolor: 'action.hover', 
+                                borderRadius: 1, 
+                                fontFamily: 'Consolas, Monaco, "Courier New", monospace',
+                                fontSize: '0.9rem',
+                                overflowX: 'auto'
+                              }}
+                            >
+                              {formatValue(value)}
+                            </Box>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Chip
+                                label={getTypeExplanation(type)}
+                                size="small"
+                                color={typeColor as any}
+                                variant="outlined"
+                              />
+                            </Box>
+                            {value?.aiDescription && (
+                              <Box sx={{ 
+                                mt: 2, 
+                                p: 1, 
+                                bgcolor: 'info.lighter', 
+                                borderRadius: 1,
+                                borderLeft: '4px solid',
+                                borderColor: 'info.main'
+                              }}>
+                                <Typography variant="caption" color="text.secondary">
+                                  {value.aiDescription}
+                                </Typography>
+                              </Box>
+                            )}
+                          </CardContent>
+                        </Card>
+                      </Box>
+                    );
+                  })}
+                </Box>
+              )}
 
               {consoleOutput.length > 0 && (
-                <div className="console-output">
-                  <Typography variant="h5" gutterBottom>Console Output</Typography>
-                  {consoleOutput.map((output, index) => (
-                    <div key={index} className="console-line">
-                      <Typography variant="body2" fontFamily="monospace">
-                        {formatValue(output)}
-                      </Typography>
-                    </div>
-                  ))}
-                </div>
+                <Box sx={{ mt: 4 }}>
+                  <Paper variant="outlined" sx={{ p: 2, bgcolor: darkMode ? 'grey.900' : 'grey.100' }}>
+                    <Typography variant="h6" gutterBottom color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <span>⌨️</span> Console Output
+                    </Typography>
+                    {consoleOutput.map((output, index) => (
+                      <Box 
+                        key={index} 
+                        sx={{ 
+                          mb: 1, 
+                          pb: 1, 
+                          borderBottom: index < consoleOutput.length - 1 ? '1px dashed' : 'none',
+                          borderColor: 'divider'
+                        }}
+                      >
+                        <Typography 
+                          variant="body2" 
+                          sx={{ 
+                            fontFamily: 'Consolas, Monaco, "Courier New", monospace',
+                            whiteSpace: 'pre-wrap',
+                            wordBreak: 'break-word'
+                          }} 
+                          color="text.primary"
+                        >
+                          {formatValue(output)}
+                        </Typography>
+                      </Box>
+                    ))}
+                  </Paper>
+                </Box>
               )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+            </Box>
+          </Paper>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
