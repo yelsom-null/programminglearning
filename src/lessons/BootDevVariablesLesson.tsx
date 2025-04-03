@@ -651,13 +651,13 @@ tasks.forEach(task => {
 
             <div className="bootdev-code-example compact">
             <h4>Creating an Instance</h4>
-              <pre>
+              
 {`// Create a new task manager
 const myTaskManager = new TaskManager("Alex");
 
 // Use its methods
 myTaskManager.addTask("Learn JavaScript", "high");`}
-              </pre>
+              
           </div>
         </>
       )
@@ -672,7 +672,7 @@ myTaskManager.addTask("Learn JavaScript", "high");`}
           <div className="theory-grid-layout">
             <div className="bootdev-code-example compact">
               <h4>Task Object Structure</h4>
-              <pre>
+              
 {`// A task object
 {
   id: 1,
@@ -685,19 +685,19 @@ myTaskManager.addTask("Learn JavaScript", "high");`}
   createdDate: "2023-04-01",
   dueDate: "2023-04-15"
 }`}
-              </pre>
+            
             </div>
 
             <div className="bootdev-code-example compact">
               <h4>Updating Objects</h4>
-              <pre>
+              
 {`// Object spread for updates
 const updatedTask = { 
   ...existingTask, 
   progress: 50,
   priority: "medium"
 };`}
-              </pre>
+              
             </div>
           </div>
         </>

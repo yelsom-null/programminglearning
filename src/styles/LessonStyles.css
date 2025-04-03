@@ -78,6 +78,7 @@
   height: 100%;
   background-color: var(--bg-primary);
   color: var(--text-primary);
+  font-family: '"Roboto", "Helvetica", "Arial", sans-serif';
 }
 
 /* Lesson header - Stick to top */
@@ -308,16 +309,137 @@
   line-height: 1.6;
 }
 
+/* Enhance code example boxes with Bootstrap styling */
 .code-example {
-  background-color: var(--bg-code);
-  color: var(--text-code);
+  background-color: var(--bg-secondary, #f8fafc);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 0.5rem;
+  margin: 1.5rem 0;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+.code-example pre {
+  margin: 0;
+  padding: 1.25rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  padding: var(--space-3);
-  border-radius: 0.25rem;
-  overflow-x: auto;
-  margin: var(--space-2) 0 var(--space-4) 0;
   font-size: 0.875rem;
   line-height: 1.6;
+  overflow-x: auto;
+  background-color: var(--bg-primary, #ffffff);
+  color: var(--text-primary, #1e293b);
+  border-radius: 0;
+  border: none;
+}
+
+/* Add code title bar */
+.code-example::before {
+  content: "JavaScript";
+  display: block;
+  background-color: var(--primary-color, #4a6cf7);
+  color: white;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: sans-serif;
+}
+
+/* Copy button */
+.code-example .copy-button {
+  position: absolute;
+  top: 0.3rem;
+  right: 0.5rem;
+  z-index: 10;
+  background-color: transparent;
+  border: none;
+  color: white;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.code-example .copy-button:hover {
+  opacity: 0.8;
+}
+
+/* Line numbers */
+.code-example pre {
+  counter-reset: line;
+}
+
+.code-example code {
+  counter-increment: line;
+  display: block;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.code-example code::before {
+  content: counter(line);
+  position: absolute;
+  left: 0;
+  color: var(--text-secondary, #94a3b8);
+  opacity: 0.5;
+  text-align: right;
+  width: 1rem;
+  font-size: 0.75rem;
+  user-select: none;
+}
+
+/* Apply different syntax highlighting styles */
+.code-example .keyword {
+  color: #569CD6;
+}
+
+.code-example .string {
+  color: #CE9178;
+}
+
+.code-example .comment {
+  color: #6A9955;
+  font-style: italic;
+}
+
+.code-example .function {
+  color: #DCDCAA;
+}
+
+.code-example .variable {
+  color: #9CDCFE;
+}
+
+/* Code example inside exercise section */
+.exercise .code-example::before {
+  background-color: var(--success-color, #10b981);
+}
+
+/* Code example inside concept section */
+.concept-section .code-example::before {
+  background-color: var(--primary-color, #4a6cf7);
+}
+
+/* Code example inside note section */
+.note .code-example::before {
+  background-color: var(--warning-color, #f59e0b);
+}
+
+/* Dark mode adjustments */
+.dark-theme .code-example {
+  background-color: var(--bg-tertiary, #1e293b);
+  border-color: var(--border-color, #2d3748);
+}
+
+.dark-theme .code-example pre {
+  background-color: var(--bg-tertiary, #1e293b);
+  color: var(--text-primary, #f8fafc);
+}
+
+.dark-theme .code-example code::before {
+  color: var(--text-secondary, #64748b);
 }
 
 .operator-examples {
@@ -1885,4 +2007,174 @@
 
 .dark-theme .lesson-placeholder .lesson-header {
   border-color: var(--border-color, #2d3748);
+}
+
+/* Concept cards for lessons */
+.concept-card {
+  margin-bottom: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.concept-card .card-header {
+  background-color: #f8f9fa;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  font-weight: 600;
+}
+
+.concept-card .card-body {
+  padding: 1.25rem;
+  color: var(--text-secondary, #4b5563);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.concept-card .card-body p {
+  margin-bottom: 0.75rem;
+}
+
+.concept-card .card-body code {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 0.9em;
+  color: #e83e8c;
+}
+
+.dark-theme .concept-card .card-body code {
+  background-color: var(--bg-secondary, #1e293b);
+  color: var(--text-secondary, #e2e8f0);
+  border-color: #444;
+}
+
+.concept-card pre {
+  background-color: #f5f5f5;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-top: 0.75rem;
+  font-family: monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+
+.concept-card .btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  color: white;
+  font-size: 0.85rem;
+  padding: 0.25rem 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.concept-card .btn-secondary:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
+.dark-theme .concept-card {
+  background-color: #2c2c2c;
+  border-color: #3a3a3a;
+}
+
+.dark-theme .concept-card .card-header {
+  background-color: #3a3a3a;
+  border-color: #444;
+  color: #f0f0f0;
+}
+
+.dark-theme .concept-card .card-body p {
+  color: #e2e8f0;
+}
+
+.dark-theme .concept-card pre {
+  background-color: #222;
+  color: #f0f0f0;
+  border: 1px solid #444;
+}
+
+.concept-card .card-body ul,
+.concept-card .card-body ol {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.concept-card .card-body li {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.dark-theme .concept-card .card-body ul,
+.dark-theme .concept-card .card-body ol,
+.dark-theme .concept-card .card-body li {
+  color: #e2e8f0;
+}
+
+/* Code blocks in lesson cards */
+.concept-card .card-body .code-block {
+  font-family: 'Courier New', Courier, monospace;
+  white-space: pre-wrap;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  line-height: 1.5;
+  font-size: 0.9rem;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  margin-top: 0.75rem;
+  color: #333;
+}
+
+.dark-theme .concept-card .card-body .code-block {
+  background-color: var(--bg-secondary, #1e293b);
+  color: var(--text-secondary, #e2e8f0);
+  border-color: #444;
+}
+
+/* Syntax highlighting for code blocks */
+.code-block .keyword {
+  color: #0000FF;
+  font-weight: bold;
+}
+
+.code-block .string {
+  color: #A31515;
+}
+
+.code-block .comment {
+  color: #008000;
+  font-style: italic;
+}
+
+.code-block .number {
+  color: #098658;
+}
+
+.code-block .operator {
+  color: #000000;
+}
+
+/* Dark mode syntax highlighting */
+.dark-theme .code-block .keyword {
+  color: #569CD6;
+}
+
+.dark-theme .code-block .string {
+  color: #CE9178;
+}
+
+.dark-theme .code-block .comment {
+  color: #6A9955;
+}
+
+.dark-theme .code-block .number {
+  color: #B5CEA8;
+}
+
+.dark-theme .code-block .operator {
+  color: #D4D4D4;
 } 

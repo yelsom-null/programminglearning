@@ -13,6 +13,7 @@ import Col from 'react-bootstrap/Col';
 import Badge from 'react-bootstrap/Badge';
 import { useParams, Link } from 'react-router-dom';
 import curriculum from '../data/curriculum';
+import Button from 'react-bootstrap/Button';
 
 interface UndefinedLessonProps {
   darkMode?: boolean;
@@ -126,10 +127,19 @@ console.log("Task duration:", getTaskDuration(newTask));
   const [consoleOutput, setConsoleOutput] = useState<any[]>([]);
   const [executionPath, setExecutionPath] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   
   // Handle code changes
   const handleCodeChange = (value: string) => {
     setCode(value);
+  };
+  
+  // Handle copying code to clipboard
+  const handleCopyCode = (code: string, index: number) => {
+    navigator.clipboard.writeText(code).then(() => {
+      setCopiedIndex(index);
+      setTimeout(() => setCopiedIndex(null), 2000);
+    });
   };
   
   // Auto-execute code when it changes
@@ -354,7 +364,11 @@ console.log("Task duration:", getTaskDuration(newTask));
             This is a legitimate state in JavaScript and is represented by the special value <code>undefined</code>.
           </p>
           
-          <div className="code-example">
+          <Card className="concept-card mb-4">
+            <Card.Header as="h4">Undefined Variables</Card.Header>
+            <Card.Body>
+              <p>Variables that have been declared but not yet assigned a value:</p>
+              <div className="code-block">
 {`// Declaring variables without assigning values
 let taskName;     // undefined
 let dueDate;      // undefined
@@ -371,14 +385,20 @@ if (taskName === undefined) {
 if (typeof taskName === "undefined") {
   console.log("Task name has not been set yet");
 }`}
-          </div>
+              </div>
+            </Card.Body>
+          </Card>
           
           <h3>Common Undefined Scenarios in Task Management</h3>
           <p>
             There are several situations where you'll encounter <code>undefined</code> values:
           </p>
           
-          <div className="code-example">
+          <Card className="concept-card mb-4">
+            <Card.Header as="h4">When You'll Encounter undefined</Card.Header>
+            <Card.Body>
+              <p>Common scenarios that produce undefined values in task management:</p>
+              <div className="code-block">
 {`// 1. Function parameters that aren't provided
 function createTask(title, dueDate) {
   console.log("Due date:", dueDate);  // undefined if not provided
@@ -399,7 +419,9 @@ console.log(result);  // undefined
 // 4. Accessing array elements that don't exist
 let tasks = ["Task 1", "Task 2"];
 console.log(tasks[5]);  // undefined (index out of bounds)`}
-          </div>
+              </div>
+            </Card.Body>
+          </Card>
           
           <h3>Undeclared Variables</h3>
           <p>
@@ -408,7 +430,11 @@ console.log(tasks[5]);  // undefined (index out of bounds)`}
             causes errors and can lead to unexpected behavior.
           </p>
           
-          <div className="code-example">
+          <Card className="concept-card mb-4">
+            <Card.Header as="h4">Undeclared Variables</Card.Header>
+            <Card.Body>
+              <p>Variables that have never been declared with let, const, or var:</p>
+              <div className="code-block">
 {`// This would cause a ReferenceError:
 // console.log(undeclaredVar);  // ReferenceError
 
@@ -424,7 +450,9 @@ function strictModeFunction() {
   // Uncommenting the next line would cause an error in strict mode
   // taskPriority = "High";  // ReferenceError
 }`}
-          </div>
+              </div>
+            </Card.Body>
+          </Card>
           
           <h3>Safely Checking for Existence</h3>
           <p>
@@ -432,7 +460,11 @@ function strictModeFunction() {
             you should use the <code>typeof</code> operator:
           </p>
           
-          <div className="code-example">
+          <Card className="concept-card mb-4">
+            <Card.Header as="h4">Safe Existence Checking</Card.Header>
+            <Card.Body>
+              <p>Using typeof to safely check for variables that might not exist:</p>
+              <div className="code-block">
 {`// Safe way to check for undefined/undeclared variables
 if (typeof possiblyUndeclaredVar === "undefined") {
   console.log("Variable is undefined or not declared");
@@ -440,7 +472,9 @@ if (typeof possiblyUndeclaredVar === "undefined") {
 
 // This works because typeof returns "undefined" for both
 // undefined variables and undeclared variables (without error)`}
-          </div>
+              </div>
+            </Card.Body>
+          </Card>
           
           <h3>Best Practices for Task Management</h3>
           <p>
@@ -454,7 +488,11 @@ if (typeof possiblyUndeclaredVar === "undefined") {
             <li>Provide default values for function parameters</li>
           </ul>
           
-          <div className="code-example">
+          <Card className="concept-card mb-4">
+            <Card.Header as="h4">Best Practices</Card.Header>
+            <Card.Body>
+              <p>Follow these patterns to avoid undefined-related issues:</p>
+              <div className="code-block">
 {`// Best practices example for task management
 "use strict";  // Catch undeclared variables
 
@@ -482,7 +520,9 @@ function getTaskDuration(task) {
   }
   return 0;  // Default value
 }`}
-          </div>
+              </div>
+            </Card.Body>
+          </Card>
           
           <p>
             Try working with the code editor to experiment with undefined and undeclared variables!

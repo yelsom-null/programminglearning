@@ -29,7 +29,7 @@ const VariablesModuleContent: React.FC<VariablesModuleContentProps> = ({
   };
 
   return (
-    <div className="module-content" style={{ maxHeight: '700px', overflowY: 'auto' }}>
+    <div className="module-content" style={{overflowY: 'auto' }}>
       {modules[moduleId as keyof typeof modules] || 
         <div className="module-not-found">Module content not found</div>}
     </div>
@@ -126,55 +126,57 @@ let estimatedHours = 2.5;         // Decimal numbers`}
           </Card>
 
           <Card className="concept-card mb-4">
-            <Card.Header as="h4">Declaring a JavaScript Variable</Card.Header>
+            <Card.Header as="h4">Declaring Variables</Card.Header>
             <Card.Body>
-              <p>Creating a variable in JavaScript is called "declaring" a variable.</p>
-              <p>You declare a JavaScript variable with the <code>var</code>, <code>let</code>, or <code>const</code> keyword:</p>
-              <ul>
-                <li><strong>let</strong> - used when the value can change</li>
-                <li><strong>const</strong> - used when the value should NOT change</li>
-                <li><strong>var</strong> - older way (less used in modern code)</li>
-              </ul>
-              <p>After the declaration, the variable has no value (technically it is undefined).</p>
-              <p>To assign a value to the variable, use the equal sign:</p>
+              <p>Declare variables with <code>let</code>, <code>const</code>, or <code>var</code> keywords:</p>
               
-              <HintButton>
-                <div className="code-example">
-                  <pre>
-{`// Declaring a variable first, then assigning value
-let taskName;
-taskName = "Complete JavaScript tutorial";
-
-// You can also assign a value when you declare it
-let progress = 0;
-const taskId = "TASK-123";`}
-                  </pre>
-                </div>
-              </HintButton>
+{`// Creating variables for our task app
+let taskName = "Complete project plan";  // can be reassigned
+const dueDate = "2023-12-31";           // cannot be reassigned
+var status = "In Progress";             // older way (avoid if possible)`}
+              
             </Card.Body>
           </Card>
 
           <Card className="concept-card mb-4">
-            <Card.Header as="h4">Rules for JavaScript Variable Names</Card.Header>
+            <Card.Header as="h4">Variable Naming Rules</Card.Header>
             <Card.Body>
-              <ul>
-                <li>Names must begin with a letter, $ or _</li>
-                <li>Names can contain letters, digits, underscores, and dollar signs</li>
-                <li>Names are case sensitive (y and Y are different)</li>
-                <li>Reserved words (like JavaScript keywords) cannot be used as names</li>
-              </ul>
-              
-              <HintButton>
-                <div className="code-example">
-                  <pre>
-{`// Good variable names for our task manager
-let taskName = "Learn JavaScript";     // Starts with letter, clear meaning
-let isComplete = false;                // Camel case for multiple words
-let task_priority = "high";            // Underscores are allowed
-let $specialTask = true;               // $ is allowed (but less common)`}
-                  </pre>
-                </div>
-              </HintButton>
+              <p>Variable names must follow these rules:</p>
+              <pre>
+{`// Valid variable names
+let taskId = 1;              // Start with letter, contain letters/numbers
+let task_status = "active";  // Can use underscores
+let $specialTask = true;     // Can start with $ (but uncommon)
+let _internalFlag = false;   // Can start with _ (often for private values)
+
+// Invalid variable names
+// let 1task = "error";      // Cannot start with a number
+// let task-name = "error";  // Cannot contain hyphens
+// let class = "error";      // Cannot use reserved keywords`}
+              </pre>
+            </Card.Body>
+          </Card>
+
+          <Card className="concept-card mb-4">
+            <Card.Header as="h4">Variable Assignment and Reassignment</Card.Header>
+            <Card.Body>
+              <p>Variables can be assigned values at declaration or later:</p>
+              <pre>
+{`// Creating and assigning in one step
+let taskCount = 5;
+
+// Creating first, assigning later
+let newTaskName;              // Value is 'undefined'
+newTaskName = "Review code";  // Now it has a value
+
+// Changing variable values (let allows reassignment)
+taskCount = 6;                // Changed from 5 to 6
+console.log(taskCount);       // Shows 6
+
+// Constants cannot be reassigned
+const taskCategory = "Development";
+// taskCategory = "Testing";  // This would cause an error`}
+              </pre>
             </Card.Body>
           </Card>
 
@@ -719,7 +721,7 @@ let remainingHours = estimatedHours * (100 - progressPercent) / 100;`}
           
           <HintButton>
             <div className="code-example">
-              <pre>
+              
 {`// Boolean variables for tasks
 let isCompleted = false;
 let isUrgent = true;
@@ -729,7 +731,7 @@ let needsReview = false;
 if (isUrgent && !isCompleted) {
   console.log("This task needs immediate attention!");
 }`}
-              </pre>
+              
             </div>
           </HintButton>
           
@@ -903,7 +905,7 @@ let remainingWork = estimatedHours * (100 - progress) / 100;`}
           
           <HintButton>
             <div className="code-example">
-              <pre>
+            
 {`// Creating a status summary string
 let taskName = "Create project plan";
 let progress = 60;
@@ -915,7 +917,7 @@ console.log(statusText);
 // Modern approach using template literals
 let modernText = \`Task: \${taskName} | Progress: \${progress}%\`;
 console.log(modernText);`}
-              </pre>
+              
             </div>
           </HintButton>
           
@@ -1453,7 +1455,7 @@ const Module5Content: React.FC<Omit<VariablesModuleContentProps, 'moduleId'>> = 
               
               <HintButton>
                 <div className="code-example">
-                  <pre>
+                  
 {`// Basic console logging
 console.log(taskName);                       // Just the variable
 
@@ -1465,7 +1467,7 @@ console.log("Task:", taskName, "Due:", dueDate);
 
 // Checking boolean values
 console.log("Is Completed:", isCompleted);   // Shows true or false`}
-                  </pre>
+                  
                 </div>
               </HintButton>
               

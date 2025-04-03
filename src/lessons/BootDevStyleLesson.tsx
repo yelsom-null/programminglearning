@@ -477,14 +477,14 @@ if (updateResult.success) {
             </div>
             
             <div className="bootdev-code-example">
-              <pre>
+              
 {`// Function to add a task
 function addTask(name, priority) {
   // Function body - the code to execute
   const newTask = { name, priority };
   return newTask;  // Return the created task
 }`}
-              </pre>
+              
             </div>
             
             <h3>Key Task Functions</h3>
@@ -517,7 +517,7 @@ function addTask(name, priority) {
             <h3>Examples</h3>
             <div className="bootdev-code-example">
               <h4>Update Task Status</h4>
-              <pre>
+              
 {`function completeTask(taskId) {
   // Find the task by id and update it
   for (let i = 0; i < tasks.length; i++) {
@@ -528,12 +528,12 @@ function addTask(name, priority) {
   }
   return false;  // Task not found
 }`}
-              </pre>
+              
             </div>
             
             <div className="bootdev-code-example">
               <h4>Calculate Task Metrics</h4>
-              <pre>
+              
 {`function getCompletionRate() {
   let completed = 0;
   for (let i = 0; i < tasks.length; i++) {
@@ -543,7 +543,7 @@ function addTask(name, priority) {
   }
   return (completed / tasks.length) * 100;
 }`}
-              </pre>
+              
             </div>
           </div>
         </div>

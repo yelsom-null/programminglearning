@@ -11,6 +11,7 @@ import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Badge from 'react-bootstrap/Badge';
+import Button from 'react-bootstrap/Button';
 import { useParams, Link } from 'react-router-dom';
 import curriculum from '../data/curriculum';
 
@@ -95,6 +96,7 @@ console.log(completeTask());
   const [consoleOutput, setConsoleOutput] = useState<any[]>([]);
   const [executionPath, setExecutionPath] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   
   // Handle code changes
   const handleCodeChange = (value: string) => {
@@ -204,6 +206,12 @@ console.log(completeTask());
       }
     }
     return `${value}`;
+  };
+
+  const handleCopyCode = (code: string, index: number) => {
+    navigator.clipboard.writeText(code);
+    setCopiedIndex(index);
+    setTimeout(() => setCopiedIndex(null), 2000);
   };
 
   return (
@@ -323,7 +331,11 @@ console.log(completeTask());
             These operators add 1 or subtract 1 from a variable:
           </p>
           
-          <div className="code-example">
+          <Card className="concept-card mb-4">
+            <Card.Header as="h4">Increment and Decrement Basics</Card.Header>
+            <Card.Body>
+              <p>Using ++ and -- operators to change values by 1:</p>
+              <div className="code-block">
 {`// Increment: increase by 1
 let completedTasks = 5;
 completedTasks++;        // Add 1 (now equals 6)
@@ -343,7 +355,9 @@ console.log(\`Completed \${taskCounter} tasks\`);
 
 taskCounter++;  // Complete second task
 console.log(\`Completed \${taskCounter} tasks\`);`}
-          </div>
+              </div>
+            </Card.Body>
+          </Card>
           
           <h3>Pre vs. Post Increment/Decrement</h3>
           <p>
@@ -354,7 +368,11 @@ console.log(\`Completed \${taskCounter} tasks\`);`}
             <li><strong>Pre-increment (++x)</strong>: Increments first, then returns the new value</li>
           </ul>
           
-          <div className="code-example">
+          <Card className="concept-card mb-4">
+            <Card.Header as="h4">Prefix vs. Postfix Operators</Card.Header>
+            <Card.Body>
+              <p>Understanding the difference between x++ and ++x:</p>
+              <div className="code-block">
 {`// Post-increment (x++)
 let a = 5;
 let b = a++;    // Assign a to b (5), then increment a
@@ -371,14 +389,20 @@ console.log("d:", d);    // 6 (got the incremented value)
 let taskCount = 10;
 console.log(taskCount--);    // Displays 10, then decrements to 9
 console.log(--taskCount);    // Decrements to 8, then displays 8`}
-          </div>
+              </div>
+            </Card.Body>
+          </Card>
           
           <h3>Real-World Task Management Applications</h3>
           <p>
             These operators are particularly useful in task management:
           </p>
           
-          <div className="code-example">
+          <Card className="concept-card mb-4">
+            <Card.Header as="h4">Practical Applications</Card.Header>
+            <Card.Body>
+              <p>Using increment and decrement operators in task management:</p>
+              <div className="code-block">
 {`// Task list navigation
 let tasks = ["Design layout", "Write code", "Test features", "Deploy"];
 let currentTaskIndex = 0;
@@ -408,14 +432,20 @@ function completeCurrentTask() {
   }
   return "All tasks completed!";
 }`}
-          </div>
+              </div>
+            </Card.Body>
+          </Card>
           
           <h3>Increment/Decrement vs. Compound Assignment</h3>
           <p>
             For larger increments or decrements, use compound assignment operators:
           </p>
           
-          <div className="code-example">
+          <Card className="concept-card mb-4">
+            <Card.Header as="h4">Compound Assignment Operators</Card.Header>
+            <Card.Body>
+              <p>Alternatives for adding or subtracting values other than 1:</p>
+              <div className="code-block">
 {`// Increment/decrement (for adding/subtracting 1)
 let count = 10;
 count++;         // 11
@@ -431,7 +461,9 @@ progress -= 10;   // Same as: progress = progress - 10 (now 40)
 let timeEstimate = 8;
 timeEstimate *= 1.5;   // Increase estimate by 50% (now 12)
 timeEstimate /= 2;     // Cut estimate in half (now 6)`}
-          </div>
+              </div>
+            </Card.Body>
+          </Card>
           
           <p>
             Try experimenting with the code editor to create a task tracking system

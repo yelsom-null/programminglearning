@@ -11,8 +11,10 @@ import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Badge from 'react-bootstrap/Badge';
+import Button from 'react-bootstrap/Button';
 import { useParams, Link } from 'react-router-dom';
 import curriculum from '../data/curriculum';
+import { CardHeader, CardContent, Typography, Box } from '@mui/material';
 
 interface NumbersLessonProps {
   darkMode?: boolean;
@@ -71,6 +73,7 @@ console.log(\`Project metrics:
   const [consoleOutput, setConsoleOutput] = useState<any[]>([]);
   const [executionPath, setExecutionPath] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   
   // Handle code changes
   const handleCodeChange = (value: string) => {
@@ -182,13 +185,19 @@ console.log(\`Project metrics:
     return `${value}`;
   };
 
+  const handleCopyCode = (code: string, index: number) => {
+    navigator.clipboard.writeText(code);
+    setCopiedIndex(index);
+    setTimeout(() => setCopiedIndex(null), 2000);
+  };
+
   return (
     <div className="lesson-container">
       <div className="lesson-header">
-        <h1>Lesson 4: Numbers in JavaScript</h1>
+        <Typography variant="h3" component="h1" gutterBottom>Lesson 4: Numbers in JavaScript</Typography>
         <div className="lesson-meta">
           <div className="chapter-info">
-            <span className="chapter-title">Chapter 1: Task Manager Fundamentals</span>
+            <Typography variant="subtitle1" gutterBottom>Chapter 1: Task Manager Fundamentals</Typography>
             <div className="lesson-navigation">
               {(() => {
                 // Find current lesson in curriculum
@@ -287,122 +296,164 @@ console.log(\`Project metrics:
 
       <div className="lesson-content">
         <div className="explanation-panel">
-          <h2>Numbers in JavaScript for Task Tracking</h2>
+          <Typography variant="h4" gutterBottom>Working with Numbers in Task Management</Typography>
+          
+          <Typography variant="body1" paragraph>
+            Numbers are essential in task management applications for tracking time estimates,
+            progress percentages, priorities, and other metrics. JavaScript uses a single 
+            number type for all numeric values.
+          </Typography>
+          
+          <h3>Numbers in JavaScript</h3>
           <p>
-            In task management applications, we use numbers for many important aspects:
-            priorities, progress tracking, time estimates, and calculations for reports.
+            In JavaScript, all numbers are stored as 64-bit floating point values (doubles). 
+            This means there's just one number type for integers and decimals:
           </p>
           
-          <h3>Basic Number Types</h3>
+          <Card className="concept-card mb-4">
+            <Card.Header as="h4">Number Basics</Card.Header>
+            <Card.Body>
+              <p>All numbers in JavaScript are 64-bit floating point values:</p>
+              <div className="code-block">
+{`// Integers for counting tasks
+let taskCount = 5;          // Simple integer
+let completedTasks = 3;     // Another integer
+let pendingTasks = taskCount - completedTasks;  // 2
+
+// Decimal numbers for task estimates
+let estimatedHours = 3.5;   // Hours to complete a task
+let hoursWorked = 2.25;     // Time already spent
+let remainingHours = estimatedHours - hoursWorked;  // 1.25
+
+// Large numbers for timestamp IDs
+let taskId = 1679493732251;  // Task ID based on timestamp`}
+              </div>
+            </Card.Body>
+          </Card>
+          
+          <h3>Number Operations for Task Management</h3>
           <p>
-            JavaScript has a single number type that represents both integers and floating-point values:
+            JavaScript provides many operations to work with numeric values:
           </p>
           
-          <div className="code-example">
-{`// Integer numbers
-let taskId = 1234;
-let priority = 3;        // 1=low, 2=medium, 3=high
+          <Card className="concept-card mb-4">
+            <Card.Header as="h4">Math Operations</Card.Header>
+            <Card.Body>
+              <p>Basic mathematical operations for task calculations:</p>
+              <div className="code-block">
+{`// Addition: Combining estimates
+let taskAHours = 2.5;
+let taskBHours = 1.75;
+let totalEstimate = taskAHours + taskBHours;  // 4.25 hours
 
-// Floating-point numbers (decimals)
-let progress = 75.5;     // Percentage complete
-let timeEstimate = 3.5;  // Hours
-let cost = 149.99;       // Currency value
+// Subtraction: Time tracking
+let allocatedHours = 8;
+let usedHours = 5.5;
+let remainingHours = allocatedHours - usedHours;  // 2.5 hours
 
-// Scientific notation (for very large or small numbers)
-let microTask = 1.5e-6;  // 0.0000015
-let bigProject = 3.2e6;  // 3,200,000`}
-          </div>
-          
-          <h3>Mathematical Operations</h3>
-          <p>
-            JavaScript supports all standard mathematical operations, which are essential
-            for task metrics and calculations:
-          </p>
-          
-          <div className="code-example">
-{`// Basic operations
-let task1Hours = 2.5;
-let task2Hours = 1.5;
-let totalHours = task1Hours + task2Hours;  // Addition: 4
-let averageHours = totalHours / 2;         // Division: 2
+// Multiplication: Scaling estimates
+let baseTime = 3;
+let complexityFactor = 1.5;  // Task is 50% more complex than base
+let adjustedEstimate = baseTime * complexityFactor;  // 4.5 hours
 
-// Task progress calculation
+// Division: Calculating completion percentage
+let completedTasks = 7;
 let totalTasks = 10;
-let completedTasks = 4;
-let progressPercent = (completedTasks / totalTasks) * 100;  // 40%
+let completionRate = completedTasks / totalTasks;  // 0.7 or 70%
 
-// Remaining work calculation
-let estimate = 8;
-let progress = 25;
-let remainingHours = estimate * (100 - progress) / 100;  // 6 hours`}
-          </div>
+// Remainder (modulo): Cycling through team members
+let teamSize = 4;
+let taskNumber = 17;
+let assignedTeamMember = taskNumber % teamSize;  // Task 17 goes to team member 1`}
+              </div>
+            </Card.Body>
+          </Card>
           
-          <h3>Formatting Numbers for Display</h3>
+          <h3>Special Number Values</h3>
           <p>
-            When displaying numbers in a task management UI, we often need to format them:
+            JavaScript has some special number values that you may encounter:
           </p>
           
-          <div className="code-example">
-{`// Rounding to nearest integer
-let roundedProgress = Math.round(75.5);  // 76
+          <Card className="concept-card mb-4">
+            <Card.Header as="h4">Special Number Values</Card.Header>
+            <Card.Body>
+              <p>Important special numeric values in JavaScript:</p>
+              <div className="code-block">
+{`// Infinity: when a number is too large or we divide by zero
+let result = 1 / 0;  
+console.log(result);  // Infinity
 
-// Fixed decimal places (for consistent display)
-let hours = 3.5;
-let formattedHours = hours.toFixed(1) + " hrs";  // "3.5 hrs"
+// Negative Infinity
+console.log(-Infinity);  // -Infinity
 
-// Percentage formatting
-let progress = 33.333333;
-let formattedProgress = progress.toFixed(1) + "%";  // "33.3%"
+// NaN: "Not a Number" - result of invalid math operations
+let invalidResult = 0 / 0;
+console.log(invalidResult);  // NaN
 
-// Currency formatting using Intl.NumberFormat
-let cost = 149.99;
-let formattedCost = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD'
-}).format(cost);  // "$149.99"`}
-          </div>
+// Parsing errors also give NaN
+let taskNumber = parseInt("Task 3");  // Tries to convert "Task 3" to a number
+console.log(taskNumber);  // NaN - cannot convert
+
+// Checking for NaN (be careful: NaN is not equal to anything, even itself)
+console.log(isNaN(taskNumber));  // true - it is NaN
+
+// Checking for Infinity
+let bigNumber = 1e308 * 2;  // Too big for JavaScript to represent
+console.log(bigNumber);  // Infinity
+console.log(isFinite(bigNumber));  // false - it's not a finite number`}
+              </div>
+            </Card.Body>
+          </Card>
           
-          <h3>Handling Invalid Number Inputs</h3>
+          <h3>Number Methods and Formatting</h3>
           <p>
-            When working with user input for task data, you need to handle potential non-numeric values:
+            JavaScript provides several methods to work with numbers in your task management app:
           </p>
           
-          <div className="code-example">
-{`// Converting string input to numbers
-let progressInput = "75%";
-let numericProgress = parseFloat(progressInput);  // 75
-console.log(numericProgress);
+          <Card className="concept-card mb-4">
+            <Card.Header as="h4">Working with Numbers</Card.Header>
+            <Card.Body>
+              <p>Common methods for working with numbers in a task management context:</p>
+              <div className="code-block">
+{`// Formatting decimals (for time tracking)
+let timeSpent = 3.14159;
+console.log(timeSpent.toFixed(1));  // "3.1" (hours)
+console.log(timeSpent.toFixed(2));  // "3.14" (hours)
 
-// Check for invalid numbers (NaN - Not a Number)
-let invalidInput = "not a number";
-let invalidNumber = parseFloat(invalidInput);  // NaN
-console.log(invalidNumber);
-console.log(isNaN(invalidNumber));  // true
+// Converting strings to numbers (from user input)
+let userInput = "42";
+let taskId = Number(userInput);  // 42 as a number, not string
+console.log(taskId);  // 42
 
-// Providing fallbacks for calculations
-function calculateRemainingHours(progress, estimate) {
-  // Ensure inputs are valid numbers
-  if (isNaN(progress) || isNaN(estimate)) {
-    return 0;  // Default fallback value
-  }
-  return estimate * (100 - progress) / 100;
-}`}
-          </div>
+// Alternative conversion methods
+let priorityInput = "3";
+let priorityLevel = parseInt(priorityInput);  // For integers
+console.log(priorityLevel);  // 3
+
+let hourInput = "2.5";
+let hours = parseFloat(hourInput);  // For floating point (decimal) numbers
+console.log(hours);  // 2.5
+
+// Math object for more complex operations
+console.log(Math.round(2.7));  // 3 - rounds to nearest integer
+console.log(Math.floor(2.7));  // 2 - rounds down 
+console.log(Math.ceil(2.2));   // 3 - rounds up
+
+// For estimates, you might want to round up
+let estimatedDays = 4.2;
+let scheduledDays = Math.ceil(estimatedDays);  // Always round up for scheduling
+console.log(scheduledDays);  // 5
+
+// Finding min/max for task prioritization
+let taskPriorities = [3, 1, 5, 2];
+let highestPriority = Math.max(...taskPriorities);  // 5
+let lowestPriority = Math.min(...taskPriorities);   // 1`}
+              </div>
+            </Card.Body>
+          </Card>
           
-          <h3>Math Object for Task Calculations</h3>
           <p>
-            JavaScript's built-in Math object provides useful methods for task calculations:
-          </p>
-          <ul>
-            <li><code>Math.round(x)</code> - Rounds to the nearest integer</li>
-            <li><code>Math.floor(x)</code> - Rounds down (useful for full task counts)</li>
-            <li><code>Math.ceil(x)</code> - Rounds up (useful for estimates)</li>
-            <li><code>Math.min(x, y, ...)</code> - Returns the lowest value</li>
-            <li><code>Math.max(x, y, ...)</code> - Returns the highest value</li>
-          </ul>
-          
-          <p>
-            Try experimenting with the code editor to perform task-related calculations!
+            Try working with these numeric operations in the code editor to build your task tracking capabilities!
           </p>
         </div>
 

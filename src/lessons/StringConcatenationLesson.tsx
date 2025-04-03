@@ -11,8 +11,11 @@ import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Badge from 'react-bootstrap/Badge';
+import Button from 'react-bootstrap/Button';
 import { useParams, Link } from 'react-router-dom';
 import curriculum from '../data/curriculum';
+import { CardHeader, CardContent, Typography, Box } from '@mui/material';
+import CodeBlock from '../components/CodeBlock';
 
 interface StringConcatenationLessonProps {
   darkMode?: boolean;
@@ -57,6 +60,7 @@ console.log(detailedReport);
   const [consoleOutput, setConsoleOutput] = useState<any[]>([]);
   const [executionPath, setExecutionPath] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   
   // Handle code changes
   const handleCodeChange = (value: string) => {
@@ -166,6 +170,12 @@ console.log(detailedReport);
       }
     }
     return `${value}`;
+  };
+
+  const handleCopyCode = (code: string, index: number) => {
+    navigator.clipboard.writeText(code);
+    setCopiedIndex(index);
+    setTimeout(() => setCopiedIndex(null), 2000);
   };
 
   return (
@@ -280,62 +290,83 @@ console.log(detailedReport);
             different pieces of text (and other values) into a single string.
           </p>
           
-          <h3>Basic String Concatenation with + Operator</h3>
-          <p>
-            JavaScript allows you to combine strings using the <code>+</code> operator:
-          </p>
-          
-          <div className="code-example">
-{`// Basic concatenation with +
-let taskName = "Complete project";
-let dueDate = "2023-12-31";
-let taskSummary = "Task: " + taskName + " (Due: " + dueDate + ")";
+          <ConceptCard title="String Concatenation with + Operator">
+            <Typography variant="body1" gutterBottom>
+              The simplest way to join strings in JavaScript is with the + operator:
+            </Typography>
+            <CodeBlock>
+{`// Basic concatenation with the + operator
+let firstName = "Maria";
+let lastName = "Garcia";
 
-console.log(taskSummary); // "Task: Complete project (Due: 2023-12-31)"
+// Creating a full name by concatenating strings
+let fullName = firstName + " " + lastName;
+console.log(fullName);  // "Maria Garcia"
 
-// Adding numbers to strings
-let progress = 75;
-let progressMessage = "Current progress: " + progress + "%";
-console.log(progressMessage); // "Current progress: 75%"`}
-          </div>
+// Building task descriptions
+let taskVerb = "Debug";
+let taskObject = "login form";
+let taskDescription = taskVerb + " the " + taskObject;
+console.log(taskDescription);  // "Debug the login form"
+
+// Concatenating with numbers (numbers are converted to strings)
+let taskId = 42;
+let taskLog = "Task #" + taskId + ": " + taskDescription;
+console.log(taskLog);  // "Task #42: Debug the login form"
+
+// Using string concatenation for multi-part messages
+let totalTasks = 10;
+let completedTasks = 7;
+let statusUpdate = "Completed " + completedTasks + " out of " + 
+                  totalTasks + " tasks";
+console.log(statusUpdate);  // "Completed 7 out of 10 tasks"`}
+            </CodeBlock>
+          </ConceptCard>
           
-          <p>
-            When you use the <code>+</code> operator with a string and another type,
-            JavaScript automatically converts the other value to a string. This is called
-            <i>type coercion</i>.
-          </p>
+          <Typography variant="h5" gutterBottom sx={{ mt: 4, mb: 2 }}>
+            Template Literals - The Modern Approach
+          </Typography>
           
-          <h3>Template Literals - The Modern Approach</h3>
-          <p>
+          <Typography variant="body1" paragraph>
             ES6 introduced template literals, which make string concatenation much cleaner
-            using backticks (<code>`</code>) and <code>${}</code> for embedding expressions:
-          </p>
+            using backticks (<Box component="code" sx={{ backgroundColor: 'rgba(0,0,0,0.05)', px: 0.5 }}>`</Box>) and <Box component="code" sx={{ backgroundColor: 'rgba(0,0,0,0.05)', px: 0.5 }}>${}</Box> for embedding expressions:
+          </Typography>
           
-          <div className="code-example">
-{`// Template literals with backticks
-let taskName = "Complete project";
-let dueDate = "2023-12-31";
-let progress = 75;
+          <Card className="concept-card mb-4">
+            <Card.Header as="h4">Template Literals</Card.Header>
+            <Card.Body>
+              <p>Using template literals for more readable string creation:</p>
+              
+<p>`// Template literals use backticks (\`) and \${} for variables
+let projectName = "Task Manager";
+let version = 2.1;
 
-// Simple template literal
-let taskSummary = \`Task: \${taskName} (Due: \${dueDate})\`;
-console.log(taskSummary); // "Task: Complete project (Due: 2023-12-31)"
+// Embedding variables directly in strings
+console.log(appInfo);  // "Task Manager v2.1"
 
-// Template literals with expressions
-let remaining = 100 - progress;
-let statusReport = \`The task "\${taskName}" is \${progress}% complete with \${remaining}% remaining.\`;
-console.log(statusReport);
-// "The task "Complete project" is 75% complete with 25% remaining."
-
-// Multiline template literals - great for reports
-let taskReport = \`
-Task: \${taskName}
-Progress: \${progress}%
-Due Date: \${dueDate}
+// Multi-line strings without concatenation
+let taskDetails = \`
+Task: Implement login feature
+Priority: High
+Due date: Next week
+Assigned to: Alex
 \`;
-console.log(taskReport);
-// Neatly formatted on multiple lines`}
-          </div>
+console.log(taskDetails);
+
+// Embedding expressions in template literals
+let totalTasks = 10;
+let completedTasks = 7;
+let progress = (completedTasks / totalTasks) * 100;
+
+console.log(progressReport);  // "Project progress: 70% (7/10 tasks)"
+
+// Embedding complex expressions
+let timePerTask = 1.5;  // hours
+let remainingTasks = totalTasks - completedTasks;
+console.log(timeEstimate);  // "Estimated time remaining: 4.5 hours"` </p>
+             
+            </Card.Body>
+          </Card>
           
           <h3>Choosing the Right Approach</h3>
           <p>

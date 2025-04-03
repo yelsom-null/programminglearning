@@ -11,6 +11,7 @@ import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Badge from 'react-bootstrap/Badge';
+import Button from 'react-bootstrap/Button';
 import { useParams, Link } from 'react-router-dom';
 import curriculum from '../data/curriculum';
 
@@ -206,6 +207,7 @@ console.log(formatTaskInfo(tasks[1]));`;
   const [consoleOutput, setConsoleOutput] = useState<any[]>([]);
   const [executionPath, setExecutionPath] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   
   // Handle code changes
   const handleCodeChange = (value: string) => {
@@ -315,6 +317,12 @@ console.log(formatTaskInfo(tasks[1]));`;
       }
     }
     return `${value}`;
+  };
+
+  const handleCopyCode = (code: string, index: number) => {
+    navigator.clipboard.writeText(code);
+    setCopiedIndex(index);
+    setTimeout(() => setCopiedIndex(null), 2000);
   };
 
   return (
@@ -429,154 +437,238 @@ console.log(formatTaskInfo(tasks[1]));`;
             Understanding the difference is crucial for effective data handling.
           </p>
           
-          <h3>Understanding the Difference</h3>
+          <h3>Understanding <code>null</code> and <code>undefined</code></h3>
           <p>
-            While both represent "empty" values, they serve different purposes:
+            JavaScript has two distinct values for representing the absence of a meaningful value:
+            <code>null</code> and <code>undefined</code>. While they seem similar, they have different purposes.
           </p>
           
-          <div className="code-example">
-{`// undefined: Variable declared but not assigned a value
-let taskDueDate;
-console.log(taskDueDate);  // undefined
+          <Card className="concept-card mb-4">
+            <Card.Header as="h4">Null vs Undefined Basics</Card.Header>
+            <Card.Body>
+              <p>Understanding the key differences between these two special values:</p>
+              <div className="code-block">
+{`// undefined: a variable declared but not assigned a value
+let taskName;
+console.log(taskName);  // undefined
 
-// null: Explicitly assigned "no value"
-let taskAssignee = null;
-console.log(taskAssignee);  // null
+// null: an intentional absence of value
+let taskDescription = null;
+console.log(taskDescription);  // null
 
-// Technical differences
+// Checking their types
 console.log(typeof undefined);  // "undefined"
-console.log(typeof null);       // "object" (a quirk in JavaScript)
+console.log(typeof null);       // "object" (this is considered a JavaScript bug)
 
-// Equality comparison
-console.log(null == undefined);   // true (loose equality)
-console.log(null === undefined);  // false (strict equality)`}
-          </div>
+// Type comparison
+console.log(undefined == null);   // true (loose equality)
+console.log(undefined === null);  // false (strict equality)`}
+              </div>
+            </Card.Body>
+          </Card>
+          
+          <h3>When You'll Encounter <code>undefined</code></h3>
+          <p>
+            There are several common scenarios where you'll encounter <code>undefined</code>
+            in your task management applications:
+          </p>
+          
+          <Card className="concept-card mb-4">
+            <Card.Header as="h4">Common undefined Scenarios</Card.Header>
+            <Card.Body>
+              <p>Five common situations that produce undefined values:</p>
+              <div className="code-block">
+{`// 1. Variables declared but not initialized
+let nextTask;
+console.log(nextTask);  // undefined
+
+// 2. Accessing non-existent object properties
+let task = { title: "Complete report" };
+console.log(task.dueDate);  // undefined (property doesn't exist)
+
+// 3. Function parameters that aren't provided
+function assignTask(taskName, assignee) {
+  console.log(\`Task: \${taskName}, Assigned to: \${assignee}\`);
+}
+assignTask("Debug issue");  // "Task: Debug issue, Assigned to: undefined"
+
+// 4. Functions without a return statement
+function processTask(task) {
+  // no return statement
+}
+let result = processTask({ id: 1 });
+console.log(result);  // undefined
+
+// 5. Accessing array elements out of bounds
+let tasks = ["Task 1", "Task 2"];
+console.log(tasks[5]);  // undefined (index doesn't exist)`}
+              </div>
+            </Card.Body>
+          </Card>
           
           <h3>When to Use <code>null</code></h3>
           <p>
-            Use <code>null</code> when you want to explicitly indicate "no value" as an intentional state:
+            Unlike <code>undefined</code>, which JavaScript assigns automatically in certain situations,
+            <code>null</code> is a value you assign explicitly to indicate an intentional absence of value.
           </p>
           
-          <div className="code-example">
-{`// Examples of when to use null in task management
+          <Card className="concept-card mb-4">
+            <Card.Header as="h4">Using null Values</Card.Header>
+            <Card.Body>
+              <p>When and how to use null for explicit "no value" situations:</p>
+              <div className="code-block">
+{`// Task with optional properties
 let task = {
-  title: "Complete project",
-  assignee: null,         // Explicitly no one is assigned yet
-  dueDate: "2023-12-31",
-  completedDate: null,    // Explicitly not completed yet
-  parentTask: null        // Explicitly not a subtask
+  id: 1,
+  title: "Complete project plan",
+  assignee: null,  // Explicitly no assignee yet
+  dueDate: null    // No due date set yet
 };
 
-// Checking for null
-if (task.assignee === null) {
-  console.log("This task needs to be assigned");
-}
+// Using null makes it clear these properties exist but have no value
+console.log(task.assignee);  // null (intentionally empty)
+console.log(task.notes);     // undefined (property doesn't exist)
 
-// Null represents an intentional absence
-function unassignTask(task) {
-  task.assignee = null;   // Deliberately removing the assignee
-  return task;
-}`}
-          </div>
-          
-          <h3>When to Expect <code>undefined</code></h3>
-          <p>
-            <code>undefined</code> typically occurs in several situations:
-          </p>
-          
-          <div className="code-example">
-{`// 1. Uninitialized variables
-let newTask;
-console.log(newTask);  // undefined
-
-// 2. Missing object properties
-let task = { title: "Debug application" };
-console.log(task.dueDate);  // undefined (property doesn't exist)
-
-// 3. Function parameters not provided
-function createTask(title, dueDate) {
-  console.log("Due date:", dueDate);  // undefined if not provided
-  // ...function body
-}
-createTask("New feature");  // Only providing the title parameter
-
-// 4. Function without a return statement
-function processTask(task) {
-  // No return statement
-}
-let result = processTask({});
-console.log(result);  // undefined`}
-          </div>
-          
-          <h3>Safe Handling of Empty Values</h3>
-          <p>
-            There are several modern approaches to handle both <code>null</code> and <code>undefined</code>:
-          </p>
-          
-          <div className="code-example">
-{`// 1. Nullish coalescing operator (??) for default values
-function getTaskDuration(task) {
-  // If duration is null or undefined, use default value
-  return task.duration ?? 1;  // Default to 1 hour
-}
-
-// The ?? operator only replaces null/undefined
-// (unlike || which also replaces "", 0, false)
-let tasks = [
-  { title: "Task 1", priority: 0 },       // priority is 0 (valid value)
-  { title: "Task 2", priority: null }     // priority is null (empty)
-];
-
-console.log(tasks[0].priority ?? "default");  // 0 (preserves 0)
-console.log(tasks[0].priority || "default");  // "default" (replaces 0)
-
-// 2. Optional chaining (?.) for safe property access
-let taskCollection = {
-  categories: {
-    development: [
-      { title: "Fix login bug" }
-    ]
-    // design category doesn't exist
-  }
-};
-
-// Safe access with optional chaining
-let designTasks = taskCollection.categories?.design?.length ?? 0;
-console.log("Design tasks:", designTasks);  // 0 (safe access)`}
-          </div>
-          
-          <h3>Best Practices for Task Management</h3>
-          <p>
-            Apply these patterns when building your task management system:
-          </p>
-          <ul>
-            <li>Use <code>null</code> for intentional emptiness (e.g., no assignee)</li>
-            <li>Initialize variables with appropriate default values</li>
-            <li>Use the nullish coalescing operator (<code>??</code>) for default values</li>
-            <li>Use optional chaining (<code>?.</code>) for safe property access</li>
-            <li>Be consistent with how you represent missing data</li>
-          </ul>
-          
-          <div className="code-example">
-{`// Example of a robust task formatter
-function formatTaskInfo(task) {
+// Handling optional data in functions
+function createTask(title, assignee = null) {
   return {
-    title: task.title ?? "Untitled Task",
-    assignee: task.assignee ?? "Unassigned",
-    dueDate: task.dueDate ?? "No due date",
-    priority: task.priority ?? "Medium",
-    status: task.status ?? "Not started",
-    description: task.description ?? "No description provided",
-    tags: task.tags ?? [],
-    subtasks: task.subtasks?.length ?? 0
+    id: Date.now(),
+    title,
+    assignee,
+    completed: false
   };
 }
 
-// This safely handles any missing properties with sensible defaults`}
-          </div>
+let newTask = createTask("Research competitors");
+console.log(newTask.assignee);  // null`}
+              </div>
+            </Card.Body>
+          </Card>
+          
+          <h3>Best Practices for Checking Null or Undefined</h3>
+          <p>
+            When working with potentially missing values in your task management code,
+            use these techniques to safely check for both <code>null</code> and <code>undefined</code>:
+          </p>
+          
+          <Card className="concept-card mb-4">
+            <Card.Header as="h4">Checking for Null and Undefined</Card.Header>
+            <Card.Body>
+              <p>Five approaches to safely handle missing values:</p>
+              <div className="code-block">
+{`// 1. Checking for either null or undefined with ==
+function processTask(task) {
+  if (task == null) {  // Checks for both null and undefined
+    console.log("No task provided");
+    return;
+  }
+  console.log("Processing task:", task);
+}
+
+// 2. Checking for either with direct comparison
+function getTaskAssignee(task) {
+  if (task.assignee === null || task.assignee === undefined) {
+    return "Unassigned";
+  }
+  return task.assignee;
+}
+
+// 3. Using the logical OR operator for default values
+function displayTaskName(task) {
+  const name = task.name || "Unnamed Task";
+  console.log(name);
+}
+
+// 4. Using nullish coalescing operator (??) - returns right side only for null/undefined
+function getTaskPriority(task) {
+  const priority = task.priority ?? "Medium";
+  return priority;
+}
+
+// 5. Optional chaining (?.) for safe property access
+function getDueDate(task) {
+  return task?.dueDate?.toLocaleDateString() ?? "No due date";
+}`}
+              </div>
+            </Card.Body>
+          </Card>
+          
+          <h3>Real-World Task Management Patterns</h3>
+          <p>
+            Here are common patterns for handling <code>null</code> and <code>undefined</code> in task management apps:
+          </p>
+          
+          <Card className="concept-card mb-4">
+            <Card.Header as="h4">Task Management Implementation</Card.Header>
+            <Card.Body>
+              <p>A complete example of handling optional values in a task system:</p>
+              <div className="code-block">
+{`// Task data model with optional properties
+function createTaskSystem() {
+  const tasks = [];
+  
+  // Create a new task with optional properties
+  function addTask(title, options = {}) {
+    const newTask = {
+      id: Date.now(),
+      title,
+      description: options.description || null,  // null if not provided
+      dueDate: options.dueDate || null,          // null if not provided
+      assignee: options.assignee || null,        // null if not provided
+      completed: false,
+      dateCreated: new Date()
+    };
+    
+    tasks.push(newTask);
+    return newTask.id;
+  }
+  
+  // Get a task or undefined if not found
+  function getTask(id) {
+    return tasks.find(task => task.id === id);
+  }
+  
+  // Safe task retrieval with error handling
+  function processTask(id) {
+    const task = getTask(id);
+    
+    if (task == null) {
+      return { success: false, error: "Task not found" };
+    }
+    
+    // Safe access to optional properties with the nullish coalescing operator
+    const assigneeDisplay = task.assignee ?? "Unassigned";
+    const dueDateDisplay = task.dueDate ? new Date(task.dueDate).toDateString() : "No due date";
+    
+    return {
+      success: true,
+      data: {
+        ...task,
+        assigneeDisplay,
+        dueDateDisplay
+      }
+    };
+  }
+  
+  return {
+    addTask,
+    getTask,
+    processTask
+  };
+}
+
+// Usage
+const taskSystem = createTaskSystem();
+const taskId = taskSystem.addTask("Review code");
+const result = taskSystem.processTask(taskId);
+console.log(result.data);`}
+              </div>
+            </Card.Body>
+          </Card>
           
           <p>
-            Try experimenting with the code editor to practice handling <code>null</code> and <code>undefined</code> values!
+            Try experimenting with <code>null</code> and <code>undefined</code> in the code editor
+            to practice handling missing or empty task values!
           </p>
         </div>
 

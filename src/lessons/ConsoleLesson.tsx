@@ -7,12 +7,15 @@ import {
   parseStringifiedClass 
 } from '../utils/codeAnalysis';
 import '../styles/LessonStyles.css';
-import Card from 'react-bootstrap/Card';
+import { Card, CardHeader, CardContent, Typography, Grid, Chip, Box } from '@mui/material';
+import Badge from 'react-bootstrap/Badge';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Badge from 'react-bootstrap/Badge';
+import Button from 'react-bootstrap/Button';
 import { useParams, Link } from 'react-router-dom';
 import curriculum from '../data/curriculum';
+import CodeBlock from '../components/CodeBlock';
+import ConceptCard from '../components/ConceptCard';
 
 interface ConsoleLessonProps {
   darkMode?: boolean;
@@ -84,6 +87,7 @@ console.timeEnd("Task Processing Time");
   const [consoleOutput, setConsoleOutput] = useState<any[]>([]);
   const [executionPath, setExecutionPath] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   
   // Handle code changes
   const handleCodeChange = (value: string) => {
@@ -195,13 +199,19 @@ console.timeEnd("Task Processing Time");
     return `${value}`;
   };
 
+  const handleCopyCode = (code: string, index: number) => {
+    navigator.clipboard.writeText(code);
+    setCopiedIndex(index);
+    setTimeout(() => setCopiedIndex(null), 2000);
+  };
+
   return (
     <div className="lesson-container">
       <div className="lesson-header">
-        <h1>Lesson 2: Console Logging Task Variables</h1>
+        <Typography variant="h3" component="h1" gutterBottom>Lesson 2: Console Logging Task Variables</Typography>
         <div className="lesson-meta">
           <div className="chapter-info">
-            <span className="chapter-title">Chapter 1: Task Manager Fundamentals</span>
+            <Typography variant="subtitle1" gutterBottom>Chapter 1: Task Manager Fundamentals</Typography>
             <div className="lesson-navigation">
               {(() => {
                 // Find current lesson in curriculum
@@ -255,7 +265,7 @@ console.timeEnd("Task Processing Time");
                         className="chapter-nav-button"
                         title={`Previous: ${prevLesson.title}`}
                       >
-                        ← Previous Lesson
+                        <Typography variant="button">← Previous Lesson</Typography>
                       </Link>
                     ) : (
                       <button 
@@ -263,15 +273,15 @@ console.timeEnd("Task Processing Time");
                         disabled={true}
                         title="This is the first lesson"
                       >
-                        ← Previous Lesson
+                        <Typography variant="button">← Previous Lesson</Typography>
                       </button>
                     )}
                     
-                    <span className="lesson-indicator">
+                    <Typography variant="body2" className="lesson-indicator">
                       {currentChapter && currentLessonIndex !== -1 
                         ? `Lesson ${currentLessonIndex + 1} of ${currentChapter.lessons.length}`
                         : "Lesson"}
-                    </span>
+                    </Typography>
                     
                     {nextLesson ? (
                       <Link 
@@ -279,7 +289,7 @@ console.timeEnd("Task Processing Time");
                         className="chapter-nav-button"
                         title={`Next: ${nextLesson.title}`}
                       >
-                        Next Lesson →
+                        <Typography variant="button">Next Lesson →</Typography>
                       </Link>
                     ) : (
                       <button 
@@ -287,7 +297,7 @@ console.timeEnd("Task Processing Time");
                         disabled={true}
                         title="This is the last lesson"
                       >
-                        Next Lesson →
+                        <Typography variant="button">Next Lesson →</Typography>
                       </button>
                     )}
                   </>
@@ -300,120 +310,211 @@ console.timeEnd("Task Processing Time");
 
       <div className="lesson-content">
         <div className="explanation-panel">
-          <h2>Console Logging for Task Management</h2>
-          <p>
+          <Typography variant="h4" gutterBottom>Console Logging for Task Management</Typography>
+
+          <Typography variant="body1" paragraph>
             The console is a powerful debugging tool that allows you to output information about your tasks
             and track the execution of your code. It's essential for developing and maintaining a task management system.
-          </p>
+          </Typography>
           
-          <h3>Basic Console.log</h3>
-          <p>
-            The most common console method is <code>console.log()</code>, which outputs information to the console:
-          </p>
+          <Typography variant="h5" gutterBottom sx={{ mt: 4, mb: 2 }}>
+            Basic Console Usage
+          </Typography>
+          <Typography variant="body1" paragraph>
+            The <Box component="code" sx={{ backgroundColor: 'rgba(0,0,0,0.05)', px: 0.5 }}>console.log()</Box> method is the most commonly used console method. 
+            It outputs a message to the web console:
+          </Typography>
           
-          <div className="code-example">
-{`// Simple string output
+          <ConceptCard title="Basic Console Logging">
+            <Typography variant="body1" gutterBottom>
+              The simplest way to output information is with console.log():
+            </Typography>
+            <CodeBlock>
+// Basic console.log
 console.log("Hello, Task Manager!");
 
 // Logging variables
-let taskName = "Complete project setup";
-console.log(taskName);  // "Complete project setup"
-
-// Logging multiple values
-let priority = "High";
+let taskName = "Complete project plan";
+let isCompleted = false;
 let dueDate = "2023-12-31";
-console.log(taskName, priority, dueDate);
 
-// Logging objects (tasks)
-let task = {
-  id: 123,
-  title: "Create wireframes",
-  completed: false
-};
-console.log(task);  // Displays the entire task object`}
-          </div>
+console.log(taskName);     // Complete project plan
+console.log(isCompleted);  // false
+console.log(dueDate);      // 2023-12-31
+
+// Logging multiple values at once
+console.log(taskName, isCompleted, dueDate);
+// Complete project plan false 2023-12-31
+
+// Logging with descriptive labels
+console.log("Task:", taskName);
+console.log("Completed:", isCompleted);
+console.log("Due Date:", dueDate);
+            </CodeBlock>
+          </ConceptCard>
           
-          <h3>Formatted Console Output</h3>
-          <p>
-            You can format your console output to make it more readable:
-          </p>
+          <Typography variant="h5" gutterBottom sx={{ mt: 4, mb: 2 }}>
+            Enhanced Console Methods
+          </Typography>
+          <Typography variant="body1" paragraph>
+            The console object provides specialized methods for different types of output:
+          </Typography>
           
-          <div className="code-example">
-{`// Using string concatenation
-console.log("Task: " + task.title + " (ID: " + task.id + ")");
+          <ConceptCard title="Different Console Methods">
+            <Typography variant="body1" gutterBottom>
+              Using various console methods to style your debug output:
+            </Typography>
+            <CodeBlock>
+{`// Error logging for debugging issues
+console.error("Task deletion failed!");
 
-// Using template literals (modern approach)
-console.log(\`Task: \${task.title} (ID: \${task.id})\`);
+// Warning logging for potential issues
+console.warn("Task is past due date!");
 
-// Using string formatting with placeholders
-console.log("Task: %s (ID: %d)", task.title, task.id);
-// %s = string, %d = number, %o = object, %f = float`}
-          </div>
-          
-          <h3>Different Console Methods</h3>
-          <p>
-            The console object provides several methods for different types of messages:
-          </p>
-          
-          <div className="code-example">
-{`// Regular informational message
-console.log("Task updated successfully");
+// Info logging for general information
+console.info("Task status updated successfully");
 
-// Informational message (blue 'i' icon in browser)
-console.info("New task created at 2:45 PM");
+// Debug logging (only shows with debug level enabled)
+console.debug("Detailed task processing information");
 
-// Warning message (yellow warning icon)
-console.warn("Task approaching deadline!");
-
-// Error message (red 'x' icon)
-console.error("Failed to save task");
-
-// Debug message (only shown if debug level enabled)
-console.debug("Task object initialized with default values");`}
-          </div>
-          
-          <h3>Advanced Console Features</h3>
-          <p>
-            The console offers more advanced features for structuring and analyzing task data:
-          </p>
-          
-          <div className="code-example">
-{`// Grouping related logs
-console.group("Task Operations");
-console.log("Loading tasks...");
-console.log("Sorting by priority...");
-console.log("Filtering completed tasks...");
+// Grouping related log messages
+console.group("Task Details");
+console.log("Name: Fix navigation bug");
+console.log("Priority: High");
+console.log("Status: In Progress");
 console.groupEnd();
 
-// Creating tables for structured data
-let tasks = [
-  { id: 1, title: "Setup project", status: "Completed" },
-  { id: 2, title: "Create UI", status: "In Progress" },
-  { id: 3, title: "Write tests", status: "Not Started" }
-];
-console.table(tasks);  // Displays a formatted table
-
 // Timing operations
-console.time("Task Loading");
-// ... code to load tasks
-console.timeEnd("Task Loading");  // "Task Loading: 1.23ms"`}
-          </div>
+console.time("taskOperation");
+// ... code that takes time to execute ...
+console.timeEnd("taskOperation"); // Outputs: taskOperation: 1234ms`}
+            </CodeBlock>
+          </ConceptCard>
           
-          <h3>Console in Task Management Applications</h3>
-          <p>
-            For task management applications, the console is useful for:
-          </p>
-          <ul>
-            <li>Debugging task creation and updates</li>
-            <li>Monitoring performance of task operations</li>
-            <li>Logging user interactions with tasks</li>
-            <li>Displaying task data in development</li>
-            <li>Tracing execution flow of task operations</li>
-          </ul>
+          <Typography variant="h5" gutterBottom sx={{ mt: 4, mb: 2 }}>
+            Logging Objects and Data Structures
+          </Typography>
+          <Typography variant="body1" paragraph>
+            When working with tasks, you'll often need to inspect complex data structures:
+          </Typography>
           
-          <p>
-            Try experimenting with the console methods in the code editor!
-          </p>
+          <ConceptCard title="Logging Complex Data">
+            <Typography variant="body1" gutterBottom>
+              How to examine complex objects and arrays in the console:
+            </Typography>
+            <CodeBlock>
+{`// Create a task object
+let task = {
+  id: 42,
+  title: "Complete project documentation",
+  description: "Write user guide and API documentation",
+  completed: false,
+  priority: "high",
+  dueDate: "2023-12-15",
+  subtasks: [
+    { id: 1, title: "Outline document structure", completed: true },
+    { id: 2, title: "Write API endpoints section", completed: false },
+    { id: 3, title: "Add code examples", completed: false }
+  ]
+};
+
+// Logging the entire object
+console.log(task);  // Shows expandable object in browser console
+
+// Using console.table for tabular data (like arrays)
+console.table(task.subtasks);  // Displays a nice table view
+
+// Inspecting objects with console.dir
+console.dir(task);  // Shows interactive object with expandable properties
+
+// Using destructuring for targeted logging
+const { title, priority, dueDate } = task;
+console.log("Task overview:", { title, priority, dueDate });`}
+            </CodeBlock>
+          </ConceptCard>
+          
+          <Typography variant="h5" gutterBottom sx={{ mt: 4, mb: 2 }}>
+            Formatting Console Output
+          </Typography>
+          <Typography variant="body1" paragraph>
+            For better readability, you can format your console output:
+          </Typography>
+          
+          <ConceptCard title="Console Output Formatting">
+            <Typography variant="body1" gutterBottom>
+              Adding style and structure to your console messages:
+            </Typography>
+            <CodeBlock>
+{`// String formatting with %s, %d, %f, etc.
+let taskCount = 5;
+let completionRate = 0.8;
+console.log("There are %d tasks with a %.1f%% completion rate", 
+            taskCount, completionRate * 100);
+// "There are 5 tasks with a 80.0% completion rate"
+
+// CSS styling in browser consoles
+console.log("%cTask Manager", "color: blue; font-size: 20px; font-weight: bold;");
+console.log("%cHigh Priority Task!", "color: red; background: yellow; padding: 5px;");
+
+// Conditional logging based on task status
+function logTaskStatus(task) {
+  if (task.completed) {
+    console.log("%c✓ %s", "color: green; font-weight: bold", task.title);
+  } else if (new Date(task.dueDate) < new Date()) {
+    console.log("%c! %s", "color: red; font-weight: bold", task.title);
+  } else {
+    console.log("%c○ %s", "color: gray", task.title);
+  }
+}
+
+// Example usage:
+logTaskStatus({ title: "Completed task", completed: true });
+logTaskStatus({ title: "Overdue task", completed: false, dueDate: "2023-01-01" });
+logTaskStatus({ title: "Future task", completed: false, dueDate: "2023-12-31" });`}
+            </CodeBlock>
+          </ConceptCard>
+          
+          <Typography variant="h5" gutterBottom sx={{ mt: 4, mb: 2 }}>
+            Best Practices for Console Logging in Task Management
+          </Typography>
+          <Typography variant="body1" paragraph>
+            Here are some tips for effective logging in your task management application:
+          </Typography>
+          
+          <ConceptCard title="Console Logging Best Practices">
+            <Typography variant="body1" gutterBottom>
+              Follow these guidelines for effective logging in your application:
+            </Typography>
+            <CodeBlock>
+{`// Use descriptive labels for better readability
+console.log("Task Created:", newTask);
+
+// Log task state changes
+function updateTaskStatus(taskId, newStatus) {
+  console.log(\`Task \${taskId} status changed to \${newStatus}\`);
+  // Implementation...
+}
+
+// Conditional logging based on environment
+const DEBUG = true;
+function debugLog(...messages) {
+  if (DEBUG) {
+    console.log("[DEBUG]", ...messages);
+  }
+}
+debugLog("Processing task queue:", taskQueue);
+
+// Remove or disable console logs in production
+// In production build process:
+// if (process.env.NODE_ENV === 'production') {
+//   console.log = () => {};
+// }`}
+            </CodeBlock>
+          </ConceptCard>
+          
+          <Typography variant="body1" paragraph>
+            Try using these console methods in the code editor to understand how they work in practice!
+          </Typography>
         </div>
 
         <div className="interactive-panel">
@@ -431,12 +532,12 @@ console.timeEnd("Task Loading");  // "Task Loading: 1.23ms"`}
           </div>
 
           <div className="visualization-panel">
-            <h3>Variable Values</h3>
+            <Typography variant="h5" gutterBottom>Variable Values</Typography>
             <div className="visualization-scroll-container">
               <div className="memory-containers">
                 {Object.keys(runtimeValues).length === 0 ? (
                   <div className="empty-state">
-                    No variables created yet.
+                    <Typography variant="body1">No variables created yet.</Typography>
                   </div>
                 ) : (
                   <Row xs={1} className="g-3 justify-content-center display-flow">
@@ -445,17 +546,17 @@ console.timeEnd("Task Loading");  // "Task Loading: 1.23ms"`}
                       return (
                         <Col key={name} className="">
                           <Card className={`variable-card type-${type}`}>
-                            <Card.Header className="variable-name d-flex justify-content-between align-items-center">
+                            <CardHeader className="variable-name d-flex justify-content-between align-items-center">
                               {name}
                               {value?.aiDescription && (
                                 <Badge bg="info" pill title={value.aiDescription}>
                                   <i className="bi bi-magic"></i> AI
                                 </Badge>
                               )}
-                            </Card.Header>
-                            <Card.Body>
-                              <Card.Title>{getTypeExplanation(type)}</Card.Title>
-                              <Card.Text className="variable-value">{formatValue(value)}</Card.Text>
+                            </CardHeader>
+                            <CardContent>
+                              <Typography variant="h6">{getTypeExplanation(type)}</Typography>
+                              <Typography variant="body1" className="variable-value">{formatValue(value)}</Typography>
                               
                               <div className="variable-type-container mt-2">
                                 <span className={`variable-type-badge bg-${getTypeColor(type)}`}>
@@ -465,10 +566,12 @@ console.timeEnd("Task Loading");  // "Task Loading: 1.23ms"`}
                               
                               {value?.aiDescription && (
                                 <div className="ai-explanation mt-2">
-                                  <small className="text-muted">{value.aiDescription}</small>
+                                  <Typography variant="caption" color="text.secondary">
+                                    {value.aiDescription}
+                                  </Typography>
                                 </div>
                               )}
-                            </Card.Body>
+                            </CardContent>
                           </Card>
                         </Col>
                       );
@@ -479,10 +582,12 @@ console.timeEnd("Task Loading");  // "Task Loading: 1.23ms"`}
 
               {consoleOutput.length > 0 && (
                 <div className="console-output">
-                  <h3>Console Output</h3>
+                  <Typography variant="h5" gutterBottom>Console Output</Typography>
                   {consoleOutput.map((output, index) => (
                     <div key={index} className="console-line">
-                      {formatValue(output)}
+                      <Typography variant="body2" fontFamily="monospace">
+                        {formatValue(output)}
+                      </Typography>
                     </div>
                   ))}
                 </div>
