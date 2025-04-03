@@ -11,200 +11,98 @@ import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Badge from 'react-bootstrap/Badge';
-import VariablesCheckpointSystem from '../components/VariablesCheckpointSystem';
-import VariablesModuleContent from '../components/VariablesModuleContent';
 import { useParams, Link } from 'react-router-dom';
 import curriculum from '../data/curriculum';
 
-interface VariablesLessonProps {
+interface IncrementDecrementLessonProps {
   darkMode?: boolean;
-  moduleId?: number;
-  step?: number;
-  topic?: string;
 }
 
-const VariablesLesson: React.FC<VariablesLessonProps> = ({ 
-  darkMode = false, 
-  moduleId: initialModuleId = 1,
-  step: initialStep = 0,
-  topic
+const IncrementDecrementLesson: React.FC<IncrementDecrementLessonProps> = ({ 
+  darkMode = false
 }) => {
-  // Define the initial code samples for each module
-  const initialCodeByModule = {
-    1: `// Task Management App - Variables Basics
-// Variables are containers for storing data values
+  // Initial code sample
+  const initialCode = `// Increment and Decrement Operators for Task Tracking
+// Use ++ and -- to update task counters efficiently
 
-// Create your task variables below:
+// Task counters
+let totalTasks = 8;
+let completedTasks = 0;
+let currentTaskIndex = 0;
 
+// Array of tasks
+let tasks = [
+  "Wireframe UI", 
+  "Create components", 
+  "Add styles", 
+  "Connect API", 
+  "Implement auth", 
+  "Add error handling", 
+  "Write tests", 
+  "Deploy"
+];
 
+// Function to complete the current task
+function completeTask() {
+  if (completedTasks < totalTasks) {
+    // Increment completed tasks
+    completedTasks++;
+    
+    // Move to next task
+    let taskName = tasks[currentTaskIndex++];
+    
+    // Calculate remaining tasks
+    let remainingTasks = totalTasks - completedTasks;
+    
+    return \`Completed task "\${taskName}". \${remainingTasks} tasks remaining.\`;
+  } else {
+    return "All tasks already completed!";
+  }
+}
 
+// Function to skip to the next task without completing
+function skipTask() {
+  if (currentTaskIndex < totalTasks) {
+    // Get current task before incrementing index
+    let taskName = tasks[currentTaskIndex++];
+    return \`Skipped task "\${taskName}". Moving to next task.\`;
+  } else {
+    return "No more tasks to skip!";
+  }
+}
 
-`,
-    2: `// Task Management App - Variable Types
-// In this module, you'll explore different types of variables for tasks.
+// Function to go back to the previous task
+function goToPreviousTask() {
+  if (currentTaskIndex > 0) {
+    // Pre-decrement to move back, then get the task
+    let taskName = tasks[--currentTaskIndex];
+    return \`Returned to task "\${taskName}".\`;
+  } else {
+    return "Already at the first task!";
+  }
+}
 
-// You'll build on what you learned in Module 1 by creating
-// variables with different data types for your task.
-
-// The code editor is empty - follow the module instructions to create:
-// - String variables (for text)
-// - Number variables (for quantities)
-// - Boolean variables (for true/false states)
-
-`,
-    3: `// Task Management App - Variable Manipulation
-// In this module, you'll learn how to update and modify variables.
-
-// First, set up some initial task state:
-let taskName = "Create project plan";
-let progress = 40;
-let estimatedHours = 6;
-let isCompleted = false;
-
-// Display initial state
-console.log("Task: " + taskName);
-console.log("Current progress: " + progress + "%");
-console.log("Initial estimate: " + estimatedHours + " hours");
-
-// Follow the module instructions to update these variables
-// and create formulas to track task progress.
-
-`,
-    4: `// Task Management App - Multiple Tasks
-// In this module, you'll manage variables for multiple tasks.
-
-// Follow the module instructions to:
-// 1. Create variables for multiple tasks
-// 2. Compare tasks based on their properties
-// 3. Calculate overall progress
-// 4. Create a task summary report
-
-`
-  };
+// Test the functions
+console.log(completeTask());
+console.log(completeTask());
+console.log(skipTask());
+console.log(goToPreviousTask());
+console.log(completeTask());
+`;
   
-  // Add the ability to preserve variables between modules
-  const [variablesByModule, setVariablesByModule] = useState<Record<number, Record<string, any>>>({
-    1: {},
-    2: {},
-    3: {},
-    4: {},
-    5: {}
-  });
-  
-  const [currentModule, setCurrentModule] = useState(initialModuleId);
-  const [code, setCode] = useState('');
+  const [code, setCode] = useState(initialCode);
   const [runtimeValues, setRuntimeValues] = useState<Record<string, any>>({});
   const [consoleOutput, setConsoleOutput] = useState<any[]>([]);
   const [executionPath, setExecutionPath] = useState<string[]>([]);
-  const [activeStep, setActiveStep] = useState<number>(initialStep);
   const [error, setError] = useState<string | null>(null);
   
-  // Only set the initial code the first time component loads
-  useEffect(() => {
-    if (initialModuleId && initialModuleId in initialCodeByModule) {
-      setCode(initialCodeByModule[initialModuleId as keyof typeof initialCodeByModule]);
-    } else {
-      setCode(initialCodeByModule[1]);
-    }
-    // We only want this to run once when the component mounts
-  }, []);
-  
-  // Handle topic-specific content if specified
-  useEffect(() => {
-    if (topic) {
-      // You could set specific code examples based on the topic
-      if (topic === 'undefined-undeclared') {
-        setCode(`// Understanding Undefined vs Undeclared Variables
-let declaredVar;  // declared but not assigned a value (undefined)
-console.log("declaredVar:", declaredVar);
-
-// console.log("undeclaredVar:", undeclaredVar);  // Uncomment to see error
-
-// Checking for undefined
-if (declaredVar === undefined) {
-  console.log("declaredVar is undefined");
-}
-
-// Safely checking for existence
-if (typeof declaredVar !== "undefined") {
-  console.log("declaredVar exists");
-}
-
-// Example with functions
-function returnNothing() {
-  // No return statement
-}
-
-let result = returnNothing();
-console.log("Function result:", result);  // undefined
-`);
-      } else if (topic === 'null-undefined') {
-        setCode(`// Understanding null vs undefined
-// undefined: variable is declared but has no value assigned
-let emptyVar;
-console.log("emptyVar:", emptyVar);
-
-// null: explicitly assigned "no value"
-let nullVar = null;
-console.log("nullVar:", nullVar);
-
-// Comparing null and undefined
-console.log("null == undefined:", null == undefined);    // true (loose equality)
-console.log("null === undefined:", null === undefined);  // false (strict equality)
-
-// Checking for null or undefined
-function processValue(value) {
-  // Check for both null and undefined
-  if (value == null) {
-    console.log("Value is either null or undefined");
-    return;
-  }
-  console.log("Processing:", value);
-}
-
-processValue(emptyVar);
-processValue(nullVar);
-processValue("Hello");
-
-// When to use null
-let user = {
-  name: "John",
-  email: null  // Explicitly set to null (user has no email)
-};
-
-console.log("User has email?", user.email !== null);
-`);
-      }
-    }
-  }, [topic]);
-  
-  // Handle moduleId and step changes
-  useEffect(() => {
-    if (initialModuleId !== 1) {
-      setCurrentModule(initialModuleId);
-    }
-    if (initialStep !== 0) {
-      setActiveStep(initialStep);
-    }
-  }, [initialModuleId, initialStep]);
-  
-  // Store variables when module is completed
-  useEffect(() => {
-    if (Object.keys(runtimeValues).length > 0) {
-      setVariablesByModule(prev => ({
-        ...prev,
-        [currentModule]: runtimeValues
-      }));
-    }
-  }, [runtimeValues, currentModule]);
-  
-  // Handle code changes and track modifications
+  // Handle code changes
   const handleCodeChange = (value: string) => {
     setCode(value);
   };
   
-  // Auto-execute code when it changes (for real-time feedback)
-  React.useEffect(() => {
+  // Auto-execute code when it changes
+  useEffect(() => {
     executeCode();
   }, [code]);
 
@@ -212,7 +110,6 @@ console.log("User has email?", user.email !== null);
     setError(null);
     
     try {
-      // Use AI-enhanced evaluation with fallback to standard
       const result = await evaluateCodeWithAI(code);
       
       if (result.variables) {
@@ -231,7 +128,6 @@ console.log("User has email?", user.email !== null);
         setError(result.error);
       }
       
-      // If AI enhanced, we can use execution path for visualization
       if (result.aiEnhanced && result.executionPath) {
         setExecutionPath(result.executionPath);
       }
@@ -245,12 +141,10 @@ console.log("User has email?", user.email !== null);
     if (value === null) return 'null';
     if (Array.isArray(value)) return 'array';
     
-    // Check for class instances
     if (typeof value === 'object' && value?.__isClass) {
       return 'class';
     }
     
-    // Check for stringified class instances
     if (typeof value === 'string' && isStringifiedClassInstance(value).isClass) {
       return 'class';
     }
@@ -291,16 +185,13 @@ console.log("User has email?", user.email !== null);
     if (value === undefined) return 'undefined';
     if (value === null) return 'null';
     
-    // Handle stringified class instances
     if (typeof value === 'string' && isStringifiedClassInstance(value).isClass) {
-      // Return the original string since it's already formatted nicely
       return value;
     }
     
     if (typeof value === 'string') return `"${value}"`;
     if (typeof value === 'object') {
       try {
-        // Don't include internal properties in the formatted output
         if (value?.__isClass || value?.__constructorName) {
           const cleanedValue = { ...value };
           delete cleanedValue.__isClass;
@@ -318,15 +209,14 @@ console.log("User has email?", user.email !== null);
   return (
     <div className="lesson-container">
       <div className="lesson-header">
-        <h1>Lesson 1: Building with Variables</h1>
+        <h1>Lesson 5: Increment and Decrement Operators</h1>
         <div className="lesson-meta">
           <div className="chapter-info">
             <span className="chapter-title">Chapter 1: Task Manager Fundamentals</span>
             <div className="lesson-navigation">
               {(() => {
                 // Find current lesson in curriculum
-                const currentLessonId = topic || 
-                  (initialModuleId === 5 ? 'console' : 'variables-intro');
+                const currentLessonId = "increment-decrement";
                 
                 let prevLesson = null;
                 let nextLesson = null;
@@ -421,17 +311,132 @@ console.log("User has email?", user.email !== null);
 
       <div className="lesson-content">
         <div className="explanation-panel">
-         
+          <h2>Increment and Decrement Operators</h2>
+          <p>
+            In task management applications, we often need to increase or decrease values by exactly 1.
+            JavaScript provides special operators for these common operations: <code>++</code> (increment)
+            and <code>--</code> (decrement).
+          </p>
           
-          {/* Module Content Component */}
-          <VariablesModuleContent 
-            moduleId={currentModule}
-            darkMode={darkMode}
-            code={code}
-            onCodeChange={handleCodeChange}
-            runtimeValues={runtimeValues}
-            consoleOutput={consoleOutput}
-          />
+          <h3>Basic Increment (++) and Decrement (--) Operators</h3>
+          <p>
+            These operators add 1 or subtract 1 from a variable:
+          </p>
+          
+          <div className="code-example">
+{`// Increment: increase by 1
+let completedTasks = 5;
+completedTasks++;        // Add 1 (now equals 6)
+console.log(completedTasks);  // 6
+
+// Decrement: decrease by 1
+let remainingTasks = 10;
+remainingTasks--;        // Subtract 1 (now equals 9) 
+console.log(remainingTasks);  // 9
+
+// Common uses in task management
+let taskCounter = 0;
+
+// Completing tasks one by one
+taskCounter++;  // Complete first task
+console.log(\`Completed \${taskCounter} tasks\`);
+
+taskCounter++;  // Complete second task
+console.log(\`Completed \${taskCounter} tasks\`);`}
+          </div>
+          
+          <h3>Pre vs. Post Increment/Decrement</h3>
+          <p>
+            There are two ways to use these operators, with an important difference:
+          </p>
+          <ul>
+            <li><strong>Post-increment (x++)</strong>: Returns the current value, then increments</li>
+            <li><strong>Pre-increment (++x)</strong>: Increments first, then returns the new value</li>
+          </ul>
+          
+          <div className="code-example">
+{`// Post-increment (x++)
+let a = 5;
+let b = a++;    // Assign a to b (5), then increment a
+console.log("a:", a);    // 6 (was incremented after assignment)
+console.log("b:", b);    // 5 (got the original value)
+
+// Pre-increment (++x)
+let c = 5;
+let d = ++c;    // Increment c first, then assign to d
+console.log("c:", c);    // 6 (was incremented before assignment)
+console.log("d:", d);    // 6 (got the incremented value)
+
+// The same applies to decrement (x-- vs --x)
+let taskCount = 10;
+console.log(taskCount--);    // Displays 10, then decrements to 9
+console.log(--taskCount);    // Decrements to 8, then displays 8`}
+          </div>
+          
+          <h3>Real-World Task Management Applications</h3>
+          <p>
+            These operators are particularly useful in task management:
+          </p>
+          
+          <div className="code-example">
+{`// Task list navigation
+let tasks = ["Design layout", "Write code", "Test features", "Deploy"];
+let currentTaskIndex = 0;
+
+// Get current task and move to next
+function getNextTask() {
+  let task = tasks[currentTaskIndex++];  // Post-increment
+  return task;
+}
+
+// Move to previous task with validation
+function getPreviousTask() {
+  if (currentTaskIndex > 0) {
+    return tasks[--currentTaskIndex];  // Pre-decrement
+  }
+  return "No previous tasks";
+}
+
+// Tracking task completion
+let totalTasks = tasks.length;
+let completedTasks = 0;
+
+function completeCurrentTask() {
+  if (completedTasks < totalTasks) {
+    completedTasks++;
+    return \`Completed \${completedTasks} of \${totalTasks} tasks\`;
+  }
+  return "All tasks completed!";
+}`}
+          </div>
+          
+          <h3>Increment/Decrement vs. Compound Assignment</h3>
+          <p>
+            For larger increments or decrements, use compound assignment operators:
+          </p>
+          
+          <div className="code-example">
+{`// Increment/decrement (for adding/subtracting 1)
+let count = 10;
+count++;         // 11
+count--;         // 10
+
+// Compound assignment (for adding/subtracting other amounts)
+let progress = 0;
+progress += 25;   // Same as: progress = progress + 25 (now 25)
+progress += 25;   // (now 50)
+progress -= 10;   // Same as: progress = progress - 10 (now 40)
+
+// Other compound operators
+let timeEstimate = 8;
+timeEstimate *= 1.5;   // Increase estimate by 50% (now 12)
+timeEstimate /= 2;     // Cut estimate in half (now 6)`}
+          </div>
+          
+          <p>
+            Try experimenting with the code editor to create a task tracking system
+            using increment and decrement operators!
+          </p>
         </div>
 
         <div className="interactive-panel">
@@ -475,56 +480,6 @@ console.log("User has email?", user.email !== null);
                               <Card.Title>{getTypeExplanation(type)}</Card.Title>
                               <Card.Text className="variable-value">{formatValue(value)}</Card.Text>
                               
-                              {/* Display class name if available */}
-                              {type === 'class' && (
-                                <>
-                                  {value?.__constructorName && (
-                                    <div className="class-name">
-                                      {value.__constructorName}
-                                    </div>
-                                  )}
-                                  {typeof value === 'string' && isStringifiedClassInstance(value).isClass && (
-                                    <div className="class-name">
-                                      {isStringifiedClassInstance(value).className}
-                                    </div>
-                                  )}
-                                </>
-                              )}
-                              
-                              {/* Display class properties if it's a class instance */}
-                              {type === 'class' && (
-                                <div className="class-properties">
-                                  {typeof value === 'object' ? (
-                                    // Regular object with properties
-                                    Object.entries(value)
-                                      .filter(([key]) => !key.startsWith('__')) // Skip internal properties
-                                      .slice(0, 5) // Limit to first 5 properties
-                                      .map(([key, propValue]) => (
-                                        <div key={key} className="class-property">
-                                          <span className="class-property-name">{key}:</span>
-                                          <span className="class-property-value">
-                                            {typeof propValue === 'object' 
-                                              ? (propValue === null ? 'null' : '{...}') 
-                                              : String(propValue)}
-                                          </span>
-                                        </div>
-                                      ))
-                                  ) : (
-                                    // Stringified class - display a simplified view
-                                    <div className="class-property text-center">
-                                      <small>Class instance properties visible in value</small>
-                                    </div>
-                                  )}
-                                  
-                                  {typeof value === 'object' && 
-                                   Object.keys(value).filter(k => !k.startsWith('__')).length > 5 && (
-                                    <div className="class-property text-center">
-                                      <small>...more properties</small>
-                                    </div>
-                                  )}
-                                </div>
-                              )}
-                              
                               <div className="variable-type-container mt-2">
                                 <span className={`variable-type-badge bg-${getTypeColor(type)}`}>
                                   {getTypeExplanation(type)}
@@ -563,4 +518,4 @@ console.log("User has email?", user.email !== null);
   );
 };
 
-export default VariablesLesson; 
+export default IncrementDecrementLesson; 

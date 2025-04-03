@@ -1697,4 +1697,192 @@
 .visualization-scroll-container {
   height: auto;
   overflow: visible;
+}
+
+/* Add styles for placeholder lessons with code examples */
+.placeholder-content {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  line-height: 1.6;
+  color: var(--text-primary, #1e293b);
+}
+
+.placeholder-content h2 {
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-color, #4a6cf7);
+  font-size: 1.75rem;
+}
+
+.placeholder-content h3 {
+  margin: 1.5rem 0 1rem;
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+.placeholder-content p {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: var(--text-secondary, #4b5563);
+}
+
+.placeholder-content ul, 
+.placeholder-content ol {
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.placeholder-content li {
+  margin-bottom: 0.5rem;
+}
+
+.placeholder-content .code-example {
+  background-color: var(--bg-secondary, #f8fafc);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 6px;
+  margin: 1.5rem 0;
+  overflow: hidden;
+}
+
+.placeholder-content .code-example pre {
+  margin: 0;
+  padding: 1.25rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  overflow-x: auto;
+  background-color: var(--bg-primary, #ffffff);
+  color: var(--text-primary, #1e293b);
+}
+
+.placeholder-content .concept-section {
+  background-color: rgba(74, 108, 247, 0.1);
+  border-left: 4px solid var(--primary-color, #4a6cf7);
+  padding: 1.25rem;
+  margin: 1.5rem 0;
+  border-radius: 4px;
+}
+
+.placeholder-content .exercise {
+  background-color: rgba(16, 185, 129, 0.1);
+  border-left: 4px solid var(--success-color, #10b981);
+  padding: 1.25rem;
+  margin: 1.5rem 0;
+  border-radius: 4px;
+}
+
+.placeholder-content .note {
+  background-color: rgba(245, 158, 11, 0.1);
+  border-left: 4px solid var(--warning-color, #f59e0b);
+  padding: 1.25rem;
+  margin: 1.5rem 0;
+  border-radius: 4px;
+}
+
+.placeholder-content .two-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+/* Dark mode adjustments */
+.dark-theme .placeholder-content .code-example {
+  background-color: var(--bg-tertiary, #1e293b);
+  border-color: var(--border-color, #2d3748);
+}
+
+.dark-theme .placeholder-content .code-example pre {
+  background-color: var(--bg-tertiary, #1e293b);
+  color: var(--text-primary, #f8fafc);
+}
+
+.dark-theme .placeholder-content {
+  color: var(--text-primary, #f8fafc);
+}
+
+.dark-theme .placeholder-content p {
+  color: var(--text-secondary, #e2e8f0);
+}
+
+/* Add styles for lesson navigation */
+.lesson-placeholder .lesson-header {
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+}
+
+.lesson-placeholder .lesson-header h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: var(--text-primary, #1e293b);
+}
+
+.lesson-placeholder .chapter-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.lesson-placeholder .chapter-title {
+  font-weight: 500;
+  color: var(--primary-color, #4a6cf7);
+}
+
+.lesson-placeholder .lesson-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lesson-placeholder .chapter-nav-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: var(--bg-secondary, #f8fafc);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 0.375rem;
+  color: var(--text-primary, #1e293b);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.lesson-placeholder .chapter-nav-button:hover:not([disabled]) {
+  background-color: var(--primary-color, #4a6cf7);
+  color: white;
+  border-color: var(--primary-color, #4a6cf7);
+}
+
+.lesson-placeholder .chapter-nav-button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.lesson-placeholder .lesson-indicator {
+  padding: 0.25rem 0.75rem;
+  background-color: var(--bg-secondary, #f8fafc);
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary, #4b5563);
+}
+
+/* Dark mode adjustments for lesson navigation */
+.dark-theme .lesson-placeholder .lesson-header h1 {
+  color: var(--text-primary, #f8fafc);
+}
+
+.dark-theme .lesson-placeholder .chapter-nav-button {
+  background-color: var(--bg-tertiary, #1e293b);
+  border-color: var(--border-color, #2d3748);
+  color: var(--text-primary, #f8fafc);
+}
+
+.dark-theme .lesson-placeholder .lesson-indicator {
+  background-color: var(--bg-tertiary, #1e293b);
+  color: var(--text-secondary, #e2e8f0);
+}
+
+.dark-theme .lesson-placeholder .lesson-header {
+  border-color: var(--border-color, #2d3748);
 } 

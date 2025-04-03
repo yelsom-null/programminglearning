@@ -11,200 +11,87 @@ import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Badge from 'react-bootstrap/Badge';
-import VariablesCheckpointSystem from '../components/VariablesCheckpointSystem';
-import VariablesModuleContent from '../components/VariablesModuleContent';
 import { useParams, Link } from 'react-router-dom';
 import curriculum from '../data/curriculum';
 
-interface VariablesLessonProps {
+interface ConsoleLessonProps {
   darkMode?: boolean;
-  moduleId?: number;
-  step?: number;
-  topic?: string;
 }
 
-const VariablesLesson: React.FC<VariablesLessonProps> = ({ 
-  darkMode = false, 
-  moduleId: initialModuleId = 1,
-  step: initialStep = 0,
-  topic
+const ConsoleLesson: React.FC<ConsoleLessonProps> = ({ 
+  darkMode = false
 }) => {
-  // Define the initial code samples for each module
-  const initialCodeByModule = {
-    1: `// Task Management App - Variables Basics
-// Variables are containers for storing data values
+  // Initial code sample
+  const initialCode = `// Console Logging for Task Management
+// Use console methods to output task information
 
-// Create your task variables below:
+// Task data
+let task = {
+  id: 123,
+  title: "Implement user authentication",
+  assignee: "John Doe",
+  dueDate: "2023-12-15",
+  priority: "High",
+  status: "In Progress",
+  progress: 60,
+  tags: ["frontend", "security"]
+};
 
+// Basic console.log
+console.log("Task information:");
+console.log(task);
 
+// Logging with string formatting
+console.log("Task #%d: %s (Priority: %s)", task.id, task.title, task.priority);
 
+// Using console.log with multiple arguments
+console.log("Assigned to:", task.assignee, "Due date:", task.dueDate);
 
-`,
-    2: `// Task Management App - Variable Types
-// In this module, you'll explore different types of variables for tasks.
+// Using template literals (modern approach)
+console.log(\`Progress: \${task.progress}% complete\`);
 
-// You'll build on what you learned in Module 1 by creating
-// variables with different data types for your task.
+// Different console methods for different types of messages
+console.info("Task tags:", task.tags);
+console.warn("Task is due in 5 days!");
+console.error("Deadline missed for task: " + task.title);
 
-// The code editor is empty - follow the module instructions to create:
-// - String variables (for text)
-// - Number variables (for quantities)
-// - Boolean variables (for true/false states)
+// Grouping related log messages
+console.group("Task Details");
+console.log("Title:", task.title);
+console.log("Status:", task.status);
+console.log("Assignee:", task.assignee);
+console.groupEnd();
 
-`,
-    3: `// Task Management App - Variable Manipulation
-// In this module, you'll learn how to update and modify variables.
+// Console table for structured data
+let tasks = [
+  { id: 1, title: "Setup project", status: "Completed", progress: 100 },
+  { id: 2, title: "Create UI components", status: "In Progress", progress: 70 },
+  { id: 3, title: "Connect API", status: "Not Started", progress: 0 }
+];
+console.table(tasks);
 
-// First, set up some initial task state:
-let taskName = "Create project plan";
-let progress = 40;
-let estimatedHours = 6;
-let isCompleted = false;
-
-// Display initial state
-console.log("Task: " + taskName);
-console.log("Current progress: " + progress + "%");
-console.log("Initial estimate: " + estimatedHours + " hours");
-
-// Follow the module instructions to update these variables
-// and create formulas to track task progress.
-
-`,
-    4: `// Task Management App - Multiple Tasks
-// In this module, you'll manage variables for multiple tasks.
-
-// Follow the module instructions to:
-// 1. Create variables for multiple tasks
-// 2. Compare tasks based on their properties
-// 3. Calculate overall progress
-// 4. Create a task summary report
-
-`
-  };
+// Tracking time for task performance
+console.time("Task Processing Time");
+// Simulate some processing
+for (let i = 0; i < 1000000; i++) {
+  // Processing task...
+}
+console.timeEnd("Task Processing Time");
+`;
   
-  // Add the ability to preserve variables between modules
-  const [variablesByModule, setVariablesByModule] = useState<Record<number, Record<string, any>>>({
-    1: {},
-    2: {},
-    3: {},
-    4: {},
-    5: {}
-  });
-  
-  const [currentModule, setCurrentModule] = useState(initialModuleId);
-  const [code, setCode] = useState('');
+  const [code, setCode] = useState(initialCode);
   const [runtimeValues, setRuntimeValues] = useState<Record<string, any>>({});
   const [consoleOutput, setConsoleOutput] = useState<any[]>([]);
   const [executionPath, setExecutionPath] = useState<string[]>([]);
-  const [activeStep, setActiveStep] = useState<number>(initialStep);
   const [error, setError] = useState<string | null>(null);
   
-  // Only set the initial code the first time component loads
-  useEffect(() => {
-    if (initialModuleId && initialModuleId in initialCodeByModule) {
-      setCode(initialCodeByModule[initialModuleId as keyof typeof initialCodeByModule]);
-    } else {
-      setCode(initialCodeByModule[1]);
-    }
-    // We only want this to run once when the component mounts
-  }, []);
-  
-  // Handle topic-specific content if specified
-  useEffect(() => {
-    if (topic) {
-      // You could set specific code examples based on the topic
-      if (topic === 'undefined-undeclared') {
-        setCode(`// Understanding Undefined vs Undeclared Variables
-let declaredVar;  // declared but not assigned a value (undefined)
-console.log("declaredVar:", declaredVar);
-
-// console.log("undeclaredVar:", undeclaredVar);  // Uncomment to see error
-
-// Checking for undefined
-if (declaredVar === undefined) {
-  console.log("declaredVar is undefined");
-}
-
-// Safely checking for existence
-if (typeof declaredVar !== "undefined") {
-  console.log("declaredVar exists");
-}
-
-// Example with functions
-function returnNothing() {
-  // No return statement
-}
-
-let result = returnNothing();
-console.log("Function result:", result);  // undefined
-`);
-      } else if (topic === 'null-undefined') {
-        setCode(`// Understanding null vs undefined
-// undefined: variable is declared but has no value assigned
-let emptyVar;
-console.log("emptyVar:", emptyVar);
-
-// null: explicitly assigned "no value"
-let nullVar = null;
-console.log("nullVar:", nullVar);
-
-// Comparing null and undefined
-console.log("null == undefined:", null == undefined);    // true (loose equality)
-console.log("null === undefined:", null === undefined);  // false (strict equality)
-
-// Checking for null or undefined
-function processValue(value) {
-  // Check for both null and undefined
-  if (value == null) {
-    console.log("Value is either null or undefined");
-    return;
-  }
-  console.log("Processing:", value);
-}
-
-processValue(emptyVar);
-processValue(nullVar);
-processValue("Hello");
-
-// When to use null
-let user = {
-  name: "John",
-  email: null  // Explicitly set to null (user has no email)
-};
-
-console.log("User has email?", user.email !== null);
-`);
-      }
-    }
-  }, [topic]);
-  
-  // Handle moduleId and step changes
-  useEffect(() => {
-    if (initialModuleId !== 1) {
-      setCurrentModule(initialModuleId);
-    }
-    if (initialStep !== 0) {
-      setActiveStep(initialStep);
-    }
-  }, [initialModuleId, initialStep]);
-  
-  // Store variables when module is completed
-  useEffect(() => {
-    if (Object.keys(runtimeValues).length > 0) {
-      setVariablesByModule(prev => ({
-        ...prev,
-        [currentModule]: runtimeValues
-      }));
-    }
-  }, [runtimeValues, currentModule]);
-  
-  // Handle code changes and track modifications
+  // Handle code changes
   const handleCodeChange = (value: string) => {
     setCode(value);
   };
   
-  // Auto-execute code when it changes (for real-time feedback)
-  React.useEffect(() => {
+  // Auto-execute code when it changes
+  useEffect(() => {
     executeCode();
   }, [code]);
 
@@ -212,7 +99,6 @@ console.log("User has email?", user.email !== null);
     setError(null);
     
     try {
-      // Use AI-enhanced evaluation with fallback to standard
       const result = await evaluateCodeWithAI(code);
       
       if (result.variables) {
@@ -231,7 +117,6 @@ console.log("User has email?", user.email !== null);
         setError(result.error);
       }
       
-      // If AI enhanced, we can use execution path for visualization
       if (result.aiEnhanced && result.executionPath) {
         setExecutionPath(result.executionPath);
       }
@@ -245,12 +130,10 @@ console.log("User has email?", user.email !== null);
     if (value === null) return 'null';
     if (Array.isArray(value)) return 'array';
     
-    // Check for class instances
     if (typeof value === 'object' && value?.__isClass) {
       return 'class';
     }
     
-    // Check for stringified class instances
     if (typeof value === 'string' && isStringifiedClassInstance(value).isClass) {
       return 'class';
     }
@@ -291,16 +174,13 @@ console.log("User has email?", user.email !== null);
     if (value === undefined) return 'undefined';
     if (value === null) return 'null';
     
-    // Handle stringified class instances
     if (typeof value === 'string' && isStringifiedClassInstance(value).isClass) {
-      // Return the original string since it's already formatted nicely
       return value;
     }
     
     if (typeof value === 'string') return `"${value}"`;
     if (typeof value === 'object') {
       try {
-        // Don't include internal properties in the formatted output
         if (value?.__isClass || value?.__constructorName) {
           const cleanedValue = { ...value };
           delete cleanedValue.__isClass;
@@ -318,15 +198,14 @@ console.log("User has email?", user.email !== null);
   return (
     <div className="lesson-container">
       <div className="lesson-header">
-        <h1>Lesson 1: Building with Variables</h1>
+        <h1>Lesson 2: Console Logging Task Variables</h1>
         <div className="lesson-meta">
           <div className="chapter-info">
             <span className="chapter-title">Chapter 1: Task Manager Fundamentals</span>
             <div className="lesson-navigation">
               {(() => {
                 // Find current lesson in curriculum
-                const currentLessonId = topic || 
-                  (initialModuleId === 5 ? 'console' : 'variables-intro');
+                const currentLessonId = "console";
                 
                 let prevLesson = null;
                 let nextLesson = null;
@@ -421,17 +300,120 @@ console.log("User has email?", user.email !== null);
 
       <div className="lesson-content">
         <div className="explanation-panel">
-         
+          <h2>Console Logging for Task Management</h2>
+          <p>
+            The console is a powerful debugging tool that allows you to output information about your tasks
+            and track the execution of your code. It's essential for developing and maintaining a task management system.
+          </p>
           
-          {/* Module Content Component */}
-          <VariablesModuleContent 
-            moduleId={currentModule}
-            darkMode={darkMode}
-            code={code}
-            onCodeChange={handleCodeChange}
-            runtimeValues={runtimeValues}
-            consoleOutput={consoleOutput}
-          />
+          <h3>Basic Console.log</h3>
+          <p>
+            The most common console method is <code>console.log()</code>, which outputs information to the console:
+          </p>
+          
+          <div className="code-example">
+{`// Simple string output
+console.log("Hello, Task Manager!");
+
+// Logging variables
+let taskName = "Complete project setup";
+console.log(taskName);  // "Complete project setup"
+
+// Logging multiple values
+let priority = "High";
+let dueDate = "2023-12-31";
+console.log(taskName, priority, dueDate);
+
+// Logging objects (tasks)
+let task = {
+  id: 123,
+  title: "Create wireframes",
+  completed: false
+};
+console.log(task);  // Displays the entire task object`}
+          </div>
+          
+          <h3>Formatted Console Output</h3>
+          <p>
+            You can format your console output to make it more readable:
+          </p>
+          
+          <div className="code-example">
+{`// Using string concatenation
+console.log("Task: " + task.title + " (ID: " + task.id + ")");
+
+// Using template literals (modern approach)
+console.log(\`Task: \${task.title} (ID: \${task.id})\`);
+
+// Using string formatting with placeholders
+console.log("Task: %s (ID: %d)", task.title, task.id);
+// %s = string, %d = number, %o = object, %f = float`}
+          </div>
+          
+          <h3>Different Console Methods</h3>
+          <p>
+            The console object provides several methods for different types of messages:
+          </p>
+          
+          <div className="code-example">
+{`// Regular informational message
+console.log("Task updated successfully");
+
+// Informational message (blue 'i' icon in browser)
+console.info("New task created at 2:45 PM");
+
+// Warning message (yellow warning icon)
+console.warn("Task approaching deadline!");
+
+// Error message (red 'x' icon)
+console.error("Failed to save task");
+
+// Debug message (only shown if debug level enabled)
+console.debug("Task object initialized with default values");`}
+          </div>
+          
+          <h3>Advanced Console Features</h3>
+          <p>
+            The console offers more advanced features for structuring and analyzing task data:
+          </p>
+          
+          <div className="code-example">
+{`// Grouping related logs
+console.group("Task Operations");
+console.log("Loading tasks...");
+console.log("Sorting by priority...");
+console.log("Filtering completed tasks...");
+console.groupEnd();
+
+// Creating tables for structured data
+let tasks = [
+  { id: 1, title: "Setup project", status: "Completed" },
+  { id: 2, title: "Create UI", status: "In Progress" },
+  { id: 3, title: "Write tests", status: "Not Started" }
+];
+console.table(tasks);  // Displays a formatted table
+
+// Timing operations
+console.time("Task Loading");
+// ... code to load tasks
+console.timeEnd("Task Loading");  // "Task Loading: 1.23ms"`}
+          </div>
+          
+          <h3>Console in Task Management Applications</h3>
+          <p>
+            For task management applications, the console is useful for:
+          </p>
+          <ul>
+            <li>Debugging task creation and updates</li>
+            <li>Monitoring performance of task operations</li>
+            <li>Logging user interactions with tasks</li>
+            <li>Displaying task data in development</li>
+            <li>Tracing execution flow of task operations</li>
+          </ul>
+          
+          <p>
+            Try experimenting with the console methods in the code editor!
+          </p>
         </div>
 
         <div className="interactive-panel">
@@ -475,56 +457,6 @@ console.log("User has email?", user.email !== null);
                               <Card.Title>{getTypeExplanation(type)}</Card.Title>
                               <Card.Text className="variable-value">{formatValue(value)}</Card.Text>
                               
-                              {/* Display class name if available */}
-                              {type === 'class' && (
-                                <>
-                                  {value?.__constructorName && (
-                                    <div className="class-name">
-                                      {value.__constructorName}
-                                    </div>
-                                  )}
-                                  {typeof value === 'string' && isStringifiedClassInstance(value).isClass && (
-                                    <div className="class-name">
-                                      {isStringifiedClassInstance(value).className}
-                                    </div>
-                                  )}
-                                </>
-                              )}
-                              
-                              {/* Display class properties if it's a class instance */}
-                              {type === 'class' && (
-                                <div className="class-properties">
-                                  {typeof value === 'object' ? (
-                                    // Regular object with properties
-                                    Object.entries(value)
-                                      .filter(([key]) => !key.startsWith('__')) // Skip internal properties
-                                      .slice(0, 5) // Limit to first 5 properties
-                                      .map(([key, propValue]) => (
-                                        <div key={key} className="class-property">
-                                          <span className="class-property-name">{key}:</span>
-                                          <span className="class-property-value">
-                                            {typeof propValue === 'object' 
-                                              ? (propValue === null ? 'null' : '{...}') 
-                                              : String(propValue)}
-                                          </span>
-                                        </div>
-                                      ))
-                                  ) : (
-                                    // Stringified class - display a simplified view
-                                    <div className="class-property text-center">
-                                      <small>Class instance properties visible in value</small>
-                                    </div>
-                                  )}
-                                  
-                                  {typeof value === 'object' && 
-                                   Object.keys(value).filter(k => !k.startsWith('__')).length > 5 && (
-                                    <div className="class-property text-center">
-                                      <small>...more properties</small>
-                                    </div>
-                                  )}
-                                </div>
-                              )}
-                              
                               <div className="variable-type-container mt-2">
                                 <span className={`variable-type-badge bg-${getTypeColor(type)}`}>
                                   {getTypeExplanation(type)}
@@ -563,4 +495,4 @@ console.log("User has email?", user.email !== null);
   );
 };
 
-export default VariablesLesson; 
+export default ConsoleLesson; 

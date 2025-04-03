@@ -24,7 +24,8 @@ const VariablesModuleContent: React.FC<VariablesModuleContentProps> = ({
     1: <Module1Content darkMode={darkMode} code={code} onCodeChange={onCodeChange} runtimeValues={runtimeValues} consoleOutput={consoleOutput} />,
     2: <Module2Content darkMode={darkMode} code={code} onCodeChange={onCodeChange} runtimeValues={runtimeValues} consoleOutput={consoleOutput} />,
     3: <Module3Content darkMode={darkMode} code={code} onCodeChange={onCodeChange} runtimeValues={runtimeValues} consoleOutput={consoleOutput} />,
-    4: <Module4Content darkMode={darkMode} code={code} onCodeChange={onCodeChange} runtimeValues={runtimeValues} consoleOutput={consoleOutput} />
+    4: <Module4Content darkMode={darkMode} code={code} onCodeChange={onCodeChange} runtimeValues={runtimeValues} consoleOutput={consoleOutput} />,
+    5: <Module5Content darkMode={darkMode} code={code} onCodeChange={onCodeChange} runtimeValues={runtimeValues} consoleOutput={consoleOutput} />
   };
 
   return (
@@ -489,7 +490,6 @@ let daysUntilDue = Math.ceil((dueDateTime - today) / (1000 * 60 * 60 * 24));`}
 
   return (
     <div className="module-container">
-      <h2>Module 1: Variable Basics</h2>
       
       {feedback && (
         <div className={`feedback-message ${feedback.includes("Great") ? "success" : "error"}`}>
@@ -1309,6 +1309,367 @@ console.log("Completion rate: " + completionRate + "%");`}
         <h3>{steps[currentStep as keyof typeof steps]?.title || "Step"}</h3>
         {steps[currentStep as keyof typeof steps]?.content}
       </div>
+    </div>
+  );
+};
+
+// Module 5: Working with Task Variables
+const Module5Content: React.FC<Omit<VariablesModuleContentProps, 'moduleId'>> = ({
+  darkMode,
+  code = '',
+  onCodeChange,
+  runtimeValues = {},
+  consoleOutput = []
+}) => {
+  const [currentStep, setCurrentStep] = useState(0);
+  const totalSteps = 4;
+  const [stepCompleted, setStepCompleted] = useState<Record<number, boolean>>({
+    0: true, // First lesson is an introduction
+    1: false,
+    2: false,
+    3: false
+  });
+  const [feedback, setFeedback] = useState("");
+  
+  // When the module receives new code, check if it satisfies the current step
+  useEffect(() => {
+    if (code) {
+      // Auto-verify if they completed the current step
+      if (verifyStep(currentStep, code, runtimeValues, consoleOutput) && !stepCompleted[currentStep]) {
+        setStepCompleted(prev => ({...prev, [currentStep]: true}));
+        setFeedback("Great job! You've completed this step. You can now proceed to the next step.");
+      }
+    }
+  }, [code, currentStep, runtimeValues, consoleOutput, stepCompleted]);
+  
+  const verifyStep = (step: number, codeValue: string, values: Record<string, any>, output: any[]) => {
+    switch(step) {
+      case 1: // Console Logging Variables
+        // Check if they've logged taskName, isCompleted, and dueDate
+        return output.some(entry => 
+            typeof entry === 'string' && entry.includes(values.taskName || '')) &&
+          output.some(entry => 
+            entry === values.isCompleted || 
+            (typeof entry === 'string' && entry.includes(String(values.isCompleted)))) &&
+          output.some(entry => 
+            typeof entry === 'string' && entry.includes(values.dueDate || ''));
+            
+      case 2: // String Concatenation
+        // Check if they've created a taskSummary variable with concatenated values
+        return values.taskSummary !== undefined && 
+               typeof values.taskSummary === 'string' &&
+               values.taskSummary.includes(values.taskName || '') &&
+               values.taskSummary.includes(values.dueDate || '');
+               
+      case 3: // Conditional Logic
+        // Check if they've written an if/else statement based on isCompleted
+        const hasIfCondition = codeValue.includes('if') && 
+                              (codeValue.includes('isCompleted') || 
+                               codeValue.includes('isComplete'));
+        const hasElseStatement = codeValue.includes('else');
+        return hasIfCondition && hasElseStatement && 
+               values.status !== undefined &&
+               typeof values.status === 'string';
+               
+      default:
+        return false;
+    }
+  };
+  
+  const handleNextStep = () => {
+    if (stepCompleted[currentStep]) {
+      if (currentStep < totalSteps - 1) {
+        setCurrentStep(currentStep + 1);
+        setFeedback("");
+      }
+    } else {
+      setFeedback("Complete the current task before moving to the next step.");
+    }
+  };
+  
+  const handlePrevStep = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+      setFeedback("");
+    }
+  };
+  
+  // Define step instructions to display prominently
+  const stepInstructions = {
+    0: "Learn about ways to output and manipulate task information in JavaScript.",
+    1: "Use console.log() to display your variables and see task information in the console.",
+    2: "Create a task summary using string concatenation to combine task name and due date.",
+    3: "Use if/else statements to display different messages based on task completion status."
+  };
+  
+  return (
+    <div className="module-container">
+      
+      {feedback && (
+        <div className={`feedback-message ${feedback.includes("Great") ? "success" : "error"}`}>
+          {feedback}
+        </div>
+      )}
+      
+      {currentStep === 0 && (
+        <div className="module-section">
+          <h3>Working with Task Variables</h3>
+          <p>
+            Now that you've created variables for your task, let's learn how to work with them.
+            In this module, we'll cover basic operations you'll need for your task manager.
+          </p>
+          
+          <Card className="concept-card mb-4">
+            <Card.Header as="h4">Key Skills You'll Learn</Card.Header>
+            <Card.Body>
+              <ul>
+                <li><strong>Outputting Variables:</strong> Seeing task information in the console</li>
+                <li><strong>String Concatenation:</strong> Combining text to create task summaries</li>
+                <li><strong>Conditional Logic:</strong> Making decisions based on task status</li>
+                <li><strong>Date Calculations:</strong> Working with deadlines and time estimates</li>
+              </ul>
+            </Card.Body>
+          </Card>
+          
+          <p>
+            These skills form the foundation for more advanced task management features
+            like task filtering, sorting, and status tracking.
+          </p>
+        </div>
+      )}
+      
+      {currentStep === 1 && (
+        <div className="module-section">
+          <h3>Console Logging Task Variables</h3>
+          <p>
+            <code>console.log()</code> is a powerful tool for debugging and seeing your task information.
+            It's like having a direct window into your program's current state.
+          </p>
+          
+          <Card className="concept-card mb-4">
+            <Card.Header as="h4">Using console.log()</Card.Header>
+            <Card.Body>
+              <p>You can log single variables, messages, or combinations:</p>
+              
+              <HintButton>
+                <div className="code-example">
+                  <pre>
+{`// Basic console logging
+console.log(taskName);                       // Just the variable
+
+// Adding context with labels
+console.log("Task Name:", taskName);         // Label and variable
+
+// Logging multiple values at once
+console.log("Task:", taskName, "Due:", dueDate);
+
+// Checking boolean values
+console.log("Is Completed:", isCompleted);   // Shows true or false`}
+                  </pre>
+                </div>
+              </HintButton>
+              
+              <p>The console output appears in the Console panel below your code editor.</p>
+            </Card.Body>
+          </Card>
+          
+          <div className="step-instruction">
+            <h4>👉 Log Your Task Variables</h4>
+            <ol>
+              <li>If you don't already have them, create these basic variables:
+                <ul>
+                  <li><code>let taskName = "Your task name here";</code></li>
+                  <li><code>let isCompleted = false;</code> (or true)</li>
+                  <li><code>let dueDate = "2023-12-31";</code> (or any date)</li>
+                </ul>
+              </li>
+              <li>Add console.log statements to display all three variables</li>
+              <li>Make your log statements informative by adding descriptive labels</li>
+              <li>Run your code and check the Console panel to see the output</li>
+            </ol>
+          </div>
+        </div>
+      )}
+      
+      {currentStep === 2 && (
+        <div className="module-section">
+          <h3>String Concatenation for Task Summaries</h3>
+          <p>
+            String concatenation means combining strings together. This is perfect for 
+            creating readable task summaries that combine multiple pieces of information.
+          </p>
+          
+          <Card className="concept-card mb-4">
+            <Card.Header as="h4">Combining Strings</Card.Header>
+            <Card.Body>
+              <p>You can use the <code>+</code> operator to join strings:</p>
+              
+              <HintButton>
+                <div className="code-example">
+                  <pre>
+{`// Basic concatenation
+let firstName = "John";
+let lastName = "Doe";
+let fullName = firstName + " " + lastName;    // "John Doe"
+
+// Creating a task summary
+let taskName = "Project Proposal";
+let dueDate = "2023-12-31";
+let taskSummary = "Task: " + taskName + " (Due: " + dueDate + ")";
+
+// Result: "Task: Project Proposal (Due: 2023-12-31)"
+console.log(taskSummary);
+
+// Template literals (modern approach with backticks)
+let summary = \`Task: \${taskName} (Due: \${dueDate})\`;
+console.log(summary);`}
+                  </pre>
+                </div>
+              </HintButton>
+            </Card.Body>
+          </Card>
+          
+          <div className="step-instruction">
+            <h4>👉 Create a Task Summary</h4>
+            <ol>
+              <li>Create a new variable called <code>taskSummary</code></li>
+              <li>Use string concatenation to combine:
+                <ul>
+                  <li>The task name</li>
+                  <li>The due date</li>
+                  <li>Any additional information you want to include</li>
+                </ul>
+              </li>
+              <li>Make the summary readable with appropriate spacing and punctuation</li>
+              <li>Log the summary to the console</li>
+              <li>Bonus: Try using template literals (with backticks) for a cleaner approach</li>
+            </ol>
+          </div>
+        </div>
+      )}
+      
+      {currentStep === 3 && (
+        <div className="module-section">
+          <h3>Conditional Logic for Task Status</h3>
+          <p>
+            Conditional logic lets you display different messages or take different actions
+            based on a task's status.
+          </p>
+          
+          <Card className="concept-card mb-4">
+            <Card.Header as="h4">If/Else Statements</Card.Header>
+            <Card.Body>
+              <p>Use if/else to create branching logic based on conditions:</p>
+              
+              <HintButton>
+                <div className="code-example">
+                  <pre>
+{`// Basic if/else for task status
+let isCompleted = false;
+let status;
+
+if (isCompleted) {
+  status = "Task is complete!";
+} else {
+  status = "Task is still in progress.";
+}
+
+console.log(status);
+
+// More complex conditions
+let priority = "high";
+let daysLeft = 3;
+
+if (isCompleted) {
+  console.log("No action needed - task is complete.");
+} else if (priority === "high" && daysLeft < 5) {
+  console.log("URGENT: High priority task due soon!");
+} else if (priority === "high") {
+  console.log("Important: High priority task.");
+} else {
+  console.log("Task needs to be completed.");
+}`}
+                  </pre>
+                </div>
+              </HintButton>
+            </Card.Body>
+          </Card>
+          
+          <div className="step-instruction">
+            <h4>👉 Add Conditional Logic</h4>
+            <ol>
+              <li>Create a new variable called <code>status</code> (don't assign a value yet)</li>
+              <li>Write an if/else statement that:
+                <ul>
+                  <li>Checks if <code>isCompleted</code> is true</li>
+                  <li>If true, sets <code>status</code> to a completion message</li>
+                  <li>If false, sets <code>status</code> to a "still in progress" message</li>
+                </ul>
+              </li>
+              <li>Log the <code>status</code> variable to the console</li>
+              <li>Bonus: Add more conditions for <code>priority</code> or <code>dueDate</code></li>
+            </ol>
+          </div>
+        </div>
+      )}
+      
+      {currentStep === 4 && (
+        <div className="module-section">
+          <h3>Working with Dates</h3>
+          <p>
+            Tasks often have deadlines, so understanding how to work with dates is essential
+            for your task manager.
+          </p>
+          
+          <Card className="concept-card mb-4">
+            <Card.Header as="h4">Date Calculations</Card.Header>
+            <Card.Body>
+              <p>JavaScript has a Date object for working with dates:</p>
+              
+              <HintButton>
+                <div className="code-example">
+                  <pre>
+{`// Get today's date
+let today = new Date();
+console.log("Today:", today);
+
+// Parse a date string
+let dueDate = "2023-12-31";  
+let dueDateObj = new Date(dueDate);
+console.log("Due date:", dueDateObj);
+
+// Calculate days remaining
+let timeDiff = dueDateObj.getTime() - today.getTime();
+let daysRemaining = Math.ceil(timeDiff / (1000 * 3600 * 24));
+console.log("Days remaining:", daysRemaining);
+
+// Check if task is overdue
+let isOverdue = today > dueDateObj;
+console.log("Is task overdue?", isOverdue);
+
+// Format a date (simple approach)
+let formattedDate = dueDateObj.toLocaleDateString();
+console.log("Formatted date:", formattedDate);`}
+                  </pre>
+                </div>
+              </HintButton>
+            </Card.Body>
+          </Card>
+          
+          <div className="step-instruction">
+            <h4>👉 Calculate Days Until Due</h4>
+            <ol>
+              <li>Your task already has a <code>dueDate</code> string (in format YYYY-MM-DD)</li>
+              <li>Create a new Date object for today: <code>let today = new Date();</code></li>
+              <li>Create a Date object from your due date: <code>let dueDateObj = new Date(dueDate);</code></li>
+              <li>Calculate the time difference and convert to days</li>
+              <li>Store the result in a variable called <code>daysRemaining</code></li>
+              <li>Add conditional logic to display a message based on the days remaining</li>
+              <li>Log everything to the console</li>
+            </ol>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

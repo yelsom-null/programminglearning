@@ -11,14 +11,24 @@ import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Badge from 'react-bootstrap/Badge';
+import { Link } from 'react-router-dom';
+import curriculum from '../data/curriculum';
 
 interface BootDevVariablesLessonProps {
   darkMode?: boolean;
+  lessonId?: string;
 }
 
-const BootDevVariablesLesson: React.FC<BootDevVariablesLessonProps> = ({ darkMode = false }) => {
-  const [code, setCode] = useState<string>(
-`// Task Management App - Part 4: Complete Task System
+const BootDevVariablesLesson: React.FC<BootDevVariablesLessonProps> = ({ 
+  darkMode = false,
+  lessonId
+}) => {
+  const [code, setCode] = useState<string>('');
+  
+  // Set code based on lessonId when component mounts
+  useEffect(() => {
+    // Default task manager class code
+    let initialCode = `// Task Management App - Part 4: Complete Task System
 // Let's combine everything into a complete task management system
 
 // Task Manager Class
@@ -156,8 +166,318 @@ const stats = myTaskManager.getStatistics();
 console.log("\\nCompletion Rate:", stats.completionRate.toFixed(1) + "%");
 
 // Try extending the task manager with your own methods and tasks!
-`
-  );
+`;
+
+    // Specific content based on lessonId
+    if (lessonId === 'object-basics') {
+      initialCode = `// Task Manager: Task Objects
+// Learn how to use objects to represent tasks
+
+// Creating a simple task object
+const task1 = {
+  id: 1,
+  name: "Complete JavaScript course",
+  description: "Finish all lessons and exercises",
+  priority: "high",
+  completed: false,
+  dueDate: "2023-12-31",
+  category: "Learning",
+  tags: ["programming", "education"]
+};
+
+// Accessing object properties
+console.log("Task name:", task1.name);
+console.log("Priority:", task1.priority);
+console.log("Due date:", task1.dueDate);
+
+// Modifying object properties
+task1.priority = "medium";
+task1.progress = 75; // Adding a new property
+
+console.log("Updated task:", task1);
+
+// Object methods
+const task2 = {
+  id: 2,
+  name: "Write project documentation",
+  completed: false,
+  priority: "medium",
+  
+  // Method to mark as complete
+  markComplete: function() {
+    this.completed = true;
+    console.log(this.name + " marked as complete");
+  },
+  
+  // Method to change priority
+  setPriority: function(newPriority) {
+    this.priority = newPriority;
+    console.log(this.name + " priority changed to " + newPriority);
+  }
+};
+
+// Using the object methods
+task2.setPriority("high");
+task2.markComplete();
+
+console.log("Task 2 after updates:", task2);
+
+// Creating multiple task objects
+const tasks = [
+  {
+    id: 1,
+    name: "Complete JavaScript course",
+    completed: false,
+    priority: "high"
+  },
+  {
+    id: 2,
+    name: "Write project documentation",
+    completed: true,
+    priority: "medium"
+  },
+  {
+    id: 3,
+    name: "Prepare presentation",
+    completed: false,
+    priority: "high"
+  }
+];
+
+// Working with arrays of objects
+console.log("\\nAll tasks:");
+for (let i = 0; i < tasks.length; i++) {
+  const statusText = tasks[i].completed ? "✓" : "□";
+  console.log(\`\${statusText} \${tasks[i].name} (\${tasks[i].priority})\`);
+}
+
+// Filtering objects
+const highPriorityTasks = tasks.filter(task => task.priority === "high");
+console.log("\\nHigh priority tasks:", highPriorityTasks);
+
+// Try creating your own task objects with different properties and methods!
+`;
+    } else if (lessonId === 'object-methods') {
+      initialCode = `// Task Manager: Object Methods
+// Learn to add functionality to your task objects
+
+// Create a task object with methods
+const task = {
+  id: 1,
+  name: "Build task manager app",
+  description: "Create a task management application with JavaScript",
+  priority: "high",
+  completed: false,
+  createdDate: new Date(),
+  dueDate: new Date("2023-12-31"),
+  progress: 25,
+  timeEstimate: 10, // hours
+  
+  // Method to update progress
+  updateProgress: function(newProgress) {
+    if (newProgress < 0 || newProgress > 100) {
+      console.log("Progress must be between 0 and 100");
+      return false;
+    }
+    
+    this.progress = newProgress;
+    
+    // Auto-complete when progress reaches 100%
+    if (newProgress === 100) {
+      this.completed = true;
+    }
+    
+    console.log(\`Progress updated to \${newProgress}%\`);
+    return true;
+  },
+  
+  // Method to calculate remaining time
+  getRemainingTime: function() {
+    const remainingHours = this.timeEstimate * (100 - this.progress) / 100;
+    return remainingHours.toFixed(1);
+  },
+  
+  // Method to check if task is overdue
+  isOverdue: function() {
+    if (this.completed) return false;
+    
+    const today = new Date();
+    return today > this.dueDate;
+  },
+  
+  // Method to get task summary
+  getSummary: function() {
+    const status = this.completed ? "Completed" : 
+                   this.isOverdue() ? "Overdue" : 
+                   \`In Progress (\${this.progress}%)\`;
+    
+    return {
+      name: this.name,
+      priority: this.priority,
+      status: status,
+      remainingTime: this.getRemainingTime() + " hours"
+    };
+  }
+};
+
+// Using the task object methods
+console.log("Task:", task.name);
+console.log("Initial progress:", task.progress + "%");
+console.log("Initial remaining time:", task.getRemainingTime() + " hours");
+
+// Update progress
+task.updateProgress(50);
+console.log("New remaining time:", task.getRemainingTime() + " hours");
+
+// Check if overdue
+console.log("Is task overdue?", task.isOverdue());
+
+// Get task summary
+const summary = task.getSummary();
+console.log("Task summary:", summary);
+
+// Creating a task with shorthand method syntax (ES6+)
+const modernTask = {
+  id: 2,
+  name: "Learn object methods",
+  progress: 80,
+  timeEstimate: 2,
+  
+  // Shorthand method syntax
+  complete() {
+    this.progress = 100;
+    console.log(this.name + " completed!");
+  },
+  
+  getRemainingHours() {
+    return this.timeEstimate * (100 - this.progress) / 100;
+  }
+};
+
+console.log("\\nModern task remaining hours:", modernTask.getRemainingHours());
+modernTask.complete();
+
+// Try creating your own task objects with methods!
+`;
+    } else if (lessonId === 'class-basics') {
+      initialCode = `// Task Manager: Classes
+// Learn how to create a Task class
+
+// Define a Task class
+class Task {
+  constructor(id, name, priority = "medium") {
+    this.id = id;
+    this.name = name;
+    this.priority = priority;
+    this.completed = false;
+    this.progress = 0;
+    this.createdDate = new Date();
+    this.dueDate = null;
+  }
+  
+  // Method to update progress
+  updateProgress(newProgress) {
+    if (newProgress < 0 || newProgress > 100) {
+      console.log("Progress must be between 0 and 100");
+      return false;
+    }
+    
+    this.progress = newProgress;
+    
+    // Auto-complete when progress reaches 100%
+    if (newProgress === 100) {
+      this.completed = true;
+    }
+    
+    return true;
+  }
+  
+  // Method to mark as complete
+  complete() {
+    this.completed = true;
+    this.progress = 100;
+  }
+  
+  // Method to set due date
+  setDueDate(dateString) {
+    this.dueDate = new Date(dateString);
+  }
+  
+  // Method to check if task is overdue
+  isOverdue() {
+    if (this.completed || !this.dueDate) return false;
+    
+    const today = new Date();
+    return today > this.dueDate;
+  }
+  
+  // Method to get human-readable status
+  getStatus() {
+    if (this.completed) return "Completed";
+    if (this.isOverdue()) return "Overdue";
+    if (this.progress > 0) return \`In Progress (\${this.progress}%)\`;
+    return "Not Started";
+  }
+  
+  // Method to get formatted due date
+  getFormattedDueDate() {
+    if (!this.dueDate) return "No due date";
+    return this.dueDate.toLocaleDateString();
+  }
+  
+  // Method to get task summary
+  getSummary() {
+    return \`Task #\${this.id}: \${this.name} - \${this.getStatus()}\`;
+  }
+}
+
+// Creating instances of the Task class
+const task1 = new Task(1, "Complete JavaScript tutorial", "high");
+const task2 = new Task(2, "Prepare presentation");
+
+console.log("Task 1:", task1);
+console.log("Task 2:", task2);
+
+// Using Task methods
+task1.updateProgress(75);
+task1.setDueDate("2023-12-31");
+
+task2.complete();
+
+// Getting task information
+console.log("\\nTask Summaries:");
+console.log(task1.getSummary());
+console.log(task2.getSummary());
+
+console.log("\\nTask 1 Status:", task1.getStatus());
+console.log("Task 1 Due Date:", task1.getFormattedDueDate());
+console.log("Task 1 Overdue:", task1.isOverdue());
+
+// Creating an array of tasks
+const tasks = [
+  new Task(1, "Learn JavaScript", "high"),
+  new Task(2, "Build a project", "medium"),
+  new Task(3, "Write documentation", "low")
+];
+
+tasks[0].updateProgress(60);
+tasks[1].updateProgress(25);
+tasks[2].complete();
+
+// Display all tasks
+console.log("\\nAll Tasks:");
+tasks.forEach(task => {
+  console.log(\`- \${task.name} (\${task.getStatus()})\`);
+});
+
+// Try creating your own Task class with additional properties and methods!
+`;
+    } else if (lessonId === 'task-manager-class') {
+      // Use the default task manager class code
+    }
+    
+    setCode(initialCode);
+  }, [lessonId]);
   
   const [runtimeValues, setRuntimeValues] = useState<Record<string, any>>({});
   const [consoleOutput, setConsoleOutput] = useState<any[]>([]);
@@ -271,7 +591,7 @@ console.log("\\nCompletion Rate:", stats.completionRate.toFixed(1) + "%");
     }
     return `${value}`;
   };
-
+  
   const theoryContent = [
     // Section 0: Introduction
     {
@@ -292,7 +612,7 @@ console.log("\\nCompletion Rate:", stats.completionRate.toFixed(1) + "%");
               <li><strong>Lesson 2:</strong> Operations to calculate metrics and priority</li>
               <li><strong>Lesson 3:</strong> Functions to manipulate tasks</li>
               <li><strong>Lesson 4 (current):</strong> Building a complete system</li>
-            </ul>
+          </ul>
             <p>Now we'll organize everything into a cohesive system using classes.</p>
           </div>
           
@@ -312,9 +632,9 @@ console.log("\\nCompletion Rate:", stats.completionRate.toFixed(1) + "%");
             A class is a blueprint for creating objects with pre-defined properties and methods.
           </p>
           
-          <div className="bootdev-code-example compact">
+            <div className="bootdev-code-example compact">
             <h4>Task Manager Class</h4>
-            <pre>
+              <pre>
 {`class TaskManager {
   constructor(userName) {
     this.userName = userName;
@@ -326,18 +646,18 @@ console.log("\\nCompletion Rate:", stats.completionRate.toFixed(1) + "%");
     // Implementation here
   }
 }`}
-            </pre>
-          </div>
+              </pre>
+            </div>
 
-          <div className="bootdev-code-example compact">
+            <div className="bootdev-code-example compact">
             <h4>Creating an Instance</h4>
-            <pre>
+              <pre>
 {`// Create a new task manager
 const myTaskManager = new TaskManager("Alex");
 
 // Use its methods
 myTaskManager.addTask("Learn JavaScript", "high");`}
-            </pre>
+              </pre>
           </div>
         </>
       )
@@ -443,7 +763,7 @@ const taskNames = tasks.map(
               <li><strong>Modularity</strong>: Build complex systems from simple, reusable pieces</li>
               <li><strong>Separation of Concerns</strong>: Each part of the system has a focused purpose</li>
             </ul>
-          </div>
+            </div>
 
           <p className="compact">
             These principles help us build maintainable code that can grow with our needs.
@@ -510,10 +830,102 @@ loadFromStorage() {
     }
   };
 
+  // Add navigation component
+  const LessonNavigation = () => {
+    // Find current lesson in curriculum
+    const currentLessonId = lessonId || 'task-manager-class';
+    
+    let prevLesson = null;
+    let nextLesson = null;
+    let currentChapter = null;
+    let currentLessonIndex = -1;
+    
+    // Find current chapter and lesson
+    for (const chapter of curriculum) {
+      const lessonIndex = chapter.lessons.findIndex(l => l.id === currentLessonId);
+      if (lessonIndex !== -1) {
+        currentChapter = chapter;
+        currentLessonIndex = lessonIndex;
+        
+        // Get previous lesson
+        if (lessonIndex > 0) {
+          prevLesson = chapter.lessons[lessonIndex - 1];
+        } else {
+          // Look for last lesson in previous chapter
+          const chapterIndex = curriculum.findIndex(c => c.id === chapter.id);
+          if (chapterIndex > 0) {
+            const prevChapter = curriculum[chapterIndex - 1];
+            prevLesson = prevChapter.lessons[prevChapter.lessons.length - 1];
+          }
+        }
+        
+        // Get next lesson
+        if (lessonIndex < chapter.lessons.length - 1) {
+          nextLesson = chapter.lessons[lessonIndex + 1];
+        } else {
+          // Look for first lesson in next chapter
+          const chapterIndex = curriculum.findIndex(c => c.id === chapter.id);
+          if (chapterIndex < curriculum.length - 1) {
+            const nextChapter = curriculum[chapterIndex + 1];
+            nextLesson = nextChapter.lessons[0];
+          }
+        }
+        
+        break;
+      }
+    }
+    
+    return (
+      <div className="chapter-nav-buttons">
+        {prevLesson ? (
+          <Link 
+            to={prevLesson.route}
+            className="chapter-nav-button"
+            title={`Previous: ${prevLesson.title}`}
+          >
+            ← Previous Lesson
+          </Link>
+        ) : (
+          <button 
+            className="chapter-nav-button" 
+            disabled={true}
+            title="This is the first lesson"
+          >
+            ← Previous Lesson
+          </button>
+        )}
+        
+        <span className="chapter-lesson-indicator">
+          {currentChapter && currentLessonIndex !== -1 
+            ? `Lesson ${currentLessonIndex + 1} of ${currentChapter.lessons.length}`
+            : "Lesson"}
+        </span>
+        
+        {nextLesson ? (
+          <Link 
+            to={nextLesson.route}
+            className="chapter-nav-button"
+            title={`Next: ${nextLesson.title}`}
+          >
+            Next Lesson →
+          </Link>
+        ) : (
+          <button 
+            className="chapter-nav-button" 
+            disabled={true}
+            title="This is the last lesson"
+          >
+            Next Lesson →
+          </button>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="bootdev-lesson-container">
       <div className="bootdev-lesson-header">
-        <h1>Building a Task Manager: Complete System</h1>
+        <h1>Building a Complete Task Manager</h1>
         <div className="bootdev-lesson-controls">
           <label className="auto-execute-toggle">
             <input 
@@ -538,24 +950,8 @@ loadFromStorage() {
         <div className="bootdev-theory-panel">
           <div className="bootdev-lesson-section">
             <div className="chapter-navigation">
-              <h2>Chapter 2: Advanced Task Management</h2>
-              <div className="chapter-nav-buttons">
-                <a 
-                  href="/lesson/boot-dev-style" 
-                  className="chapter-nav-button" 
-                  title="Previous: Functions"
-                >
-                  ← Previous Lesson
-                </a>
-                <span className="chapter-lesson-indicator">Lesson 4 of 4</span>
-                <button 
-                  className="chapter-nav-button" 
-                  disabled={true}
-                  title="This is the last lesson"
-                >
-                  Next Lesson →
-                </button>
-              </div>
+              <h2>Chapter 3: Complete Task System</h2>
+              <LessonNavigation />
             </div>
             
             <h2>{theoryContent[currentTheorySection].title}</h2>

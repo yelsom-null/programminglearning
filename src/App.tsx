@@ -13,6 +13,12 @@ import BasicOperationsLesson from './lessons/BasicOperationsLesson';
 import BootDevStyleLesson from './lessons/BootDevStyleLesson';
 import BootDevVariablesLesson from './lessons/BootDevVariablesLesson';
 import TaskManagerDemoLesson from './lessons/TaskManagerDemoLesson';
+import StringConcatenationLesson from './lessons/StringConcatenationLesson';
+import NumbersLesson from './lessons/NumbersLesson';
+import IncrementDecrementLesson from './lessons/IncrementDecrementLesson';
+import ConsoleLesson from './lessons/ConsoleLesson';
+import UndefinedLesson from './lessons/UndefinedLesson';
+import NullUndefinedLesson from './lessons/NullUndefinedLesson';
 import curriculum, { Chapter, Lesson } from './data/curriculum';
 
 const App: React.FC = () => {
@@ -100,39 +106,50 @@ const App: React.FC = () => {
       case 'task-manager-demo':
         return <TaskManagerDemoLesson darkMode={darkMode} />;
         
-      // Basic lessons
+      // Chapter 1: JavaScript Fundamentals
       case 'variables-intro':
-        return <VariablesLesson darkMode={darkMode} />;
+        return <VariablesLesson darkMode={darkMode} moduleId={1} />;
         
+      case 'console':
+        return <ConsoleLesson darkMode={darkMode} />;
+        
+      case 'string-concatenation':
+        return <StringConcatenationLesson darkMode={darkMode} />;
+        
+      case 'numbers-in-js':
+        return <NumbersLesson darkMode={darkMode} />;
+        
+      case 'increment-decrement':
+        return <IncrementDecrementLesson darkMode={darkMode} />;
+        
+      case 'undefined-undeclared':
+        return <UndefinedLesson darkMode={darkMode} />;
+        
+      case 'null-undefined':
+        return <NullUndefinedLesson darkMode={darkMode} />;
+        
+      // Chapter 2: Task Operations
       case 'basic-operations':
         return <BasicOperationsLesson darkMode={darkMode} />;
+        
+      case 'comparison-operators':
+        return <BasicOperationsLesson darkMode={darkMode} topic="comparison" />;
+        
+      case 'logical-operators':
+        return <BasicOperationsLesson darkMode={darkMode} topic="logical" />;
       
-      // Function lessons
-      case 'boot-dev-style':
-        return <BootDevStyleLesson darkMode={darkMode} />;
-      
-      // Complete system
-      case 'boot-dev-variables':
-        return <BootDevVariablesLesson darkMode={darkMode} />;
-      
-      // Original curriculum lessons
-      case 'basic-types':
-      case 'let-and-const':
-      case 'why-javascript':
-      case 'comments':
-        return <VariablesLesson darkMode={darkMode} />;
-      
-      // Numbers lessons
-      case 'numbers-in-js':
-      case 'numbers-review':
-      case 'increment-decrement':
-        return <BasicOperationsLesson darkMode={darkMode} />;
-      
-      // Function lessons
+      // Chapter 3: Task Functions
       case 'function-basics':
       case 'function-parameters':
       case 'return-values':
-        return <BootDevStyleLesson darkMode={darkMode} />;
+        return <BootDevStyleLesson darkMode={darkMode} lessonId={lessonId} />;
+      
+      // Chapter 4: Complete Task System
+      case 'object-basics':
+      case 'object-methods':
+      case 'class-basics':
+      case 'task-manager-class':
+        return <BootDevVariablesLesson darkMode={darkMode} lessonId={lessonId} />;
       
       default:
         // For any unmapped lesson, show the LessonPlaceholder component
@@ -141,6 +158,7 @@ const App: React.FC = () => {
             title={foundLesson.title}
             description={foundLesson.description}
             status={foundLesson.status}
+            lessonId={foundLesson.id}
           />
         );
     }

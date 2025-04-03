@@ -35,147 +35,130 @@ const curriculum: Chapter[] = [
     ]
   },
   {
-    id: 'task-manager-fundamentals',
-    title: 'Task Manager Fundamentals',
+    id: 'chapter-1',
+    title: 'Chapter 1: JavaScript Fundamentals',
     order: 2,
-    description: 'Learn to build a simple task management application starting with the basics',
+    description: 'Master the basics of JavaScript variables and task management',
     status: 'available',
     lessons: [
       {
         id: 'variables-intro',
-        title: 'Task Variables',
+        title: 'Lesson 1: Building with Variables',
         description: 'Define variables to represent tasks and their properties',
         order: 1,
         status: 'available',
         route: '/lesson/variables-intro'
       },
       {
-        id: 'basic-operations',
-        title: 'Task Operations',
-        description: 'Perform calculations on task data to gain insights',
+        id: 'console',
+        title: 'Lesson 2: Console Logging Task Variables',
+        description: 'Learn to output task information to the console',
         order: 2,
         status: 'available',
-        route: '/lesson/basic-operations'
-      }
-    ]
-  },
-  {
-    id: 'advanced-task-management',
-    title: 'Advanced Task Management',
-    order: 3,
-    description: 'Build more complex task management features using functions and classes',
-    status: 'available',
-    lessons: [
-      {
-        id: 'boot-dev-style',
-        title: 'Task Functions',
-        description: 'Create functions to manage task operations',
-        order: 1,
-        status: 'available',
-        route: '/lesson/boot-dev-style'
+        route: '/lesson/console'
       },
       {
-        id: 'boot-dev-variables',
-        title: 'Complete Task System',
-        description: 'Build a complete task management system with classes',
-        order: 2,
-        status: 'available',
-        route: '/lesson/boot-dev-variables'
-      }
-    ]
-  },
-  {
-    id: 'javascript-variables',
-    title: 'JavaScript Variables',
-    order: 4,
-    description: 'Learn the basic syntax of JavaScript and how to declare variables',
-    status: 'available',
-    lessons: [
-      {
-        id: 'basic-types',
-        title: 'Basic Types',
-        description: 'Learn about JavaScript\'s primitive data types',
-        order: 1,
-        status: 'available',
-        route: '/lesson/basic-types'
-      },
-      {
-        id: 'let-and-const',
-        title: 'let and const',
-        description: 'Understand variable declarations in modern JavaScript',
-        order: 2,
-        status: 'available',
-        route: '/lesson/let-and-const'
-      },
-      {
-        id: 'why-javascript',
-        title: 'Why JavaScript?',
-        description: 'Explore the popularity and use cases of JavaScript',
+        id: 'string-concatenation',
+        title: 'Lesson 3: String Concatenation for Task Summaries',
+        description: 'Combine strings to create readable task summaries',
         order: 3,
         status: 'available',
-        route: '/lesson/why-javascript'
-      },
-      {
-        id: 'comments',
-        title: 'Comments',
-        description: 'Learn how to add comments to your code',
-        order: 4,
-        status: 'available',
-        route: '/lesson/comments'
+        route: '/lesson/string-concatenation'
       },
       {
         id: 'numbers-in-js',
-        title: 'Numbers in JS',
-        description: 'Working with numeric data in JavaScript',
-        order: 5,
+        title: 'Lesson 4: Numbers in JS',
+        description: 'Working with numeric data in JavaScript tasks',
+        order: 4,
         status: 'available',
         route: '/lesson/numbers-in-js'
       },
       {
-        id: 'numbers-review',
-        title: 'Numbers Review',
-        description: 'Practice and review of number operations',
-        order: 6,
-        status: 'available',
-        route: '/lesson/numbers-review'
-      },
-      {
         id: 'increment-decrement',
-        title: 'Increment and Decrement',
-        description: 'Learn about the ++ and -- operators',
-        order: 7,
+        title: 'Lesson 5: Increment and Decrement',
+        description: 'Learn about the ++ and -- operators for task counters',
+        order: 5,
         status: 'available',
         route: '/lesson/increment-decrement'
+      },
+      {
+        id: 'undefined-undeclared',
+        title: 'Lesson 6: Undefined and Undeclared',
+        description: 'Understanding variable scope and declaration in task management',
+        order: 6,
+        status: 'available',
+        route: '/lesson/undefined-undeclared'
+      },
+      {
+        id: 'null-undefined',
+        title: 'Lesson 7: Null and Undefined',
+        description: 'Working with missing or empty task values',
+        order: 7,
+        status: 'available',
+        route: '/lesson/null-undefined'
       }
     ]
   },
   {
-    id: 'javascript-functions',
-    title: 'Functions',
-    order: 5,
-    description: 'Learn about the different ways to create and execute functions in JavaScript',
+    id: 'chapter-2',
+    title: 'Chapter 2: Task Operations',
+    order: 3,
+    description: 'Learn to manipulate and analyze task data',
+    status: 'available',
+    lessons: [
+      {
+        id: 'basic-operations',
+        title: 'Lesson 1: Basic Task Operations',
+        description: 'Perform calculations on task data to gain insights',
+        order: 1,
+        status: 'available',
+        route: '/lesson/basic-operations'
+      },
+      {
+        id: 'comparison-operators',
+        title: 'Lesson 2: Comparing Tasks',
+        description: 'Use comparison operators to prioritize tasks',
+        order: 2,
+        status: 'available',
+        route: '/lesson/comparison-operators'
+      },
+      {
+        id: 'logical-operators',
+        title: 'Lesson 3: Task Filtering',
+        description: 'Apply logical operators to filter and sort tasks',
+        order: 3,
+        status: 'available',
+        route: '/lesson/logical-operators'
+      }
+    ]
+  },
+  {
+    id: 'chapter-3',
+    title: 'Chapter 3: Task Functions',
+    order: 4,
+    description: 'Create reusable functions for task management',
     status: 'available',
     lessons: [
       {
         id: 'function-basics',
-        title: 'Function Basics',
-        description: 'Creating and calling JavaScript functions',
+        title: 'Lesson 1: Function Basics',
+        description: 'Create functions to manage task operations',
         order: 1,
         status: 'available',
         route: '/lesson/function-basics'
       },
       {
         id: 'function-parameters',
-        title: 'Function Parameters',
-        description: 'Working with function parameters and arguments',
+        title: 'Lesson 2: Function Parameters',
+        description: 'Pass task data to functions with parameters',
         order: 2,
         status: 'available',
         route: '/lesson/function-parameters'
       },
       {
         id: 'return-values',
-        title: 'Return Values',
-        description: 'Understanding function return values',
+        title: 'Lesson 3: Return Values',
+        description: 'Get results back from task functions',
         order: 3,
         status: 'available',
         route: '/lesson/return-values'
@@ -183,44 +166,43 @@ const curriculum: Chapter[] = [
     ]
   },
   {
-    id: 'javascript-objects',
-    title: 'Objects',
-    order: 6,
-    description: 'Objects are one of the most-used JS structures, learn to master them',
-    status: 'coming-soon',
+    id: 'chapter-4',
+    title: 'Chapter 4: Complete Task System',
+    order: 5,
+    description: 'Build a complete task management system with objects and classes',
+    status: 'available',
     lessons: [
       {
         id: 'object-basics',
-        title: 'Object Basics',
-        description: 'Creating and accessing object properties',
+        title: 'Lesson 1: Task Objects',
+        description: 'Create objects to represent individual tasks',
         order: 1,
-        status: 'coming-soon',
+        status: 'available',
         route: '/lesson/object-basics'
       },
       {
         id: 'object-methods',
-        title: 'Object Methods',
-        description: 'Adding functions to objects',
+        title: 'Lesson 2: Task Methods',
+        description: 'Add functions to task objects for common operations',
         order: 2,
-        status: 'coming-soon',
+        status: 'available',
         route: '/lesson/object-methods'
-      }
-    ]
-  },
-  {
-    id: 'javascript-classes',
-    title: 'Classes',
-    order: 7,
-    description: 'Learn about classes in JavaScript and how they differ from POJOs and the classes in other languages',
-    status: 'coming-soon',
-    lessons: [
+      },
       {
         id: 'class-basics',
-        title: 'Class Basics',
-        description: 'Creating classes in JavaScript',
-        order: 1,
-        status: 'coming-soon',
+        title: 'Lesson 3: Task Classes',
+        description: 'Build a Task class for consistent task creation',
+        order: 3,
+        status: 'available',
         route: '/lesson/class-basics'
+      },
+      {
+        id: 'task-manager-class',
+        title: 'Lesson 4: TaskManager Class',
+        description: 'Create a class to manage multiple tasks',
+        order: 4,
+        status: 'available',
+        route: '/lesson/task-manager-class'
       }
     ]
   }

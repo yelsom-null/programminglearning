@@ -12,14 +12,170 @@ import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Badge from 'react-bootstrap/Badge';
+import { Link } from 'react-router-dom';
+import curriculum from '../data/curriculum';
 
 interface BasicOperationsLessonProps {
   darkMode?: boolean;
+  topic?: string;
 }
 
-const BasicOperationsLesson: React.FC<BasicOperationsLessonProps> = ({ darkMode = false }) => {
+const BasicOperationsLesson: React.FC<BasicOperationsLessonProps> = ({ 
+  darkMode = false,
+  topic
+}) => {
   const [code, setCode] = useState<string>(
-`// Task Management App - Part 2: Task Operations
+    // Default code will be set after checking topic
+    ''
+  );
+  
+  // Set initial code based on topic
+  useEffect(() => {
+    if (topic === 'comparison') {
+      setCode(`// Task Management App - Comparing Tasks
+// Let's learn about comparison operators for tasks
+
+// Define some tasks
+let task1Priority = 3; // High priority
+let task2Priority = 1; // Low priority
+
+let task1Deadline = 2; // 2 days from now
+let task2Deadline = 10; // 10 days from now
+
+// Compare priorities (higher is more important)
+console.log("Task 1 priority > Task 2 priority:", task1Priority > task2Priority);
+console.log("Task 1 priority < Task 2 priority:", task1Priority < task2Priority);
+console.log("Task 1 priority === Task 2 priority:", task1Priority === task2Priority);
+
+// Compare deadlines (lower means more urgent)
+console.log("Task 1 deadline < Task 2 deadline:", task1Deadline < task2Deadline);
+
+// Combined comparisons
+let task1Urgent = task1Priority >= 3 && task1Deadline <= 3;
+let task2Urgent = task2Priority >= 3 && task2Deadline <= 3;
+
+console.log("Is Task 1 urgent?", task1Urgent);
+console.log("Is Task 2 urgent?", task2Urgent);
+
+// Sorting tasks by priority
+let highestPriorityTask = task1Priority > task2Priority ? "Task 1" : "Task 2";
+console.log("Highest priority task:", highestPriorityTask);
+
+// Sorting tasks by deadline
+let mostUrgentTask = task1Deadline < task2Deadline ? "Task 1" : "Task 2";
+console.log("Most urgent task:", mostUrgentTask);
+
+// Try creating your own comparisons to prioritize tasks!
+`);
+    } else if (topic === 'logical') {
+      setCode(`// Task Management App - Logical Operators for Task Filtering
+// Using AND, OR, and NOT to filter tasks
+
+// Task properties
+let task1 = {
+  name: "Complete project proposal",
+  priority: "high",
+  deadline: 2, // days
+  isCompleted: false,
+  category: "work"
+};
+
+let task2 = {
+  name: "Schedule team meeting",
+  priority: "medium",
+  deadline: 5, // days
+  isCompleted: false,
+  category: "work"
+};
+
+let task3 = {
+  name: "Buy groceries",
+  priority: "medium",
+  deadline: 1, // days
+  isCompleted: false,
+  category: "personal"
+};
+
+// AND (&&) - both conditions must be true
+let highPriorityWorkTasks = 
+  task1.priority === "high" && task1.category === "work";
+console.log("Task 1 is high priority work task:", highPriorityWorkTasks);
+
+// OR (||) - at least one condition must be true
+let needsAttention = 
+  task1.priority === "high" || task1.deadline <= 2;
+console.log("Task 1 needs immediate attention:", needsAttention);
+
+// NOT (!) - inverts a boolean
+let canBeDeferred = !(task1.priority === "high" || task1.deadline <= 2);
+console.log("Task 1 can be deferred:", canBeDeferred);
+
+// Complex filtering for task lists
+function shouldShowInDashboard(task) {
+  return !task.isCompleted && 
+         (task.priority === "high" || task.deadline <= 2);
+}
+
+console.log("Task 1 on dashboard:", shouldShowInDashboard(task1));
+console.log("Task 2 on dashboard:", shouldShowInDashboard(task2));
+console.log("Task 3 on dashboard:", shouldShowInDashboard(task3));
+
+// Try creating your own task filters using logical operators!
+`);
+    } else if (topic === 'increment-decrement') {
+      setCode(`// Task Management App - Increment and Decrement Operations
+// Learn to use ++ and -- operators for task counts and progress
+
+// Basic counters
+let totalTasks = 5;
+let completedTasks = 0;
+
+// Increment: increase by 1
+completedTasks++;
+console.log("Completed one task:", completedTasks);
+
+// Increment again
+completedTasks++;
+console.log("Completed another task:", completedTasks);
+
+// Decrement: decrease by 1
+totalTasks--;
+console.log("Removed a task, new total:", totalTasks);
+
+// The difference between pre and post increment
+let a = 5;
+let b = a++; // Post-increment: assign first, then increment
+console.log("a:", a, "b:", b); // a: 6, b: 5
+
+let c = 5;
+let d = ++c; // Pre-increment: increment first, then assign
+console.log("c:", c, "d:", d); // c: 6, d: 6
+
+// Task progress tracking
+let taskProgress = 0;
+
+// Increment by larger steps
+taskProgress += 25; // Same as: taskProgress = taskProgress + 25
+console.log("Progress after first step:", taskProgress + "%");
+
+taskProgress += 25;
+console.log("Progress after second step:", taskProgress + "%");
+
+// Decrement
+let daysRemaining = 7;
+daysRemaining--; // One day passed
+console.log("Days remaining:", daysRemaining);
+
+// Compound assignment with other operators
+let estimatedMinutes = 120;
+estimatedMinutes /= 2; // Cut the time in half
+console.log("New estimate:", estimatedMinutes, "minutes");
+
+// Try writing your own increment/decrement operations for task management!
+`);
+    } else {
+      // Default code example
+      setCode(`// Task Management App - Part 2: Task Operations
 // Let's perform calculations on our task data
 
 // Task 1
@@ -57,8 +213,9 @@ console.log("Task 1 remaining time: " + task1RemainingHours.toFixed(1) + " hours
 console.log("High priority task: " + highPriorityTask);
 
 // Try modifying these calculations or creating your own!
-`
-  );
+`);
+    }
+  }, [topic]);
   
   const [runtimeValues, setRuntimeValues] = useState<Record<string, any>>({});
   const [assignedValues, setAssignedValues] = useState<Record<string, string>>({});
@@ -198,21 +355,96 @@ console.log("High priority task: " + highPriorityTask);
           <div className="chapter-info">
             <span className="chapter-title">Chapter 1: Task Manager Fundamentals</span>
             <div className="lesson-navigation">
-              <a 
-                href="/lesson/variables-intro" 
-                className="chapter-nav-button" 
-                title="Previous: Variables"
-              >
-                ← Previous Lesson
-              </a>
-              <span className="lesson-indicator">Lesson 2 of 4</span>
-              <a 
-                href="/lesson/functions" 
-                className="chapter-nav-button" 
-                title="Next: Functions"
-              >
-                Next Lesson →
-              </a>
+              {(() => {
+                // Find current lesson in curriculum
+                const currentLessonId = topic || 'basic-operations';
+                
+                let prevLesson = null;
+                let nextLesson = null;
+                let currentChapter = null;
+                let currentLessonIndex = -1;
+                
+                // Find current chapter and lesson
+                for (const chapter of curriculum) {
+                  const lessonIndex = chapter.lessons.findIndex(l => l.id === currentLessonId);
+                  if (lessonIndex !== -1) {
+                    currentChapter = chapter;
+                    currentLessonIndex = lessonIndex;
+                    
+                    // Get previous lesson
+                    if (lessonIndex > 0) {
+                      prevLesson = chapter.lessons[lessonIndex - 1];
+                    } else {
+                      // Look for last lesson in previous chapter
+                      const chapterIndex = curriculum.findIndex(c => c.id === chapter.id);
+                      if (chapterIndex > 0) {
+                        const prevChapter = curriculum[chapterIndex - 1];
+                        prevLesson = prevChapter.lessons[prevChapter.lessons.length - 1];
+                      }
+                    }
+                    
+                    // Get next lesson
+                    if (lessonIndex < chapter.lessons.length - 1) {
+                      nextLesson = chapter.lessons[lessonIndex + 1];
+                    } else {
+                      // Look for first lesson in next chapter
+                      const chapterIndex = curriculum.findIndex(c => c.id === chapter.id);
+                      if (chapterIndex < curriculum.length - 1) {
+                        const nextChapter = curriculum[chapterIndex + 1];
+                        nextLesson = nextChapter.lessons[0];
+                      }
+                    }
+                    
+                    break;
+                  }
+                }
+                
+                return (
+                  <>
+                    {prevLesson ? (
+                      <Link 
+                        to={prevLesson.route}
+                        className="chapter-nav-button"
+                        title={`Previous: ${prevLesson.title}`}
+                      >
+                        ← Previous Lesson
+                      </Link>
+                    ) : (
+                      <button 
+                        className="chapter-nav-button" 
+                        disabled={true}
+                        title="This is the first lesson"
+                      >
+                        ← Previous Lesson
+                      </button>
+                    )}
+                    
+                    <span className="lesson-indicator">
+                      {currentChapter && currentLessonIndex !== -1 
+                        ? `Lesson ${currentLessonIndex + 1} of ${currentChapter.lessons.length}`
+                        : "Lesson"}
+                    </span>
+                    
+                    {nextLesson ? (
+                      <Link 
+                        to={nextLesson.route}
+                        className="chapter-nav-button"
+                        title={`Next: ${nextLesson.title}`}
+                      >
+                        Next Lesson →
+                      </Link>
+                    ) : (
+            <button 
+                        className="chapter-nav-button" 
+                        disabled={true}
+                        title="This is the last lesson"
+            >
+                        Next Lesson →
+            </button>
+          )}
+                  </>
+                );
+              })()}
             </div>
           </div>
         </div>

@@ -11,200 +11,74 @@ import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Badge from 'react-bootstrap/Badge';
-import VariablesCheckpointSystem from '../components/VariablesCheckpointSystem';
-import VariablesModuleContent from '../components/VariablesModuleContent';
 import { useParams, Link } from 'react-router-dom';
 import curriculum from '../data/curriculum';
 
-interface VariablesLessonProps {
+interface NumbersLessonProps {
   darkMode?: boolean;
-  moduleId?: number;
-  step?: number;
-  topic?: string;
 }
 
-const VariablesLesson: React.FC<VariablesLessonProps> = ({ 
-  darkMode = false, 
-  moduleId: initialModuleId = 1,
-  step: initialStep = 0,
-  topic
+const NumbersLesson: React.FC<NumbersLessonProps> = ({ 
+  darkMode = false
 }) => {
-  // Define the initial code samples for each module
-  const initialCodeByModule = {
-    1: `// Task Management App - Variables Basics
-// Variables are containers for storing data values
+  // Initial code sample
+  const initialCode = `// Numbers in JavaScript for Task Management
+// Explore different number operations for task tracking
 
-// Create your task variables below:
+// Basic task metrics
+let taskId = 1234;
+let priority = 3;        // 1=low, 2=medium, 3=high
+let progress = 75.5;     // Percentage complete
+let timeEstimate = 3.5;  // Hours
 
+// Task calculations
+let tasks = [
+  { name: "Task 1", hours: 2.5, progress: 100 },
+  { name: "Task 2", hours: 4.0, progress: 50 },
+  { name: "Task 3", hours: 1.5, progress: 25 },
+  { name: "Task 4", hours: 3.0, progress: 0 }
+];
 
+// Calculate total estimated hours
+let totalHours = 0;
+for (let task of tasks) {
+  totalHours += task.hours;
+}
 
+// Calculate overall progress percentage
+let totalProgress = 0;
+for (let task of tasks) {
+  totalProgress += task.progress * task.hours / totalHours;
+}
 
-`,
-    2: `// Task Management App - Variable Types
-// In this module, you'll explore different types of variables for tasks.
+// Calculate remaining work hours
+let remainingHours = 0;
+for (let task of tasks) {
+  remainingHours += task.hours * (100 - task.progress) / 100;
+}
 
-// You'll build on what you learned in Module 1 by creating
-// variables with different data types for your task.
+// Display the results with formatting
+console.log(\`Project metrics:
+- Total estimated hours: \${totalHours}
+- Overall progress: \${totalProgress.toFixed(1)}%
+- Remaining work: \${remainingHours.toFixed(1)} hours\`);
 
-// The code editor is empty - follow the module instructions to create:
-// - String variables (for text)
-// - Number variables (for quantities)
-// - Boolean variables (for true/false states)
-
-`,
-    3: `// Task Management App - Variable Manipulation
-// In this module, you'll learn how to update and modify variables.
-
-// First, set up some initial task state:
-let taskName = "Create project plan";
-let progress = 40;
-let estimatedHours = 6;
-let isCompleted = false;
-
-// Display initial state
-console.log("Task: " + taskName);
-console.log("Current progress: " + progress + "%");
-console.log("Initial estimate: " + estimatedHours + " hours");
-
-// Follow the module instructions to update these variables
-// and create formulas to track task progress.
-
-`,
-    4: `// Task Management App - Multiple Tasks
-// In this module, you'll manage variables for multiple tasks.
-
-// Follow the module instructions to:
-// 1. Create variables for multiple tasks
-// 2. Compare tasks based on their properties
-// 3. Calculate overall progress
-// 4. Create a task summary report
-
-`
-  };
+// Try adding your own calculations!
+`;
   
-  // Add the ability to preserve variables between modules
-  const [variablesByModule, setVariablesByModule] = useState<Record<number, Record<string, any>>>({
-    1: {},
-    2: {},
-    3: {},
-    4: {},
-    5: {}
-  });
-  
-  const [currentModule, setCurrentModule] = useState(initialModuleId);
-  const [code, setCode] = useState('');
+  const [code, setCode] = useState(initialCode);
   const [runtimeValues, setRuntimeValues] = useState<Record<string, any>>({});
   const [consoleOutput, setConsoleOutput] = useState<any[]>([]);
   const [executionPath, setExecutionPath] = useState<string[]>([]);
-  const [activeStep, setActiveStep] = useState<number>(initialStep);
   const [error, setError] = useState<string | null>(null);
   
-  // Only set the initial code the first time component loads
-  useEffect(() => {
-    if (initialModuleId && initialModuleId in initialCodeByModule) {
-      setCode(initialCodeByModule[initialModuleId as keyof typeof initialCodeByModule]);
-    } else {
-      setCode(initialCodeByModule[1]);
-    }
-    // We only want this to run once when the component mounts
-  }, []);
-  
-  // Handle topic-specific content if specified
-  useEffect(() => {
-    if (topic) {
-      // You could set specific code examples based on the topic
-      if (topic === 'undefined-undeclared') {
-        setCode(`// Understanding Undefined vs Undeclared Variables
-let declaredVar;  // declared but not assigned a value (undefined)
-console.log("declaredVar:", declaredVar);
-
-// console.log("undeclaredVar:", undeclaredVar);  // Uncomment to see error
-
-// Checking for undefined
-if (declaredVar === undefined) {
-  console.log("declaredVar is undefined");
-}
-
-// Safely checking for existence
-if (typeof declaredVar !== "undefined") {
-  console.log("declaredVar exists");
-}
-
-// Example with functions
-function returnNothing() {
-  // No return statement
-}
-
-let result = returnNothing();
-console.log("Function result:", result);  // undefined
-`);
-      } else if (topic === 'null-undefined') {
-        setCode(`// Understanding null vs undefined
-// undefined: variable is declared but has no value assigned
-let emptyVar;
-console.log("emptyVar:", emptyVar);
-
-// null: explicitly assigned "no value"
-let nullVar = null;
-console.log("nullVar:", nullVar);
-
-// Comparing null and undefined
-console.log("null == undefined:", null == undefined);    // true (loose equality)
-console.log("null === undefined:", null === undefined);  // false (strict equality)
-
-// Checking for null or undefined
-function processValue(value) {
-  // Check for both null and undefined
-  if (value == null) {
-    console.log("Value is either null or undefined");
-    return;
-  }
-  console.log("Processing:", value);
-}
-
-processValue(emptyVar);
-processValue(nullVar);
-processValue("Hello");
-
-// When to use null
-let user = {
-  name: "John",
-  email: null  // Explicitly set to null (user has no email)
-};
-
-console.log("User has email?", user.email !== null);
-`);
-      }
-    }
-  }, [topic]);
-  
-  // Handle moduleId and step changes
-  useEffect(() => {
-    if (initialModuleId !== 1) {
-      setCurrentModule(initialModuleId);
-    }
-    if (initialStep !== 0) {
-      setActiveStep(initialStep);
-    }
-  }, [initialModuleId, initialStep]);
-  
-  // Store variables when module is completed
-  useEffect(() => {
-    if (Object.keys(runtimeValues).length > 0) {
-      setVariablesByModule(prev => ({
-        ...prev,
-        [currentModule]: runtimeValues
-      }));
-    }
-  }, [runtimeValues, currentModule]);
-  
-  // Handle code changes and track modifications
+  // Handle code changes
   const handleCodeChange = (value: string) => {
     setCode(value);
   };
   
-  // Auto-execute code when it changes (for real-time feedback)
-  React.useEffect(() => {
+  // Auto-execute code when it changes
+  useEffect(() => {
     executeCode();
   }, [code]);
 
@@ -212,7 +86,6 @@ console.log("User has email?", user.email !== null);
     setError(null);
     
     try {
-      // Use AI-enhanced evaluation with fallback to standard
       const result = await evaluateCodeWithAI(code);
       
       if (result.variables) {
@@ -231,7 +104,6 @@ console.log("User has email?", user.email !== null);
         setError(result.error);
       }
       
-      // If AI enhanced, we can use execution path for visualization
       if (result.aiEnhanced && result.executionPath) {
         setExecutionPath(result.executionPath);
       }
@@ -245,12 +117,10 @@ console.log("User has email?", user.email !== null);
     if (value === null) return 'null';
     if (Array.isArray(value)) return 'array';
     
-    // Check for class instances
     if (typeof value === 'object' && value?.__isClass) {
       return 'class';
     }
     
-    // Check for stringified class instances
     if (typeof value === 'string' && isStringifiedClassInstance(value).isClass) {
       return 'class';
     }
@@ -291,16 +161,13 @@ console.log("User has email?", user.email !== null);
     if (value === undefined) return 'undefined';
     if (value === null) return 'null';
     
-    // Handle stringified class instances
     if (typeof value === 'string' && isStringifiedClassInstance(value).isClass) {
-      // Return the original string since it's already formatted nicely
       return value;
     }
     
     if (typeof value === 'string') return `"${value}"`;
     if (typeof value === 'object') {
       try {
-        // Don't include internal properties in the formatted output
         if (value?.__isClass || value?.__constructorName) {
           const cleanedValue = { ...value };
           delete cleanedValue.__isClass;
@@ -318,15 +185,14 @@ console.log("User has email?", user.email !== null);
   return (
     <div className="lesson-container">
       <div className="lesson-header">
-        <h1>Lesson 1: Building with Variables</h1>
+        <h1>Lesson 4: Numbers in JavaScript</h1>
         <div className="lesson-meta">
           <div className="chapter-info">
             <span className="chapter-title">Chapter 1: Task Manager Fundamentals</span>
             <div className="lesson-navigation">
               {(() => {
                 // Find current lesson in curriculum
-                const currentLessonId = topic || 
-                  (initialModuleId === 5 ? 'console' : 'variables-intro');
+                const currentLessonId = "numbers-in-js";
                 
                 let prevLesson = null;
                 let nextLesson = null;
@@ -421,17 +287,123 @@ console.log("User has email?", user.email !== null);
 
       <div className="lesson-content">
         <div className="explanation-panel">
-         
+          <h2>Numbers in JavaScript for Task Tracking</h2>
+          <p>
+            In task management applications, we use numbers for many important aspects:
+            priorities, progress tracking, time estimates, and calculations for reports.
+          </p>
           
-          {/* Module Content Component */}
-          <VariablesModuleContent 
-            moduleId={currentModule}
-            darkMode={darkMode}
-            code={code}
-            onCodeChange={handleCodeChange}
-            runtimeValues={runtimeValues}
-            consoleOutput={consoleOutput}
-          />
+          <h3>Basic Number Types</h3>
+          <p>
+            JavaScript has a single number type that represents both integers and floating-point values:
+          </p>
+          
+          <div className="code-example">
+{`// Integer numbers
+let taskId = 1234;
+let priority = 3;        // 1=low, 2=medium, 3=high
+
+// Floating-point numbers (decimals)
+let progress = 75.5;     // Percentage complete
+let timeEstimate = 3.5;  // Hours
+let cost = 149.99;       // Currency value
+
+// Scientific notation (for very large or small numbers)
+let microTask = 1.5e-6;  // 0.0000015
+let bigProject = 3.2e6;  // 3,200,000`}
+          </div>
+          
+          <h3>Mathematical Operations</h3>
+          <p>
+            JavaScript supports all standard mathematical operations, which are essential
+            for task metrics and calculations:
+          </p>
+          
+          <div className="code-example">
+{`// Basic operations
+let task1Hours = 2.5;
+let task2Hours = 1.5;
+let totalHours = task1Hours + task2Hours;  // Addition: 4
+let averageHours = totalHours / 2;         // Division: 2
+
+// Task progress calculation
+let totalTasks = 10;
+let completedTasks = 4;
+let progressPercent = (completedTasks / totalTasks) * 100;  // 40%
+
+// Remaining work calculation
+let estimate = 8;
+let progress = 25;
+let remainingHours = estimate * (100 - progress) / 100;  // 6 hours`}
+          </div>
+          
+          <h3>Formatting Numbers for Display</h3>
+          <p>
+            When displaying numbers in a task management UI, we often need to format them:
+          </p>
+          
+          <div className="code-example">
+{`// Rounding to nearest integer
+let roundedProgress = Math.round(75.5);  // 76
+
+// Fixed decimal places (for consistent display)
+let hours = 3.5;
+let formattedHours = hours.toFixed(1) + " hrs";  // "3.5 hrs"
+
+// Percentage formatting
+let progress = 33.333333;
+let formattedProgress = progress.toFixed(1) + "%";  // "33.3%"
+
+// Currency formatting using Intl.NumberFormat
+let cost = 149.99;
+let formattedCost = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD'
+}).format(cost);  // "$149.99"`}
+          </div>
+          
+          <h3>Handling Invalid Number Inputs</h3>
+          <p>
+            When working with user input for task data, you need to handle potential non-numeric values:
+          </p>
+          
+          <div className="code-example">
+{`// Converting string input to numbers
+let progressInput = "75%";
+let numericProgress = parseFloat(progressInput);  // 75
+console.log(numericProgress);
+
+// Check for invalid numbers (NaN - Not a Number)
+let invalidInput = "not a number";
+let invalidNumber = parseFloat(invalidInput);  // NaN
+console.log(invalidNumber);
+console.log(isNaN(invalidNumber));  // true
+
+// Providing fallbacks for calculations
+function calculateRemainingHours(progress, estimate) {
+  // Ensure inputs are valid numbers
+  if (isNaN(progress) || isNaN(estimate)) {
+    return 0;  // Default fallback value
+  }
+  return estimate * (100 - progress) / 100;
+}`}
+          </div>
+          
+          <h3>Math Object for Task Calculations</h3>
+          <p>
+            JavaScript's built-in Math object provides useful methods for task calculations:
+          </p>
+          <ul>
+            <li><code>Math.round(x)</code> - Rounds to the nearest integer</li>
+            <li><code>Math.floor(x)</code> - Rounds down (useful for full task counts)</li>
+            <li><code>Math.ceil(x)</code> - Rounds up (useful for estimates)</li>
+            <li><code>Math.min(x, y, ...)</code> - Returns the lowest value</li>
+            <li><code>Math.max(x, y, ...)</code> - Returns the highest value</li>
+          </ul>
+          
+          <p>
+            Try experimenting with the code editor to perform task-related calculations!
+          </p>
         </div>
 
         <div className="interactive-panel">
@@ -475,56 +447,6 @@ console.log("User has email?", user.email !== null);
                               <Card.Title>{getTypeExplanation(type)}</Card.Title>
                               <Card.Text className="variable-value">{formatValue(value)}</Card.Text>
                               
-                              {/* Display class name if available */}
-                              {type === 'class' && (
-                                <>
-                                  {value?.__constructorName && (
-                                    <div className="class-name">
-                                      {value.__constructorName}
-                                    </div>
-                                  )}
-                                  {typeof value === 'string' && isStringifiedClassInstance(value).isClass && (
-                                    <div className="class-name">
-                                      {isStringifiedClassInstance(value).className}
-                                    </div>
-                                  )}
-                                </>
-                              )}
-                              
-                              {/* Display class properties if it's a class instance */}
-                              {type === 'class' && (
-                                <div className="class-properties">
-                                  {typeof value === 'object' ? (
-                                    // Regular object with properties
-                                    Object.entries(value)
-                                      .filter(([key]) => !key.startsWith('__')) // Skip internal properties
-                                      .slice(0, 5) // Limit to first 5 properties
-                                      .map(([key, propValue]) => (
-                                        <div key={key} className="class-property">
-                                          <span className="class-property-name">{key}:</span>
-                                          <span className="class-property-value">
-                                            {typeof propValue === 'object' 
-                                              ? (propValue === null ? 'null' : '{...}') 
-                                              : String(propValue)}
-                                          </span>
-                                        </div>
-                                      ))
-                                  ) : (
-                                    // Stringified class - display a simplified view
-                                    <div className="class-property text-center">
-                                      <small>Class instance properties visible in value</small>
-                                    </div>
-                                  )}
-                                  
-                                  {typeof value === 'object' && 
-                                   Object.keys(value).filter(k => !k.startsWith('__')).length > 5 && (
-                                    <div className="class-property text-center">
-                                      <small>...more properties</small>
-                                    </div>
-                                  )}
-                                </div>
-                              )}
-                              
                               <div className="variable-type-container mt-2">
                                 <span className={`variable-type-badge bg-${getTypeColor(type)}`}>
                                   {getTypeExplanation(type)}
@@ -563,4 +485,4 @@ console.log("User has email?", user.email !== null);
   );
 };
 
-export default VariablesLesson; 
+export default NumbersLesson; 

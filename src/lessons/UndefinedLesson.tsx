@@ -11,200 +11,129 @@ import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Badge from 'react-bootstrap/Badge';
-import VariablesCheckpointSystem from '../components/VariablesCheckpointSystem';
-import VariablesModuleContent from '../components/VariablesModuleContent';
 import { useParams, Link } from 'react-router-dom';
 import curriculum from '../data/curriculum';
 
-interface VariablesLessonProps {
+interface UndefinedLessonProps {
   darkMode?: boolean;
-  moduleId?: number;
-  step?: number;
-  topic?: string;
 }
 
-const VariablesLesson: React.FC<VariablesLessonProps> = ({ 
-  darkMode = false, 
-  moduleId: initialModuleId = 1,
-  step: initialStep = 0,
-  topic
+const UndefinedLesson: React.FC<UndefinedLessonProps> = ({ 
+  darkMode = false
 }) => {
-  // Define the initial code samples for each module
-  const initialCodeByModule = {
-    1: `// Task Management App - Variables Basics
-// Variables are containers for storing data values
+  // Initial code sample
+  const initialCode = `// Understanding Undefined vs Undeclared Variables for Task Management
 
-// Create your task variables below:
+// Undefined variables - declared but not assigned a value
+let taskName;  
+let dueDate;
+let assignee;
 
+console.log("Task name:", taskName);  // undefined
+console.log("Due date:", dueDate);    // undefined
+console.log("Assignee:", assignee);   // undefined
 
+// Checking if variables are undefined
+if (taskName === undefined) {
+  console.log("Task name has not been set yet");
+}
 
+// Using typeof to check for undefined (safer method)
+if (typeof dueDate === "undefined") {
+  console.log("Due date has not been set yet");
+}
 
-`,
-    2: `// Task Management App - Variable Types
-// In this module, you'll explore different types of variables for tasks.
-
-// You'll build on what you learned in Module 1 by creating
-// variables with different data types for your task.
-
-// The code editor is empty - follow the module instructions to create:
-// - String variables (for text)
-// - Number variables (for quantities)
-// - Boolean variables (for true/false states)
-
-`,
-    3: `// Task Management App - Variable Manipulation
-// In this module, you'll learn how to update and modify variables.
-
-// First, set up some initial task state:
-let taskName = "Create project plan";
-let progress = 40;
-let estimatedHours = 6;
-let isCompleted = false;
-
-// Display initial state
-console.log("Task: " + taskName);
-console.log("Current progress: " + progress + "%");
-console.log("Initial estimate: " + estimatedHours + " hours");
-
-// Follow the module instructions to update these variables
-// and create formulas to track task progress.
-
-`,
-    4: `// Task Management App - Multiple Tasks
-// In this module, you'll manage variables for multiple tasks.
-
-// Follow the module instructions to:
-// 1. Create variables for multiple tasks
-// 2. Compare tasks based on their properties
-// 3. Calculate overall progress
-// 4. Create a task summary report
-
-`
+// Function parameters that aren't provided become undefined
+function createTask(title, priority, dueDate) {
+  console.log("Creating task with:");
+  console.log("- Title:", title);         // provided value
+  console.log("- Priority:", priority);   // undefined if not provided
+  console.log("- Due date:", dueDate);    // undefined if not provided
+  
+  // Create task object (with sensible defaults for undefined params)
+  return {
+    id: Date.now(),
+    title: title || "Untitled Task",
+    priority: priority || "Medium",
+    dueDate: dueDate || null,
+    completed: false
   };
+}
+
+// Creating a task with missing parameters
+let newTask = createTask("Fix navigation bug");
+console.log("New task:", newTask);
+
+// Accessing object properties that don't exist
+console.log("Task description:", newTask.description);  // undefined (property doesn't exist)
+
+// Functions without a return statement give undefined
+function processTask(task) {
+  console.log("Processing task:", task.title);
+  // No return statement
+}
+let result = processTask(newTask);
+console.log("Process result:", result);  // undefined
+
+// INCORRECT USAGE: Undeclared variables (causes errors)
+try {
+  // Uncomment the next line to see the error
+  // console.log(undeclaredVar);  // ReferenceError: undeclaredVar is not defined
+  console.log("This line won't run if undeclaredVar is used");
+} catch (error) {
+  console.log("Error caught:", error.name);
+}
+
+// Common mistake with undeclared variables in functions
+function incorrectFunction() {
+  taskStatus = "In Progress";  // Missing let/const/var - creates global variable 
+}
+
+// Using strict mode to catch these errors
+function strictModeExample() {
+  "use strict";
+  try {
+    // Uncomment the next line to see the error
+    // taskPriority = "High";  // Error in strict mode
+    console.log("This line won't run if taskPriority is assigned without declaration");
+  } catch (error) {
+    console.log("Strict mode error:", error.name);
+  }
+}
+strictModeExample();
+
+// Best practices for variables in task management
+let taskList = [];          // Initialize arrays
+let taskCount = 0;          // Initialize numbers
+let isCompleted = false;    // Initialize booleans
+let taskDescription = "";   // Initialize strings
+let taskOwner = null;       // Use null for intentionally empty values
+
+// Safe access pattern for undefined properties
+function getTaskDuration(task) {
+  // Check if property exists before using it
+  if (task && typeof task.duration !== "undefined") {
+    return task.duration;
+  }
+  return 0;  // Default value
+}
+
+console.log("Task duration:", getTaskDuration(newTask));
+`;
   
-  // Add the ability to preserve variables between modules
-  const [variablesByModule, setVariablesByModule] = useState<Record<number, Record<string, any>>>({
-    1: {},
-    2: {},
-    3: {},
-    4: {},
-    5: {}
-  });
-  
-  const [currentModule, setCurrentModule] = useState(initialModuleId);
-  const [code, setCode] = useState('');
+  const [code, setCode] = useState(initialCode);
   const [runtimeValues, setRuntimeValues] = useState<Record<string, any>>({});
   const [consoleOutput, setConsoleOutput] = useState<any[]>([]);
   const [executionPath, setExecutionPath] = useState<string[]>([]);
-  const [activeStep, setActiveStep] = useState<number>(initialStep);
   const [error, setError] = useState<string | null>(null);
   
-  // Only set the initial code the first time component loads
-  useEffect(() => {
-    if (initialModuleId && initialModuleId in initialCodeByModule) {
-      setCode(initialCodeByModule[initialModuleId as keyof typeof initialCodeByModule]);
-    } else {
-      setCode(initialCodeByModule[1]);
-    }
-    // We only want this to run once when the component mounts
-  }, []);
-  
-  // Handle topic-specific content if specified
-  useEffect(() => {
-    if (topic) {
-      // You could set specific code examples based on the topic
-      if (topic === 'undefined-undeclared') {
-        setCode(`// Understanding Undefined vs Undeclared Variables
-let declaredVar;  // declared but not assigned a value (undefined)
-console.log("declaredVar:", declaredVar);
-
-// console.log("undeclaredVar:", undeclaredVar);  // Uncomment to see error
-
-// Checking for undefined
-if (declaredVar === undefined) {
-  console.log("declaredVar is undefined");
-}
-
-// Safely checking for existence
-if (typeof declaredVar !== "undefined") {
-  console.log("declaredVar exists");
-}
-
-// Example with functions
-function returnNothing() {
-  // No return statement
-}
-
-let result = returnNothing();
-console.log("Function result:", result);  // undefined
-`);
-      } else if (topic === 'null-undefined') {
-        setCode(`// Understanding null vs undefined
-// undefined: variable is declared but has no value assigned
-let emptyVar;
-console.log("emptyVar:", emptyVar);
-
-// null: explicitly assigned "no value"
-let nullVar = null;
-console.log("nullVar:", nullVar);
-
-// Comparing null and undefined
-console.log("null == undefined:", null == undefined);    // true (loose equality)
-console.log("null === undefined:", null === undefined);  // false (strict equality)
-
-// Checking for null or undefined
-function processValue(value) {
-  // Check for both null and undefined
-  if (value == null) {
-    console.log("Value is either null or undefined");
-    return;
-  }
-  console.log("Processing:", value);
-}
-
-processValue(emptyVar);
-processValue(nullVar);
-processValue("Hello");
-
-// When to use null
-let user = {
-  name: "John",
-  email: null  // Explicitly set to null (user has no email)
-};
-
-console.log("User has email?", user.email !== null);
-`);
-      }
-    }
-  }, [topic]);
-  
-  // Handle moduleId and step changes
-  useEffect(() => {
-    if (initialModuleId !== 1) {
-      setCurrentModule(initialModuleId);
-    }
-    if (initialStep !== 0) {
-      setActiveStep(initialStep);
-    }
-  }, [initialModuleId, initialStep]);
-  
-  // Store variables when module is completed
-  useEffect(() => {
-    if (Object.keys(runtimeValues).length > 0) {
-      setVariablesByModule(prev => ({
-        ...prev,
-        [currentModule]: runtimeValues
-      }));
-    }
-  }, [runtimeValues, currentModule]);
-  
-  // Handle code changes and track modifications
+  // Handle code changes
   const handleCodeChange = (value: string) => {
     setCode(value);
   };
   
-  // Auto-execute code when it changes (for real-time feedback)
-  React.useEffect(() => {
+  // Auto-execute code when it changes
+  useEffect(() => {
     executeCode();
   }, [code]);
 
@@ -212,7 +141,6 @@ console.log("User has email?", user.email !== null);
     setError(null);
     
     try {
-      // Use AI-enhanced evaluation with fallback to standard
       const result = await evaluateCodeWithAI(code);
       
       if (result.variables) {
@@ -231,7 +159,6 @@ console.log("User has email?", user.email !== null);
         setError(result.error);
       }
       
-      // If AI enhanced, we can use execution path for visualization
       if (result.aiEnhanced && result.executionPath) {
         setExecutionPath(result.executionPath);
       }
@@ -245,12 +172,10 @@ console.log("User has email?", user.email !== null);
     if (value === null) return 'null';
     if (Array.isArray(value)) return 'array';
     
-    // Check for class instances
     if (typeof value === 'object' && value?.__isClass) {
       return 'class';
     }
     
-    // Check for stringified class instances
     if (typeof value === 'string' && isStringifiedClassInstance(value).isClass) {
       return 'class';
     }
@@ -291,16 +216,13 @@ console.log("User has email?", user.email !== null);
     if (value === undefined) return 'undefined';
     if (value === null) return 'null';
     
-    // Handle stringified class instances
     if (typeof value === 'string' && isStringifiedClassInstance(value).isClass) {
-      // Return the original string since it's already formatted nicely
       return value;
     }
     
     if (typeof value === 'string') return `"${value}"`;
     if (typeof value === 'object') {
       try {
-        // Don't include internal properties in the formatted output
         if (value?.__isClass || value?.__constructorName) {
           const cleanedValue = { ...value };
           delete cleanedValue.__isClass;
@@ -318,15 +240,14 @@ console.log("User has email?", user.email !== null);
   return (
     <div className="lesson-container">
       <div className="lesson-header">
-        <h1>Lesson 1: Building with Variables</h1>
+        <h1>Lesson 6: Undefined and Undeclared Variables</h1>
         <div className="lesson-meta">
           <div className="chapter-info">
             <span className="chapter-title">Chapter 1: Task Manager Fundamentals</span>
             <div className="lesson-navigation">
               {(() => {
                 // Find current lesson in curriculum
-                const currentLessonId = topic || 
-                  (initialModuleId === 5 ? 'console' : 'variables-intro');
+                const currentLessonId = "undefined-undeclared";
                 
                 let prevLesson = null;
                 let nextLesson = null;
@@ -421,17 +342,151 @@ console.log("User has email?", user.email !== null);
 
       <div className="lesson-content">
         <div className="explanation-panel">
-         
+          <h2>Undefined vs. Undeclared Variables</h2>
+          <p>
+            In JavaScript, understanding the difference between undefined and undeclared variables
+            is crucial for building robust task management applications.
+          </p>
           
-          {/* Module Content Component */}
-          <VariablesModuleContent 
-            moduleId={currentModule}
-            darkMode={darkMode}
-            code={code}
-            onCodeChange={handleCodeChange}
-            runtimeValues={runtimeValues}
-            consoleOutput={consoleOutput}
-          />
+          <h3>Undefined Variables</h3>
+          <p>
+            A variable is <strong>undefined</strong> when it has been declared but not assigned a value.
+            This is a legitimate state in JavaScript and is represented by the special value <code>undefined</code>.
+          </p>
+          
+          <div className="code-example">
+{`// Declaring variables without assigning values
+let taskName;     // undefined
+let dueDate;      // undefined
+let isCompleted;  // undefined
+
+console.log(taskName);  // undefined
+
+// Checking if a variable is undefined
+if (taskName === undefined) {
+  console.log("Task name has not been set yet");
+}
+
+// Alternative check for undefined
+if (typeof taskName === "undefined") {
+  console.log("Task name has not been set yet");
+}`}
+          </div>
+          
+          <h3>Common Undefined Scenarios in Task Management</h3>
+          <p>
+            There are several situations where you'll encounter <code>undefined</code> values:
+          </p>
+          
+          <div className="code-example">
+{`// 1. Function parameters that aren't provided
+function createTask(title, dueDate) {
+  console.log("Due date:", dueDate);  // undefined if not provided
+}
+createTask("New task");  // Only passing the first parameter
+
+// 2. Object properties that don't exist
+let task = { title: "Review code" };
+console.log(task.dueDate);  // undefined (property doesn't exist)
+
+// 3. Functions without a return statement
+function processTask(task) {
+  // No return statement
+}
+let result = processTask({});
+console.log(result);  // undefined
+
+// 4. Accessing array elements that don't exist
+let tasks = ["Task 1", "Task 2"];
+console.log(tasks[5]);  // undefined (index out of bounds)`}
+          </div>
+          
+          <h3>Undeclared Variables</h3>
+          <p>
+            An <strong>undeclared</strong> variable is one that has never been declared with
+            <code>let</code>, <code>const</code>, or <code>var</code>. Using undeclared variables
+            causes errors and can lead to unexpected behavior.
+          </p>
+          
+          <div className="code-example">
+{`// This would cause a ReferenceError:
+// console.log(undeclaredVar);  // ReferenceError
+
+// Common mistake: forgetting to declare variables in functions
+function incorrectFunction() {
+  taskStatus = "In Progress";  // Missing let/const/var
+  // This creates a global variable if not in strict mode!
+}
+
+// Using "use strict" to catch undeclared variables
+function strictModeFunction() {
+  "use strict";
+  // Uncommenting the next line would cause an error in strict mode
+  // taskPriority = "High";  // ReferenceError
+}`}
+          </div>
+          
+          <h3>Safely Checking for Existence</h3>
+          <p>
+            When you're not sure if a variable exists at all (it might be undeclared),
+            you should use the <code>typeof</code> operator:
+          </p>
+          
+          <div className="code-example">
+{`// Safe way to check for undefined/undeclared variables
+if (typeof possiblyUndeclaredVar === "undefined") {
+  console.log("Variable is undefined or not declared");
+}
+
+// This works because typeof returns "undefined" for both
+// undefined variables and undeclared variables (without error)`}
+          </div>
+          
+          <h3>Best Practices for Task Management</h3>
+          <p>
+            To avoid issues with undefined and undeclared variables in your task management app:
+          </p>
+          <ul>
+            <li>Always initialize variables with default values</li>
+            <li>Use <code>let</code> or <code>const</code> for all declarations</li>
+            <li>Add <code>"use strict";</code> to catch undeclared variables</li>
+            <li>Use defensive programming to check for undefined values</li>
+            <li>Provide default values for function parameters</li>
+          </ul>
+          
+          <div className="code-example">
+{`// Best practices example for task management
+"use strict";  // Catch undeclared variables
+
+// Initialize with sensible default values
+let taskName = "";
+let dueDate = null;
+let priority = "medium";
+let tags = [];
+
+// Default parameters for functions
+function createTask(name, options = {}) {
+  return {
+    id: Date.now(),
+    name,
+    priority: options.priority || "medium",
+    dueDate: options.dueDate || null,
+    completed: false
+  };
+}
+
+// Safe property access
+function getTaskDuration(task) {
+  if (task && typeof task.duration !== "undefined") {
+    return task.duration;
+  }
+  return 0;  // Default value
+}`}
+          </div>
+          
+          <p>
+            Try working with the code editor to experiment with undefined and undeclared variables!
+          </p>
         </div>
 
         <div className="interactive-panel">
@@ -475,56 +530,6 @@ console.log("User has email?", user.email !== null);
                               <Card.Title>{getTypeExplanation(type)}</Card.Title>
                               <Card.Text className="variable-value">{formatValue(value)}</Card.Text>
                               
-                              {/* Display class name if available */}
-                              {type === 'class' && (
-                                <>
-                                  {value?.__constructorName && (
-                                    <div className="class-name">
-                                      {value.__constructorName}
-                                    </div>
-                                  )}
-                                  {typeof value === 'string' && isStringifiedClassInstance(value).isClass && (
-                                    <div className="class-name">
-                                      {isStringifiedClassInstance(value).className}
-                                    </div>
-                                  )}
-                                </>
-                              )}
-                              
-                              {/* Display class properties if it's a class instance */}
-                              {type === 'class' && (
-                                <div className="class-properties">
-                                  {typeof value === 'object' ? (
-                                    // Regular object with properties
-                                    Object.entries(value)
-                                      .filter(([key]) => !key.startsWith('__')) // Skip internal properties
-                                      .slice(0, 5) // Limit to first 5 properties
-                                      .map(([key, propValue]) => (
-                                        <div key={key} className="class-property">
-                                          <span className="class-property-name">{key}:</span>
-                                          <span className="class-property-value">
-                                            {typeof propValue === 'object' 
-                                              ? (propValue === null ? 'null' : '{...}') 
-                                              : String(propValue)}
-                                          </span>
-                                        </div>
-                                      ))
-                                  ) : (
-                                    // Stringified class - display a simplified view
-                                    <div className="class-property text-center">
-                                      <small>Class instance properties visible in value</small>
-                                    </div>
-                                  )}
-                                  
-                                  {typeof value === 'object' && 
-                                   Object.keys(value).filter(k => !k.startsWith('__')).length > 5 && (
-                                    <div className="class-property text-center">
-                                      <small>...more properties</small>
-                                    </div>
-                                  )}
-                                </div>
-                              )}
-                              
                               <div className="variable-type-container mt-2">
                                 <span className={`variable-type-badge bg-${getTypeColor(type)}`}>
                                   {getTypeExplanation(type)}
@@ -563,4 +568,4 @@ console.log("User has email?", user.email !== null);
   );
 };
 
-export default VariablesLesson; 
+export default UndefinedLesson; 

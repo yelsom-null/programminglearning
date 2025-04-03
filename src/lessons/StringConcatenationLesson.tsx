@@ -11,200 +11,60 @@ import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Badge from 'react-bootstrap/Badge';
-import VariablesCheckpointSystem from '../components/VariablesCheckpointSystem';
-import VariablesModuleContent from '../components/VariablesModuleContent';
 import { useParams, Link } from 'react-router-dom';
 import curriculum from '../data/curriculum';
 
-interface VariablesLessonProps {
+interface StringConcatenationLessonProps {
   darkMode?: boolean;
-  moduleId?: number;
-  step?: number;
-  topic?: string;
 }
 
-const VariablesLesson: React.FC<VariablesLessonProps> = ({ 
-  darkMode = false, 
-  moduleId: initialModuleId = 1,
-  step: initialStep = 0,
-  topic
+const StringConcatenationLesson: React.FC<StringConcatenationLessonProps> = ({ 
+  darkMode = false
 }) => {
-  // Define the initial code samples for each module
-  const initialCodeByModule = {
-    1: `// Task Management App - Variables Basics
-// Variables are containers for storing data values
+  // Initial code sample
+  const initialCode = `// String Concatenation for Task Management
+// Create meaningful task descriptions by combining strings
 
-// Create your task variables below:
+// Basic task information
+let taskName = "Create project proposal";
+let assignee = "John Doe";
+let dueDate = "2023-05-15";
+let priority = "High";
+let progress = 30;
 
+// Create a task summary using + operator
+let taskSummary = "Task: " + taskName + " | Assigned to: " + assignee;
 
+// Create a detailed report using template literals
+let detailedReport = \`
+=== TASK DETAILS ===
+Name: \${taskName}
+Assignee: \${assignee}
+Due Date: \${dueDate}
+Priority: \${priority}
+Progress: \${progress}%
+\`;
 
+// Display both in the console
+console.log(taskSummary);
+console.log(detailedReport);
 
-`,
-    2: `// Task Management App - Variable Types
-// In this module, you'll explore different types of variables for tasks.
-
-// You'll build on what you learned in Module 1 by creating
-// variables with different data types for your task.
-
-// The code editor is empty - follow the module instructions to create:
-// - String variables (for text)
-// - Number variables (for quantities)
-// - Boolean variables (for true/false states)
-
-`,
-    3: `// Task Management App - Variable Manipulation
-// In this module, you'll learn how to update and modify variables.
-
-// First, set up some initial task state:
-let taskName = "Create project plan";
-let progress = 40;
-let estimatedHours = 6;
-let isCompleted = false;
-
-// Display initial state
-console.log("Task: " + taskName);
-console.log("Current progress: " + progress + "%");
-console.log("Initial estimate: " + estimatedHours + " hours");
-
-// Follow the module instructions to update these variables
-// and create formulas to track task progress.
-
-`,
-    4: `// Task Management App - Multiple Tasks
-// In this module, you'll manage variables for multiple tasks.
-
-// Follow the module instructions to:
-// 1. Create variables for multiple tasks
-// 2. Compare tasks based on their properties
-// 3. Calculate overall progress
-// 4. Create a task summary report
-
-`
-  };
+// Try modifying the variables and see how the output changes!
+`;
   
-  // Add the ability to preserve variables between modules
-  const [variablesByModule, setVariablesByModule] = useState<Record<number, Record<string, any>>>({
-    1: {},
-    2: {},
-    3: {},
-    4: {},
-    5: {}
-  });
-  
-  const [currentModule, setCurrentModule] = useState(initialModuleId);
-  const [code, setCode] = useState('');
+  const [code, setCode] = useState(initialCode);
   const [runtimeValues, setRuntimeValues] = useState<Record<string, any>>({});
   const [consoleOutput, setConsoleOutput] = useState<any[]>([]);
   const [executionPath, setExecutionPath] = useState<string[]>([]);
-  const [activeStep, setActiveStep] = useState<number>(initialStep);
   const [error, setError] = useState<string | null>(null);
   
-  // Only set the initial code the first time component loads
-  useEffect(() => {
-    if (initialModuleId && initialModuleId in initialCodeByModule) {
-      setCode(initialCodeByModule[initialModuleId as keyof typeof initialCodeByModule]);
-    } else {
-      setCode(initialCodeByModule[1]);
-    }
-    // We only want this to run once when the component mounts
-  }, []);
-  
-  // Handle topic-specific content if specified
-  useEffect(() => {
-    if (topic) {
-      // You could set specific code examples based on the topic
-      if (topic === 'undefined-undeclared') {
-        setCode(`// Understanding Undefined vs Undeclared Variables
-let declaredVar;  // declared but not assigned a value (undefined)
-console.log("declaredVar:", declaredVar);
-
-// console.log("undeclaredVar:", undeclaredVar);  // Uncomment to see error
-
-// Checking for undefined
-if (declaredVar === undefined) {
-  console.log("declaredVar is undefined");
-}
-
-// Safely checking for existence
-if (typeof declaredVar !== "undefined") {
-  console.log("declaredVar exists");
-}
-
-// Example with functions
-function returnNothing() {
-  // No return statement
-}
-
-let result = returnNothing();
-console.log("Function result:", result);  // undefined
-`);
-      } else if (topic === 'null-undefined') {
-        setCode(`// Understanding null vs undefined
-// undefined: variable is declared but has no value assigned
-let emptyVar;
-console.log("emptyVar:", emptyVar);
-
-// null: explicitly assigned "no value"
-let nullVar = null;
-console.log("nullVar:", nullVar);
-
-// Comparing null and undefined
-console.log("null == undefined:", null == undefined);    // true (loose equality)
-console.log("null === undefined:", null === undefined);  // false (strict equality)
-
-// Checking for null or undefined
-function processValue(value) {
-  // Check for both null and undefined
-  if (value == null) {
-    console.log("Value is either null or undefined");
-    return;
-  }
-  console.log("Processing:", value);
-}
-
-processValue(emptyVar);
-processValue(nullVar);
-processValue("Hello");
-
-// When to use null
-let user = {
-  name: "John",
-  email: null  // Explicitly set to null (user has no email)
-};
-
-console.log("User has email?", user.email !== null);
-`);
-      }
-    }
-  }, [topic]);
-  
-  // Handle moduleId and step changes
-  useEffect(() => {
-    if (initialModuleId !== 1) {
-      setCurrentModule(initialModuleId);
-    }
-    if (initialStep !== 0) {
-      setActiveStep(initialStep);
-    }
-  }, [initialModuleId, initialStep]);
-  
-  // Store variables when module is completed
-  useEffect(() => {
-    if (Object.keys(runtimeValues).length > 0) {
-      setVariablesByModule(prev => ({
-        ...prev,
-        [currentModule]: runtimeValues
-      }));
-    }
-  }, [runtimeValues, currentModule]);
-  
-  // Handle code changes and track modifications
+  // Handle code changes
   const handleCodeChange = (value: string) => {
     setCode(value);
   };
   
-  // Auto-execute code when it changes (for real-time feedback)
-  React.useEffect(() => {
+  // Auto-execute code when it changes
+  useEffect(() => {
     executeCode();
   }, [code]);
 
@@ -212,7 +72,6 @@ console.log("User has email?", user.email !== null);
     setError(null);
     
     try {
-      // Use AI-enhanced evaluation with fallback to standard
       const result = await evaluateCodeWithAI(code);
       
       if (result.variables) {
@@ -231,7 +90,6 @@ console.log("User has email?", user.email !== null);
         setError(result.error);
       }
       
-      // If AI enhanced, we can use execution path for visualization
       if (result.aiEnhanced && result.executionPath) {
         setExecutionPath(result.executionPath);
       }
@@ -245,12 +103,10 @@ console.log("User has email?", user.email !== null);
     if (value === null) return 'null';
     if (Array.isArray(value)) return 'array';
     
-    // Check for class instances
     if (typeof value === 'object' && value?.__isClass) {
       return 'class';
     }
     
-    // Check for stringified class instances
     if (typeof value === 'string' && isStringifiedClassInstance(value).isClass) {
       return 'class';
     }
@@ -291,16 +147,13 @@ console.log("User has email?", user.email !== null);
     if (value === undefined) return 'undefined';
     if (value === null) return 'null';
     
-    // Handle stringified class instances
     if (typeof value === 'string' && isStringifiedClassInstance(value).isClass) {
-      // Return the original string since it's already formatted nicely
       return value;
     }
     
     if (typeof value === 'string') return `"${value}"`;
     if (typeof value === 'object') {
       try {
-        // Don't include internal properties in the formatted output
         if (value?.__isClass || value?.__constructorName) {
           const cleanedValue = { ...value };
           delete cleanedValue.__isClass;
@@ -318,15 +171,14 @@ console.log("User has email?", user.email !== null);
   return (
     <div className="lesson-container">
       <div className="lesson-header">
-        <h1>Lesson 1: Building with Variables</h1>
+        <h1>Lesson 3: String Concatenation for Task Summaries</h1>
         <div className="lesson-meta">
           <div className="chapter-info">
             <span className="chapter-title">Chapter 1: Task Manager Fundamentals</span>
             <div className="lesson-navigation">
               {(() => {
                 // Find current lesson in curriculum
-                const currentLessonId = topic || 
-                  (initialModuleId === 5 ? 'console' : 'variables-intro');
+                const currentLessonId = "string-concatenation";
                 
                 let prevLesson = null;
                 let nextLesson = null;
@@ -421,17 +273,94 @@ console.log("User has email?", user.email !== null);
 
       <div className="lesson-content">
         <div className="explanation-panel">
-         
+          <h2>String Concatenation for Task Summaries</h2>
+          <p>
+            In task management applications, we often need to create meaningful descriptions
+            and summaries by combining text values. String concatenation allows us to join 
+            different pieces of text (and other values) into a single string.
+          </p>
           
-          {/* Module Content Component */}
-          <VariablesModuleContent 
-            moduleId={currentModule}
-            darkMode={darkMode}
-            code={code}
-            onCodeChange={handleCodeChange}
-            runtimeValues={runtimeValues}
-            consoleOutput={consoleOutput}
-          />
+          <h3>Basic String Concatenation with + Operator</h3>
+          <p>
+            JavaScript allows you to combine strings using the <code>+</code> operator:
+          </p>
+          
+          <div className="code-example">
+{`// Basic concatenation with +
+let taskName = "Complete project";
+let dueDate = "2023-12-31";
+let taskSummary = "Task: " + taskName + " (Due: " + dueDate + ")";
+
+console.log(taskSummary); // "Task: Complete project (Due: 2023-12-31)"
+
+// Adding numbers to strings
+let progress = 75;
+let progressMessage = "Current progress: " + progress + "%";
+console.log(progressMessage); // "Current progress: 75%"`}
+          </div>
+          
+          <p>
+            When you use the <code>+</code> operator with a string and another type,
+            JavaScript automatically converts the other value to a string. This is called
+            <i>type coercion</i>.
+          </p>
+          
+          <h3>Template Literals - The Modern Approach</h3>
+          <p>
+            ES6 introduced template literals, which make string concatenation much cleaner
+            using backticks (<code>`</code>) and <code>${}</code> for embedding expressions:
+          </p>
+          
+          <div className="code-example">
+{`// Template literals with backticks
+let taskName = "Complete project";
+let dueDate = "2023-12-31";
+let progress = 75;
+
+// Simple template literal
+let taskSummary = \`Task: \${taskName} (Due: \${dueDate})\`;
+console.log(taskSummary); // "Task: Complete project (Due: 2023-12-31)"
+
+// Template literals with expressions
+let remaining = 100 - progress;
+let statusReport = \`The task "\${taskName}" is \${progress}% complete with \${remaining}% remaining.\`;
+console.log(statusReport);
+// "The task "Complete project" is 75% complete with 25% remaining."
+
+// Multiline template literals - great for reports
+let taskReport = \`
+Task: \${taskName}
+Progress: \${progress}%
+Due Date: \${dueDate}
+\`;
+console.log(taskReport);
+// Neatly formatted on multiple lines`}
+          </div>
+          
+          <h3>Choosing the Right Approach</h3>
+          <p>
+            Both approaches have their place in modern JavaScript:
+          </p>
+          <ul>
+            <li><strong>Use + operator</strong> when working with legacy systems or for very simple concatenation</li>
+            <li><strong>Use template literals</strong> for more complex strings, especially those with multiple variables or multiline text</li>
+          </ul>
+          
+          <h3>Real-World Task Management Applications</h3>
+          <p>
+            String concatenation and template literals are essential for creating:
+          </p>
+          <ul>
+            <li>Task summaries and details</li>
+            <li>Progress reports</li>
+            <li>User notifications</li>
+            <li>Formatted dates and times</li>
+            <li>Status messages</li>
+          </ul>
+          
+          <p>
+            Try experimenting with the code editor to create your own task summaries and reports!
+          </p>
         </div>
 
         <div className="interactive-panel">
@@ -475,56 +404,6 @@ console.log("User has email?", user.email !== null);
                               <Card.Title>{getTypeExplanation(type)}</Card.Title>
                               <Card.Text className="variable-value">{formatValue(value)}</Card.Text>
                               
-                              {/* Display class name if available */}
-                              {type === 'class' && (
-                                <>
-                                  {value?.__constructorName && (
-                                    <div className="class-name">
-                                      {value.__constructorName}
-                                    </div>
-                                  )}
-                                  {typeof value === 'string' && isStringifiedClassInstance(value).isClass && (
-                                    <div className="class-name">
-                                      {isStringifiedClassInstance(value).className}
-                                    </div>
-                                  )}
-                                </>
-                              )}
-                              
-                              {/* Display class properties if it's a class instance */}
-                              {type === 'class' && (
-                                <div className="class-properties">
-                                  {typeof value === 'object' ? (
-                                    // Regular object with properties
-                                    Object.entries(value)
-                                      .filter(([key]) => !key.startsWith('__')) // Skip internal properties
-                                      .slice(0, 5) // Limit to first 5 properties
-                                      .map(([key, propValue]) => (
-                                        <div key={key} className="class-property">
-                                          <span className="class-property-name">{key}:</span>
-                                          <span className="class-property-value">
-                                            {typeof propValue === 'object' 
-                                              ? (propValue === null ? 'null' : '{...}') 
-                                              : String(propValue)}
-                                          </span>
-                                        </div>
-                                      ))
-                                  ) : (
-                                    // Stringified class - display a simplified view
-                                    <div className="class-property text-center">
-                                      <small>Class instance properties visible in value</small>
-                                    </div>
-                                  )}
-                                  
-                                  {typeof value === 'object' && 
-                                   Object.keys(value).filter(k => !k.startsWith('__')).length > 5 && (
-                                    <div className="class-property text-center">
-                                      <small>...more properties</small>
-                                    </div>
-                                  )}
-                                </div>
-                              )}
-                              
                               <div className="variable-type-container mt-2">
                                 <span className={`variable-type-badge bg-${getTypeColor(type)}`}>
                                   {getTypeExplanation(type)}
@@ -563,4 +442,4 @@ console.log("User has email?", user.email !== null);
   );
 };
 
-export default VariablesLesson; 
+export default StringConcatenationLesson; 
