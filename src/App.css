@@ -597,7 +597,7 @@ html, body, #root {
   padding: 0;
   margin: 0;
   gap: 0.5rem;
-  /* overflow-x: auto; */
+  overflow-x: auto;
 }
 
 .app-navigation li {
@@ -970,7 +970,7 @@ h2 {
   padding: 0.5rem;
   border-radius: 4px;
   margin-bottom: 0.5rem;
-  /* overflow-x: auto; */
+  overflow-x: auto;
   word-break: break-word;
   color: var(--text-secondary);
 }

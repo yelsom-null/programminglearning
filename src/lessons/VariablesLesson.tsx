@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import CodeEditor from '../components/CodeEditor';
 import { 
-  evaluateCodeSafely, 
   evaluateCodeWithAI, 
-  isStringifiedClassInstance, 
+  isStringifiedClassInstance,
   parseStringifiedClass 
 } from '../utils/codeAnalysis';
 import { 
@@ -15,19 +14,11 @@ import {
   Chip,
   Paper,
   useTheme,
-  Divider,
-  Container,
-  Button,
-  IconButton
+  Button
 } from '@mui/material';
-import CodeBlock from '../components/CodeBlock';
-import ConceptCard from '../components/ConceptCard';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import VariablesCheckpointSystem from '../components/VariablesCheckpointSystem';
-import VariablesModuleContent from '../components/VariablesModuleContent';
-import { useParams, Link } from 'react-router-dom';
-import curriculum from '../data/curriculum';
+import curriculum, { Chapter, Lesson } from '../data/curriculum';
 import TeachingConcept from '../components/TeachingConcept';
 
 // LessonNav component to reuse across all lessons
@@ -182,8 +173,8 @@ console.log("Initial estimate: " + estimatedHours + " hours");
     5: {}
   });
   
-  const [currentModule, setCurrentModule] = useState(initialModuleId);
-  const [code, setCode] = useState('');
+  const [currentModule, setCurrentModule] = useState(initialModuleId || 1);
+  const [code, setCode] = useState(initialCodeByModule[(initialModuleId || 1) as keyof typeof initialCodeByModule]);
   const [runtimeValues, setRuntimeValues] = useState<Record<string, any>>({});
   const [consoleOutput, setConsoleOutput] = useState<any[]>([]);
   const [executionPath, setExecutionPath] = useState<string[]>([]);
@@ -284,26 +275,25 @@ console.log("User has email?", user.email !== null);
     if (Object.keys(runtimeValues).length > 0) {
       setVariablesByModule(prev => ({
         ...prev,
-        [currentModule]: runtimeValues
+        [initialModuleId]: runtimeValues
       }));
     }
-  }, [runtimeValues, currentModule]);
+  }, [runtimeValues, initialModuleId]);
   
-  // Handle code changes and track modifications
+  // Handle code changes
   const handleCodeChange = (value: string) => {
     setCode(value);
   };
   
-  // Auto-execute code when it changes (for real-time feedback)
-  React.useEffect(() => {
-      executeCode();
+  // Auto-execute code when it changes
+  useEffect(() => {
+    executeCode();
   }, [code]);
 
   const executeCode = async () => {
     setError(null);
     
     try {
-      // Use AI-enhanced evaluation with fallback to standard
       const result = await evaluateCodeWithAI(code);
       
       if (result.variables) {
@@ -322,7 +312,6 @@ console.log("User has email?", user.email !== null);
         setError(result.error);
       }
       
-      // If AI enhanced, we can use execution path for visualization
       if (result.aiEnhanced && result.executionPath) {
         setExecutionPath(result.executionPath);
       }
@@ -970,7 +959,7 @@ console.log("Project Summary:", projectSummary);`
 
   // Render appropriate module content based on current module
   const renderModuleContent = () => {
-    switch (currentModule) {
+    switch (initialModuleId) {
       case 1:
         return renderModule1Content();
       case 2:
@@ -1017,16 +1006,19 @@ console.log("Project Summary:", projectSummary);`
           flex: { md: '0 0 50%' }, 
           width: { xs: '100%', md: '50%' }, 
           pr: { md: 2 },
-          pt: 0,
-          position: 'relative',
-          height: '100%',
+          height: 'calc(100vh - 170px)',
           overflowY: 'auto',
-          overflowX: 'hidden'
+          overflowX: 'hidden',
+          '&::-webkit-scrollbar': {
+            display: 'none'
+          },
+          msOverflowStyle: 'none',
+          scrollbarWidth: 'none'
         }}>
-          <Typography variant="h4" gutterBottom sx={{ mt: 0, mb: 3 }}>
-            {currentModule === 1 ? '' : 
-             `Module ${currentModule}: ${currentModule === 2 ? 'Variable Types' :
-                                  currentModule === 3 ? 'Variable Manipulation' :
+          <Typography>
+            {initialModuleId === 1 ? '' : 
+             `Module ${initialModuleId}: ${initialModuleId === 2 ? 'Variable Types' :
+                                  initialModuleId === 3 ? 'Variable Manipulation' :
                                   'Multiple Tasks'}`}
           </Typography>
           

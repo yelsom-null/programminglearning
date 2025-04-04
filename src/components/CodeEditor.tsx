@@ -61,7 +61,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
           fontFamily: 'Consolas, Monaco, "Courier New", monospace',
           automaticLayout: true,
           tabSize: 2,
-          wordWrap: 'on',
+          wordWrap: 'off',
           lineNumbers: 'on',
           glyphMargin: false,
           folding: true,

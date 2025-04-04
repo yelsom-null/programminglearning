@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CodeEditor from '../components/CodeEditor';
 import { 
-  evaluateCodeSafely, 
   evaluateCodeWithAI, 
   isStringifiedClassInstance,
   parseStringifiedClass 
@@ -15,17 +14,11 @@ import {
   Chip,
   Paper,
   useTheme,
-  Divider,
-  Container,
-  Button,
-  IconButton
+  Button
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { useParams, Link } from 'react-router-dom';
-import curriculum, { Chapter, Lesson } from '../data/curriculum';
-import CodeBlock from '../components/CodeBlock';
-import ConceptCard from '../components/ConceptCard';
+import curriculum from '../data/curriculum';
 import TeachingConcept from '../components/TeachingConcept';
 
 // LessonNav component to reuse across all lessons
@@ -110,7 +103,6 @@ interface ConsoleLessonProps {
 const ConsoleLesson: React.FC<ConsoleLessonProps> = ({ 
   darkMode = false
 }) => {
-  const theme = useTheme();
   
   // Initial code sample
   const initialCode = `// Console Logging for Task Management
@@ -173,9 +165,7 @@ console.timeEnd("Task Processing Time");
   const [code, setCode] = useState(initialCode);
   const [runtimeValues, setRuntimeValues] = useState<Record<string, any>>({});
   const [consoleOutput, setConsoleOutput] = useState<any[]>([]);
-  const [executionPath, setExecutionPath] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   
   // Handle code changes
   const handleCodeChange = (value: string) => {
@@ -207,10 +197,6 @@ console.timeEnd("Task Processing Time");
       
       if (result.error) {
         setError(result.error);
-      }
-      
-      if (result.aiEnhanced && result.executionPath) {
-        setExecutionPath(result.executionPath);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
@@ -287,11 +273,6 @@ console.timeEnd("Task Processing Time");
     return `${value}`;
   };
 
-  const handleCopyCode = (code: string, index: number) => {
-    navigator.clipboard.writeText(code);
-    setCopiedIndex(index);
-    setTimeout(() => setCopiedIndex(null), 2000);
-  };
 
   // Navigation handlers
   const handlePreviousLesson = () => {
@@ -403,7 +384,15 @@ console.timeEnd("Task Processing Time");
         <Box sx={{ 
           flex: { md: '0 0 50%' }, 
           width: { xs: '100%', md: '50%' }, 
-          pr: { md: 2 }
+          pr: { md: 2 },
+          height: 'calc(100vh - 170px)',
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          '&::-webkit-scrollbar': {
+            display: 'none'
+          },
+          msOverflowStyle: 'none',
+          scrollbarWidth: 'none'
         }}>
           <TeachingConcept
             title="Introduction to Console Logging"

@@ -6,12 +6,9 @@ import './styles/LessonStyles.css';
 import './styles/HomePage.css';
 import './styles/LessonSidebar.css';
 import './styles/DuraluxIntegration.css';
-import HomePage from './components/HomePage';
 import LessonPlaceholder from './components/LessonPlaceholder';
 import VariablesLesson from './lessons/VariablesLesson';
-import BasicOperationsLesson from './lessons/BasicOperationsLesson';
-import BootDevStyleLesson from './lessons/BootDevStyleLesson';
-import BootDevVariablesLesson from './lessons/BootDevVariablesLesson';
+import HomePage from './components/HomePage';
 import TaskManagerDemoLesson from './lessons/TaskManagerDemoLesson';
 import StringConcatenationLesson from './lessons/StringConcatenationLesson';
 import NumbersLesson from './lessons/NumbersLesson';
@@ -131,29 +128,7 @@ const App: React.FC = () => {
       case 'null-undefined':
         return <MuiTextProvider><NullUndefinedLesson darkMode={darkMode} /></MuiTextProvider>;
         
-      // Chapter 2: Task Operations
-      case 'basic-operations':
-        return <MuiTextProvider><BasicOperationsLesson darkMode={darkMode} /></MuiTextProvider>;
-        
-      case 'comparison-operators':
-        return <MuiTextProvider><BasicOperationsLesson darkMode={darkMode} topic="comparison" /></MuiTextProvider>;
-        
-      case 'logical-operators':
-        return <MuiTextProvider><BasicOperationsLesson darkMode={darkMode} topic="logical" /></MuiTextProvider>;
-      
-      // Chapter 3: Task Functions
-      case 'function-basics':
-      case 'function-parameters':
-      case 'return-values':
-        return <MuiTextProvider><BootDevStyleLesson darkMode={darkMode} lessonId={lessonId} /></MuiTextProvider>;
-      
-      // Chapter 4: Complete Task System
-      case 'object-basics':
-      case 'object-methods':
-      case 'class-basics':
-      case 'task-manager-class':
-        return <MuiTextProvider><BootDevVariablesLesson darkMode={darkMode} lessonId={lessonId} /></MuiTextProvider>;
-      
+    
       default:
         // For any unmapped lesson, show the LessonPlaceholder component
         return (
