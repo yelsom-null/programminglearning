@@ -404,8 +404,9 @@ console.log(completeTask());
         }}>
           <TeachingConcept
             title="Introduction to Increment and Decrement"
-            subtitle="Efficient operators for updating task counters"
+            subtitle="Learning how to add or subtract by one"
             conceptNumber={1}
+            lessonId="increment-decrement"
             blocks={[
               {
                 type: 'text',
@@ -414,24 +415,24 @@ console.log(completeTask());
               {
                 type: 'code',
                 caption: 'Basic increment and decrement operations:',
-                content: `// Increment: increase by 1
+                content: `// Increment operator (++) adds 1 to a variable
 let completedTasks = 5;
-completedTasks++;        // Add 1 (now equals 6)
-console.log(completedTasks);  // 6
+completedTasks++;                Adds 1, now equals 6
+console.log(completedTasks);     Outputs: 6
 
-// Decrement: decrease by 1
+// Decrement operator (--) subtracts 1 from a variable
 let remainingTasks = 10;
-remainingTasks--;        // Subtract 1 (now equals 9) 
-console.log(remainingTasks);  // 9
+remainingTasks--;                Subtracts 1, now equals 9
+console.log(remainingTasks);     Outputs: 9
 
-// Common uses in task management
+// Common usage pattern in task tracking
 let taskCounter = 0;
 
-// Completing tasks one by one
-taskCounter++;  // Complete first task
+// Incrementing as tasks are completed
+taskCounter++;                   First task completed
 console.log(\`Completed \${taskCounter} tasks\`);
 
-taskCounter++;  // Complete second task
+taskCounter++;                   Second task completed
 console.log(\`Completed \${taskCounter} tasks\`);`
               }
             ]}
@@ -439,8 +440,9 @@ console.log(\`Completed \${taskCounter} tasks\`);`
           
           <TeachingConcept
             title="Prefix vs. Postfix Operators"
-            subtitle="Understanding the difference between ++x and x++"
+            subtitle="The difference between ++x and x++"
             conceptNumber={2}
+            lessonId="increment-decrement"
             blocks={[
               {
                 type: 'text',
@@ -453,22 +455,22 @@ console.log(\`Completed \${taskCounter} tasks\`);`
               {
                 type: 'code',
                 caption: 'Understanding the difference between x++ and ++x:',
-                content: `// Post-increment (x++)
+                content: `// Post-increment (x++): use current value, then increment
 let a = 5;
-let b = a++;    // Assign a to b (5), then increment a
-console.log("a:", a);    // 6 (was incremented after assignment)
-console.log("b:", b);    // 5 (got the original value)
+let b = a++;                     b gets 5, then a becomes 6
+console.log("a:", a);            Outputs: 6 (incremented after assignment)
+console.log("b:", b);            Outputs: 5 (got original value)
 
-// Pre-increment (++x)
+// Pre-increment (++x): increment first, then use new value
 let c = 5;
-let d = ++c;    // Increment c first, then assign to d
-console.log("c:", c);    // 6 (was incremented before assignment)
-console.log("d:", d);    // 6 (got the incremented value)
+let d = ++c;                     c becomes 6, then d gets 6 
+console.log("c:", c);            Outputs: 6 (incremented before assignment)
+console.log("d:", d);            Outputs: 6 (got incremented value)
 
-// The same applies to decrement (x-- vs --x)
+// Same distinction applies to decrement operators
 let taskCount = 10;
-console.log(taskCount--);    // Displays 10, then decrements to 9
-console.log(--taskCount);    // Decrements to 8, then displays 8`
+console.log(taskCount--);        Outputs: 10, then decrements to 9
+console.log(--taskCount);        Decrements to 8, then outputs 8`
               },
               {
                 type: 'warning',
@@ -482,6 +484,7 @@ console.log(--taskCount);    // Decrements to 8, then displays 8`
             title="Task Management Applications"
             subtitle="Practical examples for project tracking"
             conceptNumber={3}
+            lessonId="increment-decrement"
             blocks={[
               {
                 type: 'text',
@@ -490,28 +493,25 @@ console.log(--taskCount);    // Decrements to 8, then displays 8`
               {
                 type: 'code',
                 caption: 'Using operators in task tracking functions:',
-                content: `// Tracking completed tasks
+                content: `// Task completion tracking function
 function markTaskComplete(taskList, taskIndex) {
   if (taskIndex < taskList.length) {
-    // Pre-increment completed count, return new value
-    return ++taskList.completed;
+    return ++taskList.completed;  Pre-increment returns new count
   }
   return taskList.completed;
 }
 
-// Tracking task progress
+// Next task navigation function
 function moveToNextTask(currentIndex, tasksArray) {
-  // Post-increment: use current index, then increment for next time
-  const task = tasksArray[currentIndex++];
+  const task = tasksArray[currentIndex++];  Use current index, then advance
   console.log(\`Current task: \${task}\`);
-  return currentIndex; // Returns incremented value
+  return currentIndex;           Returns the incremented value
 }
 
-// Handling navigation
+// Previous task navigation function
 function goToPreviousTask(currentIndex, tasksArray) {
-  // Pre-decrement: decrease index first, then access the array
   if (currentIndex > 0) {
-    const task = tasksArray[--currentIndex];
+    const task = tasksArray[--currentIndex];  Decrease index first, then use
     console.log(\`Previous task: \${task}\`);
   }
   return currentIndex;
@@ -524,6 +524,7 @@ function goToPreviousTask(currentIndex, tasksArray) {
             title="Best Practices and Common Mistakes"
             subtitle="Using increment and decrement operators effectively"
             conceptNumber={4}
+            lessonId="increment-decrement"
             blocks={[
               {
                 type: 'text',

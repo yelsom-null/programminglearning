@@ -360,6 +360,7 @@ console.log("Quotient:", quotient);
             title="Introduction to Numbers"
             subtitle="JavaScript's number type and how it works"
             conceptNumber={1}
+            lessonId="numbers-in-js"
             blocks={[
               {
                 type: 'text',
@@ -372,9 +373,9 @@ console.log("Quotient:", quotient);
               {
                 type: 'code',
                 caption: 'Various ways to declare numbers:',
-                content: `let x = 2;     // this is a number
-x = 5.69;        // this is also a number
-x = -5.42;       // yup, still a number`
+                content: `let x = 2;                   A whole number
+x = 5.69;                   A decimal number
+x = -5.42;                  A negative number`
               }
             ]}
           />
@@ -383,6 +384,7 @@ x = -5.42;       // yup, still a number`
             title="Arithmetic Operations"
             subtitle="Performing math calculations with JavaScript numbers"
             conceptNumber={2}
+            lessonId="numbers-in-js"
             blocks={[
               {
                 type: 'text',
@@ -391,10 +393,10 @@ x = -5.42;       // yup, still a number`
               {
                 type: 'code',
                 caption: 'JavaScript supports standard arithmetic operations:',
-                content: `let sum = 2 + 3 + 7;        // 12
-let difference = 5.3 - 2.1;  // 3.2
-let product = 2 * 3;         // 6
-let quotient = 6 / 2;        // 3`
+                content: `let sum = 2 + 3 + 7;         Result: 12
+let difference = 5.3 - 2.1;  Result: 3.2
+let product = 2 * 3;         Result: 6
+let quotient = 6 / 2;        Result: 3`
               },
               {
                 type: 'tip',
@@ -408,6 +410,7 @@ let quotient = 6 / 2;        // 3`
             title="Special Number Values"
             subtitle="JavaScript has some unique number behaviors"
             conceptNumber={3}
+            lessonId="numbers-in-js"
             blocks={[
               {
                 type: 'text',
@@ -416,14 +419,14 @@ let quotient = 6 / 2;        // 3`
               {
                 type: 'code',
                 caption: 'Special number values in JavaScript:',
-                content: `// Infinity
+                content: `// Infinity - a special numeric value
 let positiveInfinity = Infinity;
 let negativeInfinity = -Infinity;
 
-// Not a Number (NaN)
+// NaN - Not a Number
 let notANumber = NaN;
-let alsoNaN = 0 / 0;      // Results in NaN
-let nanExample = "hello" * 5;  // Results in NaN`
+let alsoNaN = 0 / 0;             Results in NaN
+let nanExample = "hello" * 5;     Results in NaN`
               },
               {
                 type: 'note',
@@ -437,6 +440,7 @@ let nanExample = "hello" * 5;  // Results in NaN`
             title="Number Methods"
             subtitle="Useful built-in functions for working with numbers"
             conceptNumber={4}
+            lessonId="numbers-in-js"
             blocks={[
               {
                 type: 'text',
@@ -447,16 +451,16 @@ let nanExample = "hello" * 5;  // Results in NaN`
                 caption: 'Common number methods:',
                 content: `// Converting strings to numbers
 let stringNumber = "42";
-let actualNumber = Number(stringNumber);  // 42
+let actualNumber = Number(stringNumber);  Result: 42
 
 // Rounding numbers
-let roundedDown = Math.floor(5.8);  // 5
-let roundedUp = Math.ceil(5.2);     // 6
-let rounded = Math.round(5.5);      // 6
+let roundedDown = Math.floor(5.8);  Result: 5
+let roundedUp = Math.ceil(5.2);     Result: 6
+let rounded = Math.round(5.5);      Result: 6
 
 // Finding min/max
-let minimum = Math.min(10, 5, 20);  // 5
-let maximum = Math.max(10, 5, 20);  // 20`
+let minimum = Math.min(10, 5, 20);  Result: 5
+let maximum = Math.max(10, 5, 20);  Result: 20`
               }
             ]}
           />

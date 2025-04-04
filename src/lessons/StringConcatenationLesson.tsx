@@ -369,111 +369,190 @@ console.log(detailedReport);
         }}>
           <TeachingConcept
             title="Introduction to String Concatenation"
-            subtitle="Combining text values for task descriptions"
+            subtitle="Combining strings in JavaScript"
             conceptNumber={1}
+            lessonId="string-concatenation"
             blocks={[
               {
                 type: 'text',
-                content: 'In task management applications, we often need to create meaningful descriptions and summaries by combining text values. String concatenation allows us to join different pieces of text (and other values) into a single string.'
+                content: 'In task management applications, we often need to create meaningful descriptions and summaries by combining text values. String concatenation allows us to join different pieces of text (and other values) into a single string.',
+                keyTerms: [
+                  {
+                    term: 'string concatenation',
+                    definition: 'The process of joining two or more strings together to create a new string.'
+                  }
+                ]
+              },
+              {
+                type: 'visualization',
+                content: 'String concatenation visualization',
+                visualization: {
+                  type: 'flow',
+                  title: 'How String Concatenation Works',
+                  description: 'Individual strings are joined together to form a new, combined string.'
+                }
               },
               {
                 type: 'code',
                 caption: 'Basic concatenation with the + operator:',
-                content: `// Basic concatenation with the + operator
+                content: `// Creating strings with the + operator
 let firstName = "Maria";
 let lastName = "Garcia";
 
-// Creating a full name by concatenating strings
+// Concatenating with a space between
 let fullName = firstName + " " + lastName;
-console.log(fullName);  // "Maria Garcia"
+console.log(fullName);            Outputs: "Maria Garcia"
 
-// Building task descriptions
+// Building descriptive task strings
 let taskVerb = "Debug";
 let taskObject = "login form";
 let taskDescription = taskVerb + " the " + taskObject;
-console.log(taskDescription);  // "Debug the login form"
+console.log(taskDescription);     Outputs: "Debug the login form"
 
-// Concatenating with numbers (numbers are converted to strings)
+// Numbers are converted to strings during concatenation
 let taskId = 42;
 let taskLog = "Task #" + taskId + ": " + taskDescription;
-console.log(taskLog);  // "Task #42: Debug the login form"
+console.log(taskLog);             Outputs: "Task #42: Debug the login form"
 
-// Using string concatenation for multi-part messages
+// Multi-part messages with concatenation
 let totalTasks = 10;
 let completedTasks = 7;
 let statusUpdate = "Completed " + completedTasks + " out of " + 
                   totalTasks + " tasks";
-console.log(statusUpdate);  // "Completed 7 out of 10 tasks"`
+console.log(statusUpdate);        Outputs: "Completed 7 out of 10 tasks"`
+              },
+              {
+                type: 'alternative-explanation',
+                alternativeTitle: 'If you\'re struggling with string concatenation...',
+                content: 'Think of string concatenation like building a train. Each string is a train car, and the + operator is the coupling that connects them. Just as you can connect many train cars to make a longer train, you can connect many strings to make a longer message.'
               }
             ]}
           />
           
           <TeachingConcept
-            title="Template Literals - The Modern Approach"
-            subtitle="Using ES6 template strings for cleaner code"
+            title="String Concatenation Methods"
+            subtitle="Different ways to combine strings"
             conceptNumber={2}
+            lessonId="string-concatenation"
             blocks={[
               {
                 type: 'text',
-                content: 'ES6 introduced template literals, which make string concatenation much cleaner using backticks (`) and ${} for embedding expressions:'
+                content: 'In addition to the + operator and template literals, JavaScript provides other methods for string concatenation.',
+                keyTerms: [
+                  {
+                    term: 'concat()',
+                    definition: 'A string method that joins two or more strings and returns a new string without modifying the original strings.'
+                  }
+                ]
+              },
+              {
+                type: 'code',
+                caption: 'Using the concat() method:',
+                content: `// Using the concat() method
+let firstName = "Maria";
+let lastName = "Garcia";
+
+// Concatenating with the concat() method
+let fullName = firstName.concat(" ", lastName);
+console.log(fullName);            Outputs: "Maria Garcia"
+
+// The concat method can take multiple arguments
+let greeting = "Hello";
+let message = greeting.concat(", ", firstName, " ", lastName, "!");
+console.log(message);             Outputs: "Hello, Maria Garcia!"
+
+// String concatenation with arrays
+let taskParts = ["Debug", "the", "login", "form"];
+let taskDescription = taskParts.join(" ");
+console.log(taskDescription);     Outputs: "Debug the login form"
+
+// The original strings remain unchanged
+console.log(firstName);           Outputs: "Maria" (unchanged)
+console.log(lastName);            Outputs: "Garcia" (unchanged)`
+              },
+              {
+                type: 'advanced',
+                advancedTitle: 'Performance Considerations',
+                content: 'For simple concatenations, the + operator is usually fastest. The concat() method can be more readable when joining many strings, but may be slower. For repeatedly building large strings, consider using array.join() or a specialized approach like StringBuilder in some environments.'
+              }
+            ]}
+          />
+          
+          <TeachingConcept
+            title="Template Literals"
+            subtitle="Modern string formatting in JavaScript"
+            conceptNumber={3}
+            lessonId="string-concatenation"
+            blocks={[
+              {
+                type: 'text',
+                content: 'ES6 introduced template literals, which make string concatenation much cleaner using backticks (`) and ${} for embedding expressions:',
+                keyTerms: [
+                  {
+                    term: 'template literals',
+                    definition: 'A modern JavaScript feature that allows embedding expressions within string literals using backticks (`) and ${} syntax.'
+                  },
+                  {
+                    term: 'expression',
+                    definition: 'A combination of values, variables, and operators that resolves to a value.'
+                  }
+                ]
+              },
+              {
+                type: 'visualization',
+                content: 'Template literals visualization',
+                visualization: {
+                  type: 'comparison',
+                  title: 'Concatenation vs. Template Literals',
+                  description: 'Template literals provide a more readable and maintainable way to create complex strings than traditional concatenation.'
+                }
               },
               {
                 type: 'code',
                 caption: 'Using template literals for more readable string creation:',
-                content: `// Template literals use backticks (\`) and \${} for variables
+                content: `// Template literals use backticks (\\\`) instead of quotes
 let projectName = "Task Manager";
 let version = 2.1;
 
-// Embedding variables directly in strings
-let appInfo = \`\${projectName} v\${version}\`;
-console.log(appInfo);  // "Task Manager v2.1"
+// Variable embedding with \${} syntax
+let appInfo = \\\`\${projectName} v\${version}\\\`;
+console.log(appInfo);             Outputs: "Task Manager v2.1"
 
-// Multi-line strings without concatenation
-let taskDetails = \`
+// Multi-line strings without concatenation or \\n
+let taskDetails = \\\`
 Task: Implement login feature
 Priority: High
 Due date: Next week
 Assigned to: Alex
-\`;
-console.log(taskDetails);
+\\\`;
+console.log(taskDetails);         Preserves line breaks and formatting
 
-// Embedding expressions in template literals
+// Expressions inside \${} are evaluated
 let totalTasks = 10;
 let completedTasks = 7;
 let progress = (completedTasks / totalTasks) * 100;
-let progressReport = \`Project progress: \${progress}% (\${completedTasks}/\${totalTasks} tasks)\`;
-console.log(progressReport);  // "Project progress: 70% (7/10 tasks)"
+let progressReport = \\\`Project progress: \${progress}% (\${completedTasks}/\${totalTasks} tasks)\\\`;
+console.log(progressReport);      Outputs: "Project progress: 70% (7/10 tasks)"
 
-// Embedding complex expressions
-let timePerTask = 1.5;  // hours
+// Math expressions and function calls work inside \${}
+let timePerTask = 1.5;            // Time in hours
 let remainingTasks = totalTasks - completedTasks;
-let timeEstimate = \`Estimated time remaining: \${remainingTasks * timePerTask} hours\`;
-console.log(timeEstimate);  // "Estimated time remaining: 4.5 hours"`
-              }
-            ]}
-          />
-          
-          <TeachingConcept
-            title="Choosing the Right Approach"
-            subtitle="When to use each string concatenation method"
-            conceptNumber={3}
-            blocks={[
-              {
-                type: 'text',
-                content: 'Both approaches have their place in modern JavaScript:'
+let timeEstimate = \\\`Estimated time remaining: \${remainingTasks * timePerTask} hours\\\`;
+console.log(timeEstimate);        Outputs: "Estimated time remaining: 4.5 hours"`
               },
               {
-                type: 'text',
-                content: `• Use + operator when working with legacy systems or for very simple concatenation
-• Use template literals for more complex strings, especially those with multiple variables or multiline text`
+                type: 'tip',
+                caption: 'Template Literal Best Practice',
+                content: 'Use template literals instead of concatenation for complex strings with multiple variables or when creating multi-line strings. They\'re more readable and less error-prone.'
               }
             ]}
           />
           
           <TeachingConcept
-            title="Real-World Task Management Applications"
-            subtitle="Practical uses in project tracking systems"
+            title="Building Task Summaries"
+            subtitle="Practical applications for task management"
             conceptNumber={4}
+            lessonId="string-concatenation"
             blocks={[
               {
                 type: 'text',
@@ -491,6 +570,36 @@ console.log(timeEstimate);  // "Estimated time remaining: 4.5 hours"`
                 type: 'tip',
                 caption: 'Try it yourself',
                 content: 'Try experimenting with the code editor to create your own task summaries and reports!'
+              },
+              {
+                type: 'related-concepts',
+                content: 'Related topics',
+                relatedConcepts: [
+                  {
+                    title: 'Console Logging',
+                    lessonId: 'console',
+                    description: 'Using string concatenation for effective console messages.',
+                    isPrerequisite: false
+                  },
+                  {
+                    title: 'JavaScript Data Types',
+                    lessonId: 'javascript-data-types',
+                    description: 'Learning more about strings and other data types.',
+                    isPrerequisite: true
+                  },
+                  {
+                    title: 'Numbers',
+                    lessonId: 'numbers',
+                    description: 'Understanding how numbers work with string concatenation.',
+                    isPrerequisite: false
+                  },
+                  {
+                    title: 'Variables',
+                    lessonId: 'variables-intro',
+                    description: 'Creating and using variables for string concatenation.',
+                    isPrerequisite: true
+                  }
+                ]
               }
             ]}
           />

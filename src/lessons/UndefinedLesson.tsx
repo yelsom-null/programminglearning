@@ -435,9 +435,10 @@ console.log("Task duration:", getTaskDuration(newTask));
           scrollbarWidth: 'none'
         }}>
           <TeachingConcept
-            title="Understanding Undefined Variables"
-            subtitle="Variables declared but not assigned a value"
+            title="Understanding undefined"
+            subtitle="What undefined means in JavaScript"
             conceptNumber={1}
+            lessonId="undefined-undeclared"
             blocks={[
               {
                 type: 'text',
@@ -450,19 +451,16 @@ console.log("Task duration:", getTaskDuration(newTask));
               {
                 type: 'code',
                 caption: 'Variables that have been declared but not yet assigned a value:',
-                content: `// Declaring variables without assigning values
-let taskName;     // undefined
-let dueDate;      // undefined
-let isCompleted;  // undefined
+                content: `let taskName;                 This variable is undefined
+let dueDate;                  This variable is undefined
+let isCompleted;              This variable is undefined
 
-console.log(taskName);  // undefined
+console.log(taskName);        Outputs: undefined
 
-// Checking if a variable is undefined
 if (taskName === undefined) {
   console.log("Task name has not been set yet");
 }
 
-// Alternative check for undefined (safer)
 if (typeof taskName === "undefined") {
   console.log("Task name has not been set yet");
 }`
@@ -471,56 +469,10 @@ if (typeof taskName === "undefined") {
           />
           
           <TeachingConcept
-            title="Common Undefined Scenarios"
-            subtitle="When you'll encounter undefined in task management"
+            title="Undefined vs. Undeclared"
+            subtitle="Two different concepts often confused"
             conceptNumber={2}
-            blocks={[
-              {
-                type: 'text',
-                content: 'There are several situations where you\'ll encounter undefined values in task management applications:'
-              },
-              {
-                type: 'code',
-                caption: 'Common scenarios that produce undefined values:',
-                content: `// 1. Missing function parameters
-function createTask(title, priority, dueDate) {
-  console.log("Priority:", priority);   // undefined if not provided
-  console.log("Due date:", dueDate);    // undefined if not provided
-  
-  // Use default values for undefined parameters
-  return {
-    title: title || "Untitled Task",
-    priority: priority || "Medium",
-    dueDate: dueDate || null
-  };
-}
-
-// Call with missing parameters
-let task = createTask("Fix login bug");
-// priority and dueDate will be undefined
-
-// 2. Accessing object properties that don't exist
-console.log(task.description);  // undefined (property doesn't exist)
-
-// 3. Functions without a return statement
-function processTask(task) {
-  console.log("Processing:", task.title);
-  // No return statement
-}
-let result = processTask(task);  // result will be undefined`
-              },
-              {
-                type: 'warning',
-                caption: 'Potential Bugs',
-                content: 'Unchecked undefined values can lead to unexpected behavior. Always check that values exist before using them in critical operations.'
-              }
-            ]}
-          />
-          
-          <TeachingConcept
-            title="Undeclared Variables vs. Undefined"
-            subtitle="The key difference and why it matters"
-            conceptNumber={3}
+            lessonId="undefined-undeclared"
             blocks={[
               {
                 type: 'text',
@@ -529,29 +481,22 @@ let result = processTask(task);  // result will be undefined`
               {
                 type: 'code',
                 caption: 'Undeclared variables cause runtime errors:',
-                content: `// Proper variable declaration
-let taskName;  // undefined but declared
+                content: `let taskName;                    undefined but declared variable
 
-// Trying to access an undeclared variable
 try {
-  // This will cause an error
-  console.log(undeclaredVar);  // ReferenceError
+  console.log(undeclaredVar);     ReferenceError: not defined
 } catch (error) {
-  console.log("Error:", error.name);  // "ReferenceError"
+  console.log("Error:", error.name);
 }
 
-// Common mistake - creating accidental globals
 function setupTask() {
-  taskStatus = "In Progress";  // Missing let/const/var!
-  // Creates a global variable (or error in strict mode)
+  taskStatus = "In Progress";     Missing let/const/var - creates global
 }
 
-// Using strict mode to prevent accidental globals
 function strictModeExample() {
   "use strict";
   try {
-    // This causes an error in strict mode
-    taskPriority = "High";  // ReferenceError
+    taskPriority = "High";        Causes error in strict mode
   } catch (error) {
     console.log("Strict mode prevents globals");
   }
@@ -566,9 +511,10 @@ function strictModeExample() {
           />
           
           <TeachingConcept
-            title="Working with Undefined in Task Management"
-            subtitle="Practical techniques for handling undefined values"
-            conceptNumber={4}
+            title="Checking for undefined"
+            subtitle="Safely working with potentially undefined values"
+            conceptNumber={3}
+            lessonId="undefined-undeclared"
             blocks={[
               {
                 type: 'text',
@@ -577,25 +523,18 @@ function strictModeExample() {
               {
                 type: 'code',
                 caption: 'Safe handling of undefined values:',
-                content: `// 1. Default values with the || operator (beware of falsy values)
-function getTaskTitle(task) {
-  return task.title || "Untitled Task";
-  // Warning: returns "Untitled" if title is "" or 0
+                content: `function getTaskTitle(task) {
+  return task.title || "Untitled Task";    Uses default for falsy values
 }
 
-// 2. Nullish coalescing operator (??) - better for numbers and strings
 function getTaskPriority(task) {
-  return task.priority ?? "Medium";
-  // Only uses "Medium" if priority is null or undefined
+  return task.priority ?? "Medium";        Only for null/undefined
 }
 
-// 3. Optional chaining for nested properties
 function getSubtaskCount(task) {
-  return task.subtasks?.length ?? 0;
-  // Safe access even if subtasks doesn't exist
+  return task.subtasks?.length ?? 0;       Safe property access chain
 }
 
-// 4. Defensive checking for function parameters
 function updateTask(taskId, updates) {
   if (typeof taskId === "undefined") {
     throw new Error("Task ID is required");
@@ -604,16 +543,56 @@ function updateTask(taskId, updates) {
   // Process updates...
 }
 
-// 5. Default values for function parameters (ES6)
 function createNewTask(title = "Untitled", priority = "Medium") {
-  // Parameters have defaults if undefined
-  return { title, priority };
+  return { title, priority };              Default parameters in ES6
 }`
               },
               {
                 type: 'note',
                 caption: 'Modern JavaScript',
                 content: 'ES6+ provides elegant solutions for undefined values with optional chaining (?.), nullish coalescing (??), and default parameters that make your code more robust.'
+              }
+            ]}
+          />
+          
+          <TeachingConcept
+            title="Undefined in Functions"
+            subtitle="Function return values and parameters"
+            conceptNumber={4}
+            lessonId="undefined-undeclared"
+            blocks={[
+              {
+                type: 'text',
+                content: 'There are several situations where you\'ll encounter undefined values in task management applications:'
+              },
+              {
+                type: 'code',
+                caption: 'Common scenarios that produce undefined values:',
+                content: `function createTask(title, priority, dueDate) {
+  console.log("Priority:", priority);   undefined if not provided
+  console.log("Due date:", dueDate);    undefined if not provided
+  
+  return {
+    title: title || "Untitled Task",    Using default for undefined parameters
+    priority: priority || "Medium",
+    dueDate: dueDate || null
+  };
+}
+
+let task = createTask("Fix login bug");  Missing parameters become undefined
+
+console.log(task.description);  undefined - property doesn't exist
+
+function processTask(task) {
+  console.log("Processing:", task.title);
+  // No return statement
+}
+let result = processTask(task);  result will be undefined`
+              },
+              {
+                type: 'warning',
+                caption: 'Potential Bugs',
+                content: 'Unchecked undefined values can lead to unexpected behavior. Always check that values exist before using them in critical operations.'
               }
             ]}
           />

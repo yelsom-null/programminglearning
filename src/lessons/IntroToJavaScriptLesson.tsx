@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import CodeEditor from '../components/CodeEditor';
 import { 
   evaluateCodeWithAI, 
-  isStringifiedClassInstance,
-  parseStringifiedClass 
+  isStringifiedClassInstance
 } from '../utils/codeAnalysis';
 import { 
   Typography, 
@@ -96,194 +95,27 @@ const LessonNav: React.FC<LessonNavProps> = ({
   );
 };
 
-interface NullUndefinedLessonProps {
+interface IntroToJavaScriptLessonProps {
   darkMode?: boolean;
 }
 
-const NullUndefinedLesson: React.FC<NullUndefinedLessonProps> = ({ 
+const IntroToJavaScriptLesson: React.FC<IntroToJavaScriptLessonProps> = ({ 
   darkMode = false
 }) => {
   const theme = useTheme();
   
   // Initial code sample
-  const initialCode = `// Null vs Undefined in Task Management
+  const initialCode = `// Welcome to JavaScript!
+// This is the most popular programming language in the world
 
-// PART 1: Understanding the Difference
-// ====================================
+// Let's try some simple JavaScript
+console.log("JavaScript runs in the browser");
+console.log("JavaScript also runs on servers");
+console.log("JavaScript is used to make websites interactive");
 
-// undefined: variable is declared but has no value assigned
-let taskDueDate;
-console.log("1. Undefined variable:", taskDueDate);  // undefined
-
-// null: explicitly assigned "no value"
-let taskAssignee = null;
-console.log("2. Null variable:", taskAssignee);  // null
-
-// Type checking
-console.log("3. typeof undefined:", typeof undefined);  // "undefined"
-console.log("4. typeof null:", typeof null);  // "object" (JS quirk)
-
-// Equality comparisons
-console.log("5. null == undefined:", null == undefined);    // true (loose equality)
-console.log("6. null === undefined:", null === undefined);  // false (strict equality)
-
-// PART 2: Task Management with null and undefined
-// ==============================================
-
-// Task object with intentional null values and missing properties
-let task = {
-  id: 123,
-  title: "Setup project repository", 
-  description: "Create initial folder structure and config files",
-  dueDate: "2023-12-31",
-  assignee: null,              // explicitly no assignee yet
-  completedDate: null,         // explicitly not completed
-  priority: "high",
-  // tags property is missing (will be undefined when accessed)
-};
-
-// Accessing properties
-console.log("7. Task assignee:", task.assignee);       // null (explicitly set)
-console.log("8. Task tags:", task.tags);               // undefined (property doesn't exist)
-
-// PART 3: Different Ways to Check for Empty Values
-// ===============================================
-
-// Checking for null
-if (task.assignee === null) {
-  console.log("9. Task needs to be assigned");
-}
-
-// Checking for undefined
-if (task.tags === undefined) {
-  console.log("10. No tags have been added to this task");
-}
-
-// Checking for either null or undefined (unsafe)
-if (!task.assignee) {
-  console.log("11. Task assignee is empty (null)");
-}
-
-if (!task.tags) {
-  console.log("12. Task tags is empty (undefined)");
-}
-
-// Beware: This approach also catches other falsy values like 0 and ""
-let urgentTask = {
-  title: "Fix critical bug",
-  priority: 0  // 0 = lowest priority in this system
-};
-
-if (!urgentTask.priority) {
-  // This will incorrectly run even though priority exists but is 0
-  console.log("13. WARNING: This runs even though priority exists!");
-}
-
-// PART 4: Best Practices for Checking Empty Values
-// ==============================================
-
-// 1. Checking for either null or undefined specifically
-function isNullOrUndefined(value) {
-  return value == null;  // Uses loose equality (==)
-  // This works because null == undefined is true
-}
-
-console.log("14. isNullOrUndefined(null):", isNullOrUndefined(null));            // true
-console.log("15. isNullOrUndefined(undefined):", isNullOrUndefined(undefined));  // true
-console.log("16. isNullOrUndefined(0):", isNullOrUndefined(0));                  // false
-console.log("17. isNullOrUndefined(''):", isNullOrUndefined(""));                // false
-
-// 2. Using the nullish coalescing operator (??) for default values
-function getTaskDuration(task) {
-  // If duration is null or undefined, use default value
-  return task.duration ?? 1;  // Default to 1 hour
-}
-
-let projectTask = { title: "Project planning", duration: 2 };
-let meetingTask = { title: "Team meeting", duration: 0 };
-let unknownTask = { title: "New task" };  // no duration property
-let emptyTask = { title: "Empty task", duration: null };
-
-console.log("18. Task durations:");
-console.log("   - Project:", getTaskDuration(projectTask));  // 2 (uses actual value)
-console.log("   - Meeting:", getTaskDuration(meetingTask));  // 0 (preserves zero)
-console.log("   - Unknown:", getTaskDuration(unknownTask));  // 1 (uses default - undefined)
-console.log("   - Empty:", getTaskDuration(emptyTask));      // 1 (uses default - null)
-
-// 3. Using optional chaining (?.) for safe property access
-let taskCollection = {
-  categories: {
-    development: [
-      { title: "Fix login bug" },
-      { title: "Update API endpoints" }
-    ]
-    // design category is missing
-  }
-};
-
-// Safe access with optional chaining
-let designTasks = taskCollection.categories?.design?.length ?? 0;
-console.log("19. Design tasks:", designTasks);  // 0 (safe access to missing property)
-
-// Without optional chaining this would cause an error:
-// let designTasks = taskCollection.categories.design.length;  // Error!
-
-// PART 5: When to Use Each in Task Management
-// =========================================
-
-// Use null when:
-let userTask = {
-  title: "Review documentation",
-  assignee: null,      // Explicitly no assignee yet
-  dueDate: null,       // Explicitly no due date
-  parentTask: null     // Explicitly not a subtask
-};
-
-// Use undefined (implicitly) when something just doesn't exist:
-let simpleTask = {
-  title: "Quick fix"
-  // All other properties are undefined because they don't exist
-};
-
-// PART 6: Creating a Function to Format Task Info
-// ============================================
-
-function formatTaskInfo(task) {
-  // Default values using nullish coalescing operator
-  const title = task.title ?? "Untitled Task";
-  const assignee = task.assignee ?? "Unassigned";
-  const dueDate = task.dueDate ?? "No due date";
-  const description = task.description ?? "No description provided";
-  
-  return \`
-  TASK: \${title}
-  ASSIGNEE: \${assignee}
-  DUE: \${dueDate}
-  DESCRIPTION: \${description}
-  \`;
-}
-
-// Test with different tasks
-const tasks = [
-  {
-    id: 1,
-    title: "Complete project",
-    dueDate: "2023-12-31",
-    assignee: null,  // explicitly not assigned
-    description: undefined  // implicitly missing
-  },
-  {
-    id: 2,
-    title: "Review code"
-    // dueDate is missing
-    // assignee is missing
-    // description is missing
-  }
-];
-
-console.log("20. Formatted task info:");
-console.log(formatTaskInfo(tasks[0]));
-console.log(formatTaskInfo(tasks[1]));`;
+// You can try editing the messages above
+// Or add your own new message below
+`;
   
   const [code, setCode] = useState(initialCode);
   const [runtimeValues, setRuntimeValues] = useState<Record<string, any>>({});
@@ -399,14 +231,14 @@ console.log(formatTaskInfo(tasks[1]));`;
   // Navigation handlers
   const handlePreviousLesson = () => {
     // Find current lesson in curriculum
-    const currentLessonId = "null-undefined";
+    const currentLessonId = "intro-to-javascript";
     
-    let prevLesson = null;
-    let currentChapter = null;
+    let prevLesson: Lesson | null = null;
+    let currentChapter: Chapter | null = null;
     
     // Find current chapter and lesson
     for (const chapter of curriculum) {
-      const lessonIndex = chapter.lessons.findIndex(l => l.id === currentLessonId);
+      const lessonIndex = chapter.lessons.findIndex((l: Lesson) => l.id === currentLessonId);
       if (lessonIndex !== -1) {
         currentChapter = chapter;
         
@@ -415,7 +247,7 @@ console.log(formatTaskInfo(tasks[1]));`;
           prevLesson = chapter.lessons[lessonIndex - 1];
         } else {
           // Look for last lesson in previous chapter
-          const chapterIndex = curriculum.findIndex(c => c.id === chapter.id);
+          const chapterIndex = curriculum.findIndex((c: Chapter) => c.id === chapter.id);
           if (chapterIndex > 0) {
             const prevChapter = curriculum[chapterIndex - 1];
             prevLesson = prevChapter.lessons[prevChapter.lessons.length - 1];
@@ -433,14 +265,14 @@ console.log(formatTaskInfo(tasks[1]));`;
 
   const handleNextLesson = () => {
     // Find current lesson in curriculum
-    const currentLessonId = "null-undefined";
+    const currentLessonId = "intro-to-javascript";
     
-    let nextLesson = null;
-    let currentChapter = null;
+    let nextLesson: Lesson | null = null;
+    let currentChapter: Chapter | null = null;
     
     // Find current chapter and lesson
     for (const chapter of curriculum) {
-      const lessonIndex = chapter.lessons.findIndex(l => l.id === currentLessonId);
+      const lessonIndex = chapter.lessons.findIndex((l: Lesson) => l.id === currentLessonId);
       if (lessonIndex !== -1) {
         currentChapter = chapter;
         
@@ -449,7 +281,7 @@ console.log(formatTaskInfo(tasks[1]));`;
           nextLesson = chapter.lessons[lessonIndex + 1];
         } else {
           // Look for first lesson in next chapter
-          const chapterIndex = curriculum.findIndex(c => c.id === chapter.id);
+          const chapterIndex = curriculum.findIndex((c: Chapter) => c.id === chapter.id);
           if (chapterIndex < curriculum.length - 1) {
             const nextChapter = curriculum[chapterIndex + 1];
             nextLesson = nextChapter.lessons[0];
@@ -466,7 +298,7 @@ console.log(formatTaskInfo(tasks[1]));`;
   };
 
   // Find current lesson information for navigation
-  const currentLessonId = "null-undefined";
+  const currentLessonId = "intro-to-javascript";
   let currentLessonIndex = -1;
   let totalLessons = 0;
   let hasPrevious = false;
@@ -474,13 +306,13 @@ console.log(formatTaskInfo(tasks[1]));`;
   
   // Find current chapter and lesson
   for (const chapter of curriculum) {
-    const lessonIndex = chapter.lessons.findIndex(l => l.id === currentLessonId);
+    const lessonIndex = chapter.lessons.findIndex((l: Lesson) => l.id === currentLessonId);
     if (lessonIndex !== -1) {
       currentLessonIndex = lessonIndex;
       totalLessons = chapter.lessons.length;
-      hasPrevious = lessonIndex > 0 || curriculum.findIndex(c => c.id === chapter.id) > 0;
+      hasPrevious = lessonIndex > 0 || curriculum.findIndex((c: Chapter) => c.id === chapter.id) > 0;
       hasNext = lessonIndex < chapter.lessons.length - 1 || 
-                curriculum.findIndex(c => c.id === chapter.id) < curriculum.length - 1;
+                curriculum.findIndex((c: Chapter) => c.id === chapter.id) < curriculum.length - 1;
       break;
     }
   }
@@ -488,7 +320,7 @@ console.log(formatTaskInfo(tasks[1]));`;
   return (
     <Box sx={{ p: 3, width: '100%' }}>
       <LessonNav
-        title="Null and Undefined in JavaScript"
+        title="Introduction to JavaScript"
         lessonNumber={currentLessonIndex + 1}
         totalLessons={totalLessons || 12}
         onPrevious={handlePreviousLesson}
@@ -517,189 +349,182 @@ console.log(formatTaskInfo(tasks[1]));`;
           scrollbarWidth: 'none'
         }}>
           <TeachingConcept
-            title="Null vs. Undefined"
-            subtitle="Understanding the difference"
+            title="What is JavaScript?"
+            subtitle="Understanding JavaScript's role in web development"
             conceptNumber={1}
-            lessonId="null-undefined"
+            lessonId="intro-to-javascript"
             blocks={[
               {
                 type: 'text',
-                content: 'JavaScript has two different ways to represent "nothing" or "no value" - null and undefined. Understanding the difference is crucial for effective task management applications.'
+                content: 'JavaScript is the world\'s most popular programming language. Despite having "Java" in its name, it has nothing to do with the Java programming language!',
+                keyTerms: [
+                  {
+                    term: 'JavaScript',
+                    definition: 'A high-level programming language primarily used to create interactive effects within web browsers.'
+                  }
+                ]
               },
-              {
-                type: 'code',
-                caption: 'The basic difference between null and undefined:',
-                content: `let taskDueDate;                    Undefined - no value assigned
-console.log("Undefined variable:", taskDueDate);  Outputs: undefined
-
-let taskAssignee = null;            Null - explicitly assigned no value
-console.log("Null variable:", taskAssignee);  Outputs: null
-
-console.log(typeof undefined);      Outputs: "undefined"
-console.log(typeof null);           Outputs: "object" (JS quirk)
-
-console.log(null == undefined);     Outputs: true (loose equality)
-console.log(null === undefined);    Outputs: false (strict equality)`
-              },
-              {
-                type: 'warning',
-                caption: 'JavaScript Quirk',
-                content: 'Despite null representing an empty object reference, typeof null returns "object", which is considered a JavaScript bug that can\'t be fixed for backward compatibility reasons.'
-              }
-            ]}
-          />
-          
-          <TeachingConcept
-            title="When to Use Null"
-            subtitle="Intentional absence of a value"
-            conceptNumber={2}
-            lessonId="null-undefined"
-            blocks={[
               {
                 type: 'text',
-                content: 'In task management applications, both null and undefined have practical uses:'
+                content: 'JavaScript was created in 1995 to make websites interactive. Before JavaScript, websites were just static pages - like reading a book. JavaScript made websites respond to your actions, creating a more engaging experience.'
               },
               {
-                type: 'code',
-                caption: 'Task object with intentional null values and missing properties:',
-                content: `let task = {
-  id: 123,
-  title: "Setup project repository", 
-  description: "Create initial folder structure and config files",
-  dueDate: "2023-12-31",
-  assignee: null,              Explicitly no assignee yet
-  completedDate: null,         Explicitly not completed
-  priority: "high"
-  // tags property doesn't exist
-};
-
-console.log(task.assignee);    Outputs: null (explicitly set)
-console.log(task.tags);        Outputs: undefined (missing property)
-
-// When to use null:
-// - A task deliberately has no assignee yet
-// - A task is explicitly not part of any category
-// - A message has been intentionally left blank
-
-// When to use undefined (by omitting):
-// - A property doesn't apply to this task
-// - Something hasn't been set yet by default`
-              },
-              {
-                type: 'tip',
-                caption: 'Best Practice',
-                content: 'Use null when you want to explicitly indicate "no value" and let properties remain undefined (by not setting them) when they simply don\'t exist yet or don\'t apply.'
-              }
-            ]}
-          />
-          
-          <TeachingConcept
-            title="Checking for Null or Undefined"
-            subtitle="Safe ways to test for empty values"
-            conceptNumber={3}
-            lessonId="null-undefined"
-            blocks={[
-              {
-                type: 'text',
-                content: 'There are multiple ways to check for null or undefined values, with different trade-offs:'
-              },
-              {
-                type: 'code',
-                caption: 'Different ways to check for null and undefined:',
-                content: `if (task.assignee === null) {        Explicit check for null
-  console.log("Task needs to be assigned");
-}
-
-if (task.tags === undefined) {      Explicit check for undefined
-  console.log("No tags have been added");
-}
-
-if (!task.assignee) {               Works for null AND undefined
-  console.log("Task assignee is empty");
-}
-
-let urgentTask = {
-  title: "Fix critical bug",
-  priority: 0                       0 = lowest priority in this system
-};
-
-if (!urgentTask.priority) {         This runs even though priority exists!
-  console.log("WARNING: This incorrectly runs for 0!");
-}
-
-function isNullOrUndefined(value) {
-  return value == null;             Uses loose equality (==)
-}                                   null == undefined is true
-
-console.log(isNullOrUndefined(null));        Outputs: true
-console.log(isNullOrUndefined(undefined));   Outputs: true
-console.log(isNullOrUndefined(0));           Outputs: false
-console.log(isNullOrUndefined(""));          Outputs: false`
-              },
-              {
-                type: 'warning',
-                caption: 'Avoid Simple Negation',
-                content: 'The !variable check is convenient but dangerous as it treats all falsy values (0, "", false, NaN) the same as null and undefined. Use explicit checks or value == null for more reliable code.'
-              }
-            ]}
-          />
-          
-          <TeachingConcept
-            title="Default Values and Nullish Coalescing"
-            subtitle="Modern ways to handle null and undefined"
-            conceptNumber={4}
-            lessonId="null-undefined"
-            blocks={[
-              {
-                type: 'text',
-                content: 'Modern JavaScript provides elegant solutions for working with null and undefined values:'
-              },
-              {
-                type: 'code',
-                caption: 'Modern ways to handle null and undefined:',
-                content: `function getTaskDuration(task) {
-  return task.duration ?? 1;        Default only for null/undefined
-}
-
-let projectTask = { title: "Project planning", duration: 2 };
-let meetingTask = { title: "Team meeting", duration: 0 };
-let unknownTask = { title: "New task" };  No duration property
-let emptyTask = { title: "Empty task", duration: null };
-
-console.log(getTaskDuration(projectTask));  Outputs: 2 (actual value)
-console.log(getTaskDuration(meetingTask));  Outputs: 0 (preserves 0)
-console.log(getTaskDuration(unknownTask));  Outputs: 1 (undefined → default)
-console.log(getTaskDuration(emptyTask));    Outputs: 1 (null → default)
-
-let taskCollection = {
-  categories: {
-    development: [
-      { title: "Fix login bug" },
-      { title: "Update API endpoints" }
-    ]
-    // design category is missing
-  }
-};
-
-let designTasks = taskCollection.categories?.design?.length ?? 0;
-console.log("Design tasks:", designTasks);  Outputs: 0 (safe property access)
-
-function formatTaskInfo(task) {
-  const title = task.title ?? "Untitled Task";          Default if undefined/null
-  const assignee = task.assignee ?? "Unassigned"; 
-  const dueDate = task.dueDate ?? "No due date";
-  const description = task.description ?? "No description";
-  
-  return \`TASK: \${title}
-  ASSIGNEE: \${assignee}
-  DUE: \${dueDate}
-  DESCRIPTION: \${description}\`;
-}`
+                type: 'visualization',
+                content: 'JavaScript in web development',
+                visualization: {
+                  type: 'flow',
+                  title: 'JavaScript\'s Role in Web Development',
+                  description: 'JavaScript connects the user interface with backend systems, allowing for dynamic content and interactivity.'
+                }
               },
               {
                 type: 'note',
-                caption: 'Nullish Coalescing vs OR',
-                content: 'The ?? operator only falls back to the default when the value is null or undefined, unlike || which also falls back for other falsy values like 0 or empty string. This makes ?? safer for numbers and strings where 0 and "" might be valid values.'
+                caption: 'Did you know?',
+                content: 'JavaScript was created in just 10 days by Brendan Eich while he was working at Netscape. It was originally called "Mocha", then "LiveScript", before settling on "JavaScript".'
+              },
+              {
+                type: 'advanced',
+                advancedTitle: 'JavaScript Engines',
+                content: 'JavaScript code is executed by a JavaScript engine, which is built into modern web browsers. Chrome uses V8, Firefox uses SpiderMonkey, and Safari uses JavaScriptCore. These engines compile JavaScript code into machine code that your computer can understand and execute very quickly.'
+              }
+            ]}
+          />
+
+          <TeachingConcept
+            title="Where JavaScript is Used"
+            subtitle="More places than you might think"
+            conceptNumber={2}
+            lessonId="intro-to-javascript"
+            blocks={[
+              {
+                type: 'text',
+                content: 'JavaScript started in web browsers, but now it\'s used almost everywhere:',
+                keyTerms: [
+                  {
+                    term: 'browser',
+                    definition: 'A software application used to access and view websites on the internet, such as Chrome, Firefox, Safari, or Edge.'
+                  },
+                  {
+                    term: 'Node.js',
+                    definition: 'A runtime environment that allows JavaScript to be executed outside of web browsers, enabling server-side development.'
+                  }
+                ]
+              },
+              {
+                type: 'text',
+                content: '• Web Browsers: Creating interactive websites and web apps\n• Web Servers: Running backend services with Node.js\n• Mobile Apps: Building apps for phones and tablets\n• Desktop Apps: Creating programs for Windows, Mac, and Linux\n• Games: Creating browser and mobile games\n• Smart Devices: Programming IoT (Internet of Things) devices'
+              },
+              {
+                type: 'tip',
+                caption: 'Learning JavaScript Opens Doors',
+                content: 'When you learn JavaScript, you gain skills that can be applied in many different tech fields - from web development to game design!'
+              },
+              {
+                type: 'alternative-explanation',
+                alternativeTitle: 'If you\'re struggling to understand JavaScript\'s reach...',
+                content: 'Think of JavaScript as a universal language for computers, similar to how English is often used across many countries. Just as knowing English helps you communicate in many places, knowing JavaScript helps you work with many different platforms and technologies.'
+              }
+            ]}
+          />
+          
+          <TeachingConcept
+            title="JavaScript in Web Browsers"
+            subtitle="Making websites come alive"
+            conceptNumber={3}
+            lessonId="intro-to-javascript"
+            blocks={[
+              {
+                type: 'text',
+                content: 'JavaScript works with HTML and CSS to create modern websites:',
+                keyTerms: [
+                  {
+                    term: 'HTML',
+                    definition: 'HyperText Markup Language, used to define the structure and content of web pages.'
+                  },
+                  {
+                    term: 'CSS',
+                    definition: 'Cascading Style Sheets, used to control the appearance and layout of HTML elements.'
+                  }
+                ]
+              },
+              {
+                type: 'text',
+                content: '• HTML creates the structure (like the skeleton)\n• CSS styles the appearance (like clothing and makeup)\n• JavaScript adds behavior (like muscles and a brain)'
+              },
+              {
+                type: 'visualization',
+                content: 'Web Technologies Visualization',
+                visualization: {
+                  type: 'comparison',
+                  title: 'Web Technologies Working Together',
+                  description: 'HTML, CSS, and JavaScript work together to create the complete web experience.'
+                }
+              },
+              {
+                type: 'text',
+                content: 'With JavaScript, websites can respond to user actions like clicks and typing, animate elements, fetch data from servers, and much more!'
+              },
+              {
+                type: 'code',
+                caption: 'This simple code shows a message in the browser:',
+                content: `// Show a message
+console.log("Hello from JavaScript!");  Outputs: Hello from JavaScript!
+
+// We can also show alerts
+// (You won't see this run in our editor though)
+alert("Welcome to JavaScript!");`
+              }
+            ]}
+          />
+          
+          <TeachingConcept
+            title="JavaScript for Beginners"
+            subtitle="Why it's a great first language"
+            conceptNumber={4}
+            lessonId="intro-to-javascript"
+            blocks={[
+              {
+                type: 'text',
+                content: 'JavaScript is a wonderful first programming language for several reasons:',
+                keyTerms: [
+                  {
+                    term: 'syntax',
+                    definition: 'The set of rules that define how JavaScript programs must be written to be valid.'
+                  }
+                ]
+              },
+              {
+                type: 'text',
+                content: '1. Built-in to browsers - no setup needed to get started\n2. Instant feedback - see your code working immediately\n3. Forgiving - it tries to run even with small mistakes\n4. Huge community - easy to find help and resources online\n5. Actually used in the real world - not just for learning'
+              },
+              {
+                type: 'exercise',
+                caption: 'Try it yourself',
+                content: 'In the editor on the right, try adding another line with console.log() and a message of your choosing. What happens when you add it?'
+              },
+              {
+                type: 'related-concepts',
+                content: 'Related topics',
+                relatedConcepts: [
+                  {
+                    title: 'JavaScript Data Types',
+                    lessonId: 'javascript-data-types',
+                    description: 'Learn about the different kinds of data you can use in JavaScript.',
+                    isPrerequisite: false
+                  },
+                  {
+                    title: 'Using the Console',
+                    lessonId: 'console',
+                    description: 'Learn more about using the console for debugging and output.',
+                    isPrerequisite: false
+                  },
+                  {
+                    title: 'Introduction to Programming',
+                    lessonId: 'intro-to-programming',
+                    description: 'Basic programming concepts that apply to all languages.',
+                    isPrerequisite: true
+                  }
+                ]
               }
             ]}
           />
@@ -714,34 +539,27 @@ function formatTaskInfo(task) {
             mb: 3, 
             overflow: 'hidden',
             position: 'relative',
-            flexShrink: 0,
             height: '400px',
             display: 'flex',
             flexDirection: 'column',
             border: '1px solid',
             borderColor: 'divider'
           }}>
-            <Box sx={{ 
-              position: 'relative',
-              width: '100%',
-              height: '100%',
-              overflow: 'hidden',
-              flex: 1
-            }}>
             <CodeEditor
               value={code}
               onChange={handleCodeChange}
               darkMode={darkMode}
-              name="null_undefined_editor"
+              name="javascript_intro_editor"
             />
-            </Box>
             {error && (
               <Box sx={{ 
                 p: 2, 
                 color: 'error.main', 
                 bgcolor: 'error.light', 
                 borderTop: '1px solid',
-                borderColor: 'error.main' 
+                borderColor: 'error.main',
+                width: '100%',
+                flexShrink: 0
               }}>
                 {error}
               </Box>
@@ -896,4 +714,4 @@ function formatTaskInfo(task) {
   );
 };
 
-export default NullUndefinedLesson; 
+export default IntroToJavaScriptLesson; 

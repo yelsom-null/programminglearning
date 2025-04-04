@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import CodeEditor from '../components/CodeEditor';
 import { 
   evaluateCodeWithAI, 
-  isStringifiedClassInstance,
-  parseStringifiedClass 
+  isStringifiedClassInstance
 } from '../utils/codeAnalysis';
 import { 
   Typography, 
@@ -96,194 +95,36 @@ const LessonNav: React.FC<LessonNavProps> = ({
   );
 };
 
-interface NullUndefinedLessonProps {
+interface JavaScriptDataTypesLessonProps {
   darkMode?: boolean;
 }
 
-const NullUndefinedLesson: React.FC<NullUndefinedLessonProps> = ({ 
+const JavaScriptDataTypesLesson: React.FC<JavaScriptDataTypesLessonProps> = ({ 
   darkMode = false
 }) => {
   const theme = useTheme();
   
   // Initial code sample
-  const initialCode = `// Null vs Undefined in Task Management
+  const initialCode = `// JavaScript has different types of data
 
-// PART 1: Understanding the Difference
-// ====================================
+// Type 1: Strings - for text
+console.log("This is a string");
+console.log('This is also a string');
 
-// undefined: variable is declared but has no value assigned
-let taskDueDate;
-console.log("1. Undefined variable:", taskDueDate);  // undefined
+// Type 2: Numbers - for numeric values
+console.log(42);        // A whole number (integer)
+console.log(3.14);      // A decimal number
+console.log(-10);       // A negative number
 
-// null: explicitly assigned "no value"
-let taskAssignee = null;
-console.log("2. Null variable:", taskAssignee);  // null
+// Type 3: Booleans - for true/false values
+console.log(true);
+console.log(false);
 
-// Type checking
-console.log("3. typeof undefined:", typeof undefined);  // "undefined"
-console.log("4. typeof null:", typeof null);  // "object" (JS quirk)
-
-// Equality comparisons
-console.log("5. null == undefined:", null == undefined);    // true (loose equality)
-console.log("6. null === undefined:", null === undefined);  // false (strict equality)
-
-// PART 2: Task Management with null and undefined
-// ==============================================
-
-// Task object with intentional null values and missing properties
-let task = {
-  id: 123,
-  title: "Setup project repository", 
-  description: "Create initial folder structure and config files",
-  dueDate: "2023-12-31",
-  assignee: null,              // explicitly no assignee yet
-  completedDate: null,         // explicitly not completed
-  priority: "high",
-  // tags property is missing (will be undefined when accessed)
-};
-
-// Accessing properties
-console.log("7. Task assignee:", task.assignee);       // null (explicitly set)
-console.log("8. Task tags:", task.tags);               // undefined (property doesn't exist)
-
-// PART 3: Different Ways to Check for Empty Values
-// ===============================================
-
-// Checking for null
-if (task.assignee === null) {
-  console.log("9. Task needs to be assigned");
-}
-
-// Checking for undefined
-if (task.tags === undefined) {
-  console.log("10. No tags have been added to this task");
-}
-
-// Checking for either null or undefined (unsafe)
-if (!task.assignee) {
-  console.log("11. Task assignee is empty (null)");
-}
-
-if (!task.tags) {
-  console.log("12. Task tags is empty (undefined)");
-}
-
-// Beware: This approach also catches other falsy values like 0 and ""
-let urgentTask = {
-  title: "Fix critical bug",
-  priority: 0  // 0 = lowest priority in this system
-};
-
-if (!urgentTask.priority) {
-  // This will incorrectly run even though priority exists but is 0
-  console.log("13. WARNING: This runs even though priority exists!");
-}
-
-// PART 4: Best Practices for Checking Empty Values
-// ==============================================
-
-// 1. Checking for either null or undefined specifically
-function isNullOrUndefined(value) {
-  return value == null;  // Uses loose equality (==)
-  // This works because null == undefined is true
-}
-
-console.log("14. isNullOrUndefined(null):", isNullOrUndefined(null));            // true
-console.log("15. isNullOrUndefined(undefined):", isNullOrUndefined(undefined));  // true
-console.log("16. isNullOrUndefined(0):", isNullOrUndefined(0));                  // false
-console.log("17. isNullOrUndefined(''):", isNullOrUndefined(""));                // false
-
-// 2. Using the nullish coalescing operator (??) for default values
-function getTaskDuration(task) {
-  // If duration is null or undefined, use default value
-  return task.duration ?? 1;  // Default to 1 hour
-}
-
-let projectTask = { title: "Project planning", duration: 2 };
-let meetingTask = { title: "Team meeting", duration: 0 };
-let unknownTask = { title: "New task" };  // no duration property
-let emptyTask = { title: "Empty task", duration: null };
-
-console.log("18. Task durations:");
-console.log("   - Project:", getTaskDuration(projectTask));  // 2 (uses actual value)
-console.log("   - Meeting:", getTaskDuration(meetingTask));  // 0 (preserves zero)
-console.log("   - Unknown:", getTaskDuration(unknownTask));  // 1 (uses default - undefined)
-console.log("   - Empty:", getTaskDuration(emptyTask));      // 1 (uses default - null)
-
-// 3. Using optional chaining (?.) for safe property access
-let taskCollection = {
-  categories: {
-    development: [
-      { title: "Fix login bug" },
-      { title: "Update API endpoints" }
-    ]
-    // design category is missing
-  }
-};
-
-// Safe access with optional chaining
-let designTasks = taskCollection.categories?.design?.length ?? 0;
-console.log("19. Design tasks:", designTasks);  // 0 (safe access to missing property)
-
-// Without optional chaining this would cause an error:
-// let designTasks = taskCollection.categories.design.length;  // Error!
-
-// PART 5: When to Use Each in Task Management
-// =========================================
-
-// Use null when:
-let userTask = {
-  title: "Review documentation",
-  assignee: null,      // Explicitly no assignee yet
-  dueDate: null,       // Explicitly no due date
-  parentTask: null     // Explicitly not a subtask
-};
-
-// Use undefined (implicitly) when something just doesn't exist:
-let simpleTask = {
-  title: "Quick fix"
-  // All other properties are undefined because they don't exist
-};
-
-// PART 6: Creating a Function to Format Task Info
-// ============================================
-
-function formatTaskInfo(task) {
-  // Default values using nullish coalescing operator
-  const title = task.title ?? "Untitled Task";
-  const assignee = task.assignee ?? "Unassigned";
-  const dueDate = task.dueDate ?? "No due date";
-  const description = task.description ?? "No description provided";
-  
-  return \`
-  TASK: \${title}
-  ASSIGNEE: \${assignee}
-  DUE: \${dueDate}
-  DESCRIPTION: \${description}
-  \`;
-}
-
-// Test with different tasks
-const tasks = [
-  {
-    id: 1,
-    title: "Complete project",
-    dueDate: "2023-12-31",
-    assignee: null,  // explicitly not assigned
-    description: undefined  // implicitly missing
-  },
-  {
-    id: 2,
-    title: "Review code"
-    // dueDate is missing
-    // assignee is missing
-    // description is missing
-  }
-];
-
-console.log("20. Formatted task info:");
-console.log(formatTaskInfo(tasks[0]));
-console.log(formatTaskInfo(tasks[1]));`;
+// Let's check what type each value is
+console.log(typeof "Hello");    // Shows what type "Hello" is
+console.log(typeof 42);         // Shows what type 42 is
+console.log(typeof true);       // Shows what type true is
+`;
   
   const [code, setCode] = useState(initialCode);
   const [runtimeValues, setRuntimeValues] = useState<Record<string, any>>({});
@@ -399,14 +240,14 @@ console.log(formatTaskInfo(tasks[1]));`;
   // Navigation handlers
   const handlePreviousLesson = () => {
     // Find current lesson in curriculum
-    const currentLessonId = "null-undefined";
+    const currentLessonId = "javascript-data-types";
     
-    let prevLesson = null;
-    let currentChapter = null;
+    let prevLesson: Lesson | null = null;
+    let currentChapter: Chapter | null = null;
     
     // Find current chapter and lesson
     for (const chapter of curriculum) {
-      const lessonIndex = chapter.lessons.findIndex(l => l.id === currentLessonId);
+      const lessonIndex = chapter.lessons.findIndex((l: Lesson) => l.id === currentLessonId);
       if (lessonIndex !== -1) {
         currentChapter = chapter;
         
@@ -415,7 +256,7 @@ console.log(formatTaskInfo(tasks[1]));`;
           prevLesson = chapter.lessons[lessonIndex - 1];
         } else {
           // Look for last lesson in previous chapter
-          const chapterIndex = curriculum.findIndex(c => c.id === chapter.id);
+          const chapterIndex = curriculum.findIndex((c: Chapter) => c.id === chapter.id);
           if (chapterIndex > 0) {
             const prevChapter = curriculum[chapterIndex - 1];
             prevLesson = prevChapter.lessons[prevChapter.lessons.length - 1];
@@ -433,14 +274,14 @@ console.log(formatTaskInfo(tasks[1]));`;
 
   const handleNextLesson = () => {
     // Find current lesson in curriculum
-    const currentLessonId = "null-undefined";
+    const currentLessonId = "javascript-data-types";
     
-    let nextLesson = null;
-    let currentChapter = null;
+    let nextLesson: Lesson | null = null;
+    let currentChapter: Chapter | null = null;
     
     // Find current chapter and lesson
     for (const chapter of curriculum) {
-      const lessonIndex = chapter.lessons.findIndex(l => l.id === currentLessonId);
+      const lessonIndex = chapter.lessons.findIndex((l: Lesson) => l.id === currentLessonId);
       if (lessonIndex !== -1) {
         currentChapter = chapter;
         
@@ -449,7 +290,7 @@ console.log(formatTaskInfo(tasks[1]));`;
           nextLesson = chapter.lessons[lessonIndex + 1];
         } else {
           // Look for first lesson in next chapter
-          const chapterIndex = curriculum.findIndex(c => c.id === chapter.id);
+          const chapterIndex = curriculum.findIndex((c: Chapter) => c.id === chapter.id);
           if (chapterIndex < curriculum.length - 1) {
             const nextChapter = curriculum[chapterIndex + 1];
             nextLesson = nextChapter.lessons[0];
@@ -466,7 +307,7 @@ console.log(formatTaskInfo(tasks[1]));`;
   };
 
   // Find current lesson information for navigation
-  const currentLessonId = "null-undefined";
+  const currentLessonId = "javascript-data-types";
   let currentLessonIndex = -1;
   let totalLessons = 0;
   let hasPrevious = false;
@@ -474,13 +315,13 @@ console.log(formatTaskInfo(tasks[1]));`;
   
   // Find current chapter and lesson
   for (const chapter of curriculum) {
-    const lessonIndex = chapter.lessons.findIndex(l => l.id === currentLessonId);
+    const lessonIndex = chapter.lessons.findIndex((l: Lesson) => l.id === currentLessonId);
     if (lessonIndex !== -1) {
       currentLessonIndex = lessonIndex;
       totalLessons = chapter.lessons.length;
-      hasPrevious = lessonIndex > 0 || curriculum.findIndex(c => c.id === chapter.id) > 0;
+      hasPrevious = lessonIndex > 0 || curriculum.findIndex((c: Chapter) => c.id === chapter.id) > 0;
       hasNext = lessonIndex < chapter.lessons.length - 1 || 
-                curriculum.findIndex(c => c.id === chapter.id) < curriculum.length - 1;
+                curriculum.findIndex((c: Chapter) => c.id === chapter.id) < curriculum.length - 1;
       break;
     }
   }
@@ -488,7 +329,7 @@ console.log(formatTaskInfo(tasks[1]));`;
   return (
     <Box sx={{ p: 3, width: '100%' }}>
       <LessonNav
-        title="Null and Undefined in JavaScript"
+        title="JavaScript Data Types"
         lessonNumber={currentLessonIndex + 1}
         totalLessons={totalLessons || 12}
         onPrevious={handlePreviousLesson}
@@ -517,189 +358,259 @@ console.log(formatTaskInfo(tasks[1]));`;
           scrollbarWidth: 'none'
         }}>
           <TeachingConcept
-            title="Null vs. Undefined"
-            subtitle="Understanding the difference"
+            title="What Are Data Types?"
+            subtitle="Different kinds of information in JavaScript"
             conceptNumber={1}
-            lessonId="null-undefined"
+            lessonId="javascript-data-types"
             blocks={[
               {
                 type: 'text',
-                content: 'JavaScript has two different ways to represent "nothing" or "no value" - null and undefined. Understanding the difference is crucial for effective task management applications.'
+                content: 'In JavaScript, data can be of different types. Think of data types like different kinds of containers - each designed to hold a specific kind of information.',
+                keyTerms: [
+                  {
+                    term: 'data types',
+                    definition: 'Categories of values that determine what operations can be performed on them and how they are stored in memory.'
+                  }
+                ]
               },
-              {
-                type: 'code',
-                caption: 'The basic difference between null and undefined:',
-                content: `let taskDueDate;                    Undefined - no value assigned
-console.log("Undefined variable:", taskDueDate);  Outputs: undefined
-
-let taskAssignee = null;            Null - explicitly assigned no value
-console.log("Null variable:", taskAssignee);  Outputs: null
-
-console.log(typeof undefined);      Outputs: "undefined"
-console.log(typeof null);           Outputs: "object" (JS quirk)
-
-console.log(null == undefined);     Outputs: true (loose equality)
-console.log(null === undefined);    Outputs: false (strict equality)`
-              },
-              {
-                type: 'warning',
-                caption: 'JavaScript Quirk',
-                content: 'Despite null representing an empty object reference, typeof null returns "object", which is considered a JavaScript bug that can\'t be fixed for backward compatibility reasons.'
-              }
-            ]}
-          />
-          
-          <TeachingConcept
-            title="When to Use Null"
-            subtitle="Intentional absence of a value"
-            conceptNumber={2}
-            lessonId="null-undefined"
-            blocks={[
               {
                 type: 'text',
-                content: 'In task management applications, both null and undefined have practical uses:'
+                content: 'Understanding data types is important because each type has different properties and methods (special abilities) that you can use.'
               },
               {
-                type: 'code',
-                caption: 'Task object with intentional null values and missing properties:',
-                content: `let task = {
-  id: 123,
-  title: "Setup project repository", 
-  description: "Create initial folder structure and config files",
-  dueDate: "2023-12-31",
-  assignee: null,              Explicitly no assignee yet
-  completedDate: null,         Explicitly not completed
-  priority: "high"
-  // tags property doesn't exist
-};
-
-console.log(task.assignee);    Outputs: null (explicitly set)
-console.log(task.tags);        Outputs: undefined (missing property)
-
-// When to use null:
-// - A task deliberately has no assignee yet
-// - A task is explicitly not part of any category
-// - A message has been intentionally left blank
-
-// When to use undefined (by omitting):
-// - A property doesn't apply to this task
-// - Something hasn't been set yet by default`
-              },
-              {
-                type: 'tip',
-                caption: 'Best Practice',
-                content: 'Use null when you want to explicitly indicate "no value" and let properties remain undefined (by not setting them) when they simply don\'t exist yet or don\'t apply.'
-              }
-            ]}
-          />
-          
-          <TeachingConcept
-            title="Checking for Null or Undefined"
-            subtitle="Safe ways to test for empty values"
-            conceptNumber={3}
-            lessonId="null-undefined"
-            blocks={[
-              {
-                type: 'text',
-                content: 'There are multiple ways to check for null or undefined values, with different trade-offs:'
-              },
-              {
-                type: 'code',
-                caption: 'Different ways to check for null and undefined:',
-                content: `if (task.assignee === null) {        Explicit check for null
-  console.log("Task needs to be assigned");
-}
-
-if (task.tags === undefined) {      Explicit check for undefined
-  console.log("No tags have been added");
-}
-
-if (!task.assignee) {               Works for null AND undefined
-  console.log("Task assignee is empty");
-}
-
-let urgentTask = {
-  title: "Fix critical bug",
-  priority: 0                       0 = lowest priority in this system
-};
-
-if (!urgentTask.priority) {         This runs even though priority exists!
-  console.log("WARNING: This incorrectly runs for 0!");
-}
-
-function isNullOrUndefined(value) {
-  return value == null;             Uses loose equality (==)
-}                                   null == undefined is true
-
-console.log(isNullOrUndefined(null));        Outputs: true
-console.log(isNullOrUndefined(undefined));   Outputs: true
-console.log(isNullOrUndefined(0));           Outputs: false
-console.log(isNullOrUndefined(""));          Outputs: false`
-              },
-              {
-                type: 'warning',
-                caption: 'Avoid Simple Negation',
-                content: 'The !variable check is convenient but dangerous as it treats all falsy values (0, "", false, NaN) the same as null and undefined. Use explicit checks or value == null for more reliable code.'
-              }
-            ]}
-          />
-          
-          <TeachingConcept
-            title="Default Values and Nullish Coalescing"
-            subtitle="Modern ways to handle null and undefined"
-            conceptNumber={4}
-            lessonId="null-undefined"
-            blocks={[
-              {
-                type: 'text',
-                content: 'Modern JavaScript provides elegant solutions for working with null and undefined values:'
-              },
-              {
-                type: 'code',
-                caption: 'Modern ways to handle null and undefined:',
-                content: `function getTaskDuration(task) {
-  return task.duration ?? 1;        Default only for null/undefined
-}
-
-let projectTask = { title: "Project planning", duration: 2 };
-let meetingTask = { title: "Team meeting", duration: 0 };
-let unknownTask = { title: "New task" };  No duration property
-let emptyTask = { title: "Empty task", duration: null };
-
-console.log(getTaskDuration(projectTask));  Outputs: 2 (actual value)
-console.log(getTaskDuration(meetingTask));  Outputs: 0 (preserves 0)
-console.log(getTaskDuration(unknownTask));  Outputs: 1 (undefined → default)
-console.log(getTaskDuration(emptyTask));    Outputs: 1 (null → default)
-
-let taskCollection = {
-  categories: {
-    development: [
-      { title: "Fix login bug" },
-      { title: "Update API endpoints" }
-    ]
-    // design category is missing
-  }
-};
-
-let designTasks = taskCollection.categories?.design?.length ?? 0;
-console.log("Design tasks:", designTasks);  Outputs: 0 (safe property access)
-
-function formatTaskInfo(task) {
-  const title = task.title ?? "Untitled Task";          Default if undefined/null
-  const assignee = task.assignee ?? "Unassigned"; 
-  const dueDate = task.dueDate ?? "No due date";
-  const description = task.description ?? "No description";
-  
-  return \`TASK: \${title}
-  ASSIGNEE: \${assignee}
-  DUE: \${dueDate}
-  DESCRIPTION: \${description}\`;
-}`
+                type: 'visualization',
+                content: 'JavaScript data types',
+                visualization: {
+                  type: 'container',
+                  title: 'JavaScript Data Types',
+                  description: 'Different data types store different kinds of information, just like different containers are designed for specific contents.'
+                }
               },
               {
                 type: 'note',
-                caption: 'Nullish Coalescing vs OR',
-                content: 'The ?? operator only falls back to the default when the value is null or undefined, unlike || which also falls back for other falsy values like 0 or empty string. This makes ?? safer for numbers and strings where 0 and "" might be valid values.'
+                caption: 'Fun Fact',
+                content: 'JavaScript automatically figures out what type of data you\'re using. This is called "dynamic typing" and makes JavaScript easier for beginners.'
+              },
+              {
+                type: 'advanced',
+                advancedTitle: 'Type Coercion in JavaScript',
+                content: 'JavaScript will sometimes automatically convert data from one type to another when needed. This is called "type coercion" and can be both helpful and confusing. For example, when you add a number to a string, JavaScript converts the number to a string before concatenating: 5 + "5" = "55".'
+              }
+            ]}
+          />
+
+          <TeachingConcept
+            title="Strings - Text Data"
+            subtitle="For words, letters, and text"
+            conceptNumber={2}
+            lessonId="javascript-data-types"
+            blocks={[
+              {
+                type: 'text',
+                content: 'Strings are used to store and manipulate text. They can include letters, numbers, symbols, and spaces.',
+                keyTerms: [
+                  {
+                    term: 'strings',
+                    definition: 'A sequence of characters (letters, numbers, symbols) used to represent text in JavaScript.'
+                  }
+                ]
+              },
+              {
+                type: 'code',
+                caption: 'Creating strings:',
+                content: `// Strings are created with quotes
+let name = "Alex";              Outputs: Alex
+let message = 'Hello, world!';  Outputs: Hello, world!
+
+// Strings can contain letters, numbers, spaces and symbols
+let address = "123 Main St.";
+let emoji = "😊";
+
+// You can find out the length of a string
+console.log(name.length);       Outputs: 4`
+              },
+              {
+                type: 'visualization',
+                content: 'String visualization',
+                visualization: {
+                  type: 'container',
+                  title: 'Strings as Character Collections',
+                  description: 'Each character in a string has a position (index) starting from 0.'
+                }
+              },
+              {
+                type: 'tip',
+                caption: 'Double vs. Single Quotes',
+                content: 'You can use either double quotes (") or single quotes (\') for strings. They work exactly the same way, but you need to be consistent within each string.'
+              },
+              {
+                type: 'alternative-explanation',
+                alternativeTitle: 'If you\'re struggling with strings...',
+                content: 'Think of a string like a necklace, where each character is a bead on the necklace. Just as you can count beads or replace them, you can work with individual characters in a string.'
+              }
+            ]}
+          />
+          
+          <TeachingConcept
+            title="Numbers - Numeric Data"
+            subtitle="For counting, measuring, and calculating"
+            conceptNumber={3}
+            lessonId="javascript-data-types"
+            blocks={[
+              {
+                type: 'text',
+                content: 'Numbers in JavaScript are used for calculations. Unlike other programming languages, JavaScript has only one number type for integers and decimals.',
+                keyTerms: [
+                  {
+                    term: 'numbers',
+                    definition: 'Numeric values used for calculations in JavaScript, which can be integers (whole numbers) or floating-point (decimal) values.'
+                  },
+                  {
+                    term: 'integers',
+                    definition: 'Whole numbers without decimal points (e.g., 1, 42, -7).'
+                  },
+                  {
+                    term: 'floating-point',
+                    definition: 'Numbers with decimal places (e.g., 3.14, 2.5, -0.001).'
+                  }
+                ]
+              },
+              {
+                type: 'code',
+                caption: 'Working with numbers:',
+                content: `// Numbers don't use quotes
+let age = 25;                   Outputs: 25
+let price = 19.99;              Outputs: 19.99
+let temperature = -5;           Outputs: -5
+
+// You can perform calculations
+let sum = 10 + 5;               Outputs: 15
+let product = 4 * 3;            Outputs: 12
+let remainder = 10 % 3;         Outputs: 1 (remainder of division)`
+              },
+              {
+                type: 'visualization',
+                content: 'Number operations',
+                visualization: {
+                  type: 'flow',
+                  title: 'Math Operations in JavaScript',
+                  description: 'JavaScript provides various operators for mathematical calculations.'
+                }
+              },
+              {
+                type: 'note',
+                caption: 'Math in JavaScript',
+                content: 'JavaScript has all the standard math operations: addition (+), subtraction (-), multiplication (*), division (/), and more. We\'ll learn about these in detail in later lessons.'
+              }
+            ]}
+          />
+          
+          <TeachingConcept
+            title="Booleans - True/False Data"
+            subtitle="For yes/no, true/false, on/off situations"
+            conceptNumber={4}
+            lessonId="javascript-data-types"
+            blocks={[
+              {
+                type: 'text',
+                content: 'Booleans are simple but powerful - they can only be true or false. They\'re used to make decisions in your code.',
+                keyTerms: [
+                  {
+                    term: 'boolean',
+                    definition: 'A data type with only two possible values: true or false, used for logical operations and conditions.'
+                  }
+                ]
+              },
+              {
+                type: 'code',
+                caption: 'Using boolean values:',
+                content: `// Boolean values are either true or false
+let isLoggedIn = true;          Outputs: true
+let isCompleted = false;        Outputs: false
+
+// Booleans are often created through comparisons
+let isAdult = age >= 18;        true if age is 18 or more
+let hasDiscount = price < 20;   true if price is less than 20`
+              },
+              {
+                type: 'visualization',
+                content: 'Boolean logic',
+                visualization: {
+                  type: 'comparison',
+                  title: 'True vs False',
+                  description: 'Booleans represent binary states - things that can only be in one of two possible conditions.'
+                }
+              },
+              {
+                type: 'tip',
+                caption: 'Boolean Logic',
+                content: 'Booleans are the foundation of computer logic. They\'re used in conditionals (if statements) to decide which code should run based on whether something is true or false.'
+              }
+            ]}
+          />
+          
+          <TeachingConcept
+            title="The typeof Operator"
+            subtitle="Finding out what type of data you have"
+            conceptNumber={5}
+            lessonId="javascript-data-types"
+            blocks={[
+              {
+                type: 'text',
+                content: 'JavaScript provides a special operator called typeof that tells you what type of data you\'re working with.',
+                keyTerms: [
+                  {
+                    term: 'typeof',
+                    definition: 'An operator that returns a string indicating the data type of a value.'
+                  }
+                ]
+              },
+              {
+                type: 'code',
+                caption: 'Using the typeof operator:',
+                content: `// Check the type of different values
+console.log(typeof "Hello");    Outputs: "string"
+console.log(typeof 42);         Outputs: "number"
+console.log(typeof true);       Outputs: "boolean"
+
+// This is useful when debugging
+let value = "42";
+console.log(typeof value);      Outputs: "string" (not "number"!)`
+              },
+              {
+                type: 'exercise',
+                caption: 'Try it yourself',
+                content: 'In the editor, try adding some different values and use typeof to check what type they are. Try numbers with and without quotes to see the difference!'
+              },
+              {
+                type: 'related-concepts',
+                content: 'Related topics',
+                relatedConcepts: [
+                  {
+                    title: 'Variables',
+                    lessonId: 'variables-intro',
+                    description: 'Learn how to store and work with different types of data.',
+                    isPrerequisite: false
+                  },
+                  {
+                    title: 'Introduction to JavaScript',
+                    lessonId: 'intro-to-javascript',
+                    description: 'Overview of the JavaScript language.',
+                    isPrerequisite: true
+                  },
+                  {
+                    title: 'String Concatenation',
+                    lessonId: 'string-concatenation',
+                    description: 'Working with string data in JavaScript.',
+                    isPrerequisite: false
+                  },
+                  {
+                    title: 'Number Operations',
+                    lessonId: 'numbers',
+                    description: 'Working with numeric data in JavaScript.',
+                    isPrerequisite: false
+                  }
+                ]
               }
             ]}
           />
@@ -714,34 +625,27 @@ function formatTaskInfo(task) {
             mb: 3, 
             overflow: 'hidden',
             position: 'relative',
-            flexShrink: 0,
             height: '400px',
             display: 'flex',
             flexDirection: 'column',
             border: '1px solid',
             borderColor: 'divider'
           }}>
-            <Box sx={{ 
-              position: 'relative',
-              width: '100%',
-              height: '100%',
-              overflow: 'hidden',
-              flex: 1
-            }}>
             <CodeEditor
               value={code}
               onChange={handleCodeChange}
               darkMode={darkMode}
-              name="null_undefined_editor"
+              name="data_types_editor"
             />
-            </Box>
             {error && (
               <Box sx={{ 
                 p: 2, 
                 color: 'error.main', 
                 bgcolor: 'error.light', 
                 borderTop: '1px solid',
-                borderColor: 'error.main' 
+                borderColor: 'error.main',
+                width: '100%',
+                flexShrink: 0
               }}>
                 {error}
               </Box>
@@ -896,4 +800,4 @@ function formatTaskInfo(task) {
   );
 };
 
-export default NullUndefinedLesson; 
+export default JavaScriptDataTypesLesson; 

@@ -398,38 +398,98 @@ console.timeEnd("Task Processing Time");
             title="Introduction to Console Logging"
             subtitle="Using the console for task management debugging"
             conceptNumber={1}
+            lessonId="console"
             blocks={[
               {
                 type: 'text',
-                content: 'The console is a powerful debugging tool that allows you to output information about your tasks and track the execution of your code. It\'s essential for developing and maintaining a task management system.'
+                content: 'The console is a powerful debugging tool that allows you to output information about your tasks and track the execution of your code. It\'s essential for developing and maintaining a task management system.',
+                keyTerms: [
+                  {
+                    term: 'console',
+                    definition: 'A debugging interface built into web browsers that allows developers to view outputs and errors from their JavaScript code.'
+                  },
+                  {
+                    term: 'debugging',
+                    definition: 'The process of finding and resolving errors or unexpected behavior in code.'
+                  }
+                ]
               },
               {
-                type: 'text',
-                content: 'The console.log() method is the most commonly used console method. It outputs a message to the web console:'
+                type: 'visualization',
+                content: 'Browser console visualization',
+                visualization: {
+                  type: 'flow',
+                  title: 'The Console in Action',
+                  description: 'The console displays messages from your code, helping you understand what\'s happening at each step of execution.'
+                }
               },
               {
                 type: 'code',
                 caption: 'Basic console logging:',
-                content: `// Basic console.log
+                content: `// Basic logging
 console.log("Hello, Task Manager!");
 
-// Logging variables
+// Logging variables with values
 let taskName = "Complete project plan";
 let isCompleted = false;
 let dueDate = "2023-12-31";
 
-console.log(taskName);     // Complete project plan
-console.log(isCompleted);  // false
-console.log(dueDate);      // 2023-12-31
+console.log(taskName);            Outputs: "Complete project plan"
+console.log(isCompleted);         Outputs: false
+console.log(dueDate);             Outputs: "2023-12-31"
 
-// Logging multiple values at once
+// Multiple values in one log statement
 console.log(taskName, isCompleted, dueDate);
-// Complete project plan false 2023-12-31
+                                  Outputs all three values together
 
-// Logging with descriptive labels
-console.log("Task:", taskName);
+// Descriptive labels make logs easier to understand
+console.log("Task:", taskName);   Outputs: "Task: Complete project plan"
 console.log("Completed:", isCompleted);
-console.log("Due Date:", dueDate);`
+console.log("Due Date:", dueDate);`,
+                highlights: [
+                  {
+                    lineNumbers: [2],
+                    explanation: "This is the simplest form of console logging - just a string message."
+                  },
+                  {
+                    lineNumbers: [8, 9, 10],
+                    explanation: "Console.log shows the exact value of each variable, including its type."
+                  },
+                  {
+                    lineNumbers: [13, 14],
+                    explanation: "You can log multiple values at once by separating them with commas."
+                  },
+                  {
+                    lineNumbers: [17, 18, 19],
+                    explanation: "Adding labels before values makes console output much easier to understand."
+                  }
+                ]
+              },
+              {
+                type: 'quiz',
+                caption: 'Check Your Understanding',
+                content: 'Test your knowledge of console.log formatting.',
+                quiz: {
+                  question: 'What will the following code output to the console?  console.log("Status:", true, 42);',
+                  options: [
+                    'Status: true 42',
+                    '"Status:" true 42',
+                    'Status: "true" "42"',
+                    'Status: true, 42'
+                  ],
+                  correctAnswer: 0,
+                  explanation: 'console.log() prints all arguments with spaces between them. The first argument "Status:" is printed as a string, followed by the boolean true and the number 42.'
+                }
+              },
+              {
+                type: 'advanced',
+                advancedTitle: 'Advanced Console Techniques',
+                content: 'The console object provides many advanced features beyond basic logging. You can use console.assert() to only log when a condition is false, console.count() to count how many times a piece of code is executed, and console.trace() to show the call stack. These are helpful for more complex debugging scenarios in larger task management applications.'
+              },
+              {
+                type: 'alternative-explanation',
+                alternativeTitle: 'If you\'re struggling with console.log...',
+                content: 'Think of console.log as leaving notes for yourself while your program runs. Just like you might leave sticky notes to remind yourself of things, console.log lets you see what\'s happening in your code at specific moments. It\'s like having a window into your program\'s mind!'
               }
             ]}
           />
@@ -438,37 +498,57 @@ console.log("Due Date:", dueDate);`
             title="Enhanced Console Methods"
             subtitle="Specialized console tools for different output types"
             conceptNumber={2}
+            lessonId="console"
             blocks={[
               {
                 type: 'text',
-                content: 'The console object provides specialized methods for different types of output:'
+                content: 'The console object provides specialized methods for different types of output:',
+                keyTerms: [
+                  {
+                    term: 'console.error',
+                    definition: 'A method that outputs an error message to the console, typically displayed in red.'
+                  },
+                  {
+                    term: 'console.warn',
+                    definition: 'A method that outputs a warning message to the console, typically displayed in yellow.'
+                  }
+                ]
               },
               {
                 type: 'code',
                 caption: 'Different console methods for various purposes:',
-                content: `// Error logging for debugging issues
+                content: `// Error logging - red text for critical issues
 console.error("Task deletion failed!");
 
-// Warning logging for potential issues
+// Warning logging - yellow text for potential problems 
 console.warn("Task is past due date!");
 
-// Info logging for general information
+// Info logging - blue text for important information
 console.info("Task status updated successfully");
 
-// Debug logging (only shows with debug level enabled)
+// Debug logging - only shown when debug level is enabled
 console.debug("Detailed task processing information");
 
-// Grouping related log messages
+// Grouping related logs for better organization
 console.group("Task Details");
 console.log("Name: Fix navigation bug");
 console.log("Priority: High");
 console.log("Status: In Progress");
-console.groupEnd();
+console.groupEnd();               Outputs: Closes the group
 
-// Timing operations
-console.time("taskOperation");
-// ... code that takes time to execute ...
-console.timeEnd("taskOperation"); // Outputs: taskOperation: 1234ms`
+// Measuring performance
+console.time("taskOperation");    Outputs: Starts a timer
+// Code that takes time to execute would go here
+console.timeEnd("taskOperation"); Outputs: Shows elapsed time`
+              },
+              {
+                type: 'visualization',
+                content: 'Console methods visualization',
+                visualization: {
+                  type: 'comparison',
+                  title: 'Different Console Methods',
+                  description: 'Each console method serves a specific purpose, with distinct visual styling to help you quickly identify message types.'
+                }
               }
             ]}
           />
@@ -477,15 +557,26 @@ console.timeEnd("taskOperation"); // Outputs: taskOperation: 1234ms`
             title="Logging Complex Data Structures"
             subtitle="Working with objects and arrays in the console"
             conceptNumber={3}
+            lessonId="console"
             blocks={[
               {
                 type: 'text',
-                content: 'When working with tasks, you\'ll often need to inspect complex data structures:'
+                content: 'When working with tasks, you\'ll often need to inspect complex data structures:',
+                keyTerms: [
+                  {
+                    term: 'console.table',
+                    definition: 'A method that displays tabular data as a table in the console, making it easier to read complex objects and arrays.'
+                  },
+                  {
+                    term: 'JSON.stringify',
+                    definition: 'A method that converts a JavaScript object to a JSON string, often used for formatting objects in console output.'
+                  }
+                ]
               },
               {
                 type: 'code',
                 caption: 'Console methods for handling objects and arrays:',
-                content: `// Task object logging
+                content: `// Object with task information
 let task = {
   id: 42,
   name: "Implement login",
@@ -497,25 +588,30 @@ let task = {
   ]
 };
 
-// Basic object logging
+// Logging the entire object - expandable in browser console
 console.log(task);
 
-// Using console.table for structured data
-console.table(task);
+// Tabular display - great for objects and arrays
+console.table(task);              Outputs: Shows properties in table format
 
-// Using console.table for arrays of objects (subtasks)
-console.table(task.subtasks);
+// Tabular display for arrays - even better for arrays of objects
+console.table(task.subtasks);     Outputs: Clean table of all subtasks
 
-// Inspecting nested properties
+// Inspecting specific properties
 console.log("Subtasks:", task.subtasks);
 console.log("First subtask:", task.subtasks[0]);
 
-// Destructuring for selective logging
+// Destructuring for cleaner logging
 const { id, name, assignee } = task;
 console.log("Task basics:", id, name, assignee);
 
-// JSON formatting for cleaner output in larger objects
-console.log(JSON.stringify(task, null, 2));`
+// Formatted JSON for better readability
+console.log(JSON.stringify(task, null, 2));  Outputs: Pretty-printed JSON`
+              },
+              {
+                type: 'advanced',
+                advancedTitle: 'Browser Developer Tools',
+                content: 'Modern browser developer tools let you interact with objects in the console. When you log an object, you can click to expand it, search within it, and even modify its properties in real-time. This interactive exploration is incredibly valuable when debugging complex task management applications.'
               }
             ]}
           />
@@ -524,6 +620,7 @@ console.log(JSON.stringify(task, null, 2));`
             title="Console for Task Management"
             subtitle="Practical applications in task tracking applications"
             conceptNumber={4}
+            lessonId="console"
             blocks={[
               {
                 type: 'text',
@@ -542,6 +639,30 @@ console.log(JSON.stringify(task, null, 2));`
                 type: 'tip',
                 caption: 'Try it yourself',
                 content: 'Try out the console methods in the code editor to see how you can use them for your task management app!'
+              },
+              {
+                type: 'related-concepts',
+                content: 'Related topics',
+                relatedConcepts: [
+                  {
+                    title: 'JavaScript Data Types',
+                    lessonId: 'javascript-data-types',
+                    description: 'Understanding the types of data you can log to the console.',
+                    isPrerequisite: true
+                  },
+                  {
+                    title: 'String Concatenation',
+                    lessonId: 'string-concatenation',
+                    description: 'Learn to combine strings for more effective console messages.',
+                    isPrerequisite: false
+                  },
+                  {
+                    title: 'Variables',
+                    lessonId: 'variables-intro',
+                    description: 'Creating and using variables that can be logged to the console.',
+                    isPrerequisite: true
+                  }
+                ]
               }
             ]}
           />

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import CodeEditor from '../components/CodeEditor';
 import { 
   evaluateCodeWithAI, 
-  isStringifiedClassInstance,
+  isStringifiedClassInstance, 
   parseStringifiedClass 
 } from '../utils/codeAnalysis';
 import { 
@@ -20,6 +20,9 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import curriculum, { Chapter, Lesson } from '../data/curriculum';
 import TeachingConcept from '../components/TeachingConcept';
+import UserProgressBar from '../components/UserProgressBar';
+import { useProgress } from '../utils/useProgress';
+import InteractiveMemoryDiagram from '../components/InteractiveMemoryDiagram';
 
 // LessonNav component to reuse across all lessons
 interface LessonNavProps {
@@ -111,15 +114,29 @@ const VariablesLesson: React.FC<VariablesLessonProps> = ({
 }) => {
   const theme = useTheme();
   
+  // Add progress tracking
+  const { 
+    getCompletionPercentage, 
+    points, 
+    streak, 
+    badges 
+  } = useProgress();
+  
+  // Calculate completion percentage for this lesson
+  const lessonId = topic || (initialModuleId === 5 ? 'console' : 'variables-intro');
+  const completionPercentage = getCompletionPercentage(lessonId, 
+    initialModuleId === 1 ? 3 : // Module 1 has 3 concepts
+    initialModuleId === 2 ? 2 : // Module 2 has 2 concepts
+    initialModuleId === 3 ? 3 : // Module 3 has 3 concepts
+    initialModuleId === 4 ? 3 : // Module 4 has 3 concepts
+    3 // Default
+  );
+  
   // Define the initial code samples for each module
   const initialCodeByModule = {
-    1: `// Task Management App - Variables Basics
-// Variables are containers for storing data values
+    1: `/*Editor*/
 
-// Create your task variables below:
-
-
-
+     
 
 `,
     2: `// Task Management App - Variable Types
@@ -287,7 +304,7 @@ console.log("User has email?", user.email !== null);
   
   // Auto-execute code when it changes
   useEffect(() => {
-    executeCode();
+      executeCode();
   }, [code]);
 
   const executeCode = async () => {
@@ -465,7 +482,6 @@ console.log("User has email?", user.email !== null);
   };
 
   // Find current lesson information for navigation
-  const currentLessonId = topic || (initialModuleId === 5 ? 'console' : 'variables-intro');
   let currentLessonIndex = -1;
   let totalLessons = 0;
   let hasPrevious = false;
@@ -473,7 +489,7 @@ console.log("User has email?", user.email !== null);
   
   // Find current chapter and lesson
   for (const chapter of curriculum) {
-    const lessonIndex = chapter.lessons.findIndex(l => l.id === currentLessonId);
+    const lessonIndex = chapter.lessons.findIndex(l => l.id === lessonId);
     if (lessonIndex !== -1) {
       currentLessonIndex = lessonIndex;
       totalLessons = chapter.lessons.length;
@@ -484,7 +500,7 @@ console.log("User has email?", user.email !== null);
     }
   }
 
-  // Teaching content for Module 1
+  // Rendering Module 1 content with updated components
   const renderModule1Content = () => {
     return (
       <>
@@ -492,27 +508,96 @@ console.log("User has email?", user.email !== null);
           title="Introduction to Variables"
           subtitle="The foundation of storing and managing data"
           conceptNumber={1}
+          lessonId={lessonId}
           blocks={[
             {
               type: 'text',
-              content: 'In JavaScript, variables are containers for storing data values. They are the fundamental building blocks for any task management application.'
+              content: 'In JavaScript, variables are containers for storing data values. They are the fundamental building blocks for any application.',
+              keyTerms: [
+                {
+                  term: 'variables',
+                  definition: 'Named storage locations in memory that hold data which can be accessed and modified by your program.'
+                },
+                {
+                  term: 'data values',
+                  definition: 'Information that can be stored and manipulated, such as numbers, text, or more complex structures.'
+                }
+              ]
+            },
+            {
+              type: 'visualization',
+              visualization: {
+                type: 'container',
+                title: 'Variables as Containers',
+                description: 'Think of variables like labeled boxes that store different types of data. Each box (variable) has a name and can hold one value at a time.',
+                imageSrc: 'https://via.placeholder.com/600x300?text=Variables+As+Containers'
+              },
+              content: "Variable visualization"
             },
             {
               type: 'text',
-              content: 'Variables allow us to store, track, and manipulate different types of information such as task names, completion status, due dates, and more.'
+              content: 'Variables allow us to store, track, and manipulate different types of information. When you create a variable, you\'re reserving space in memory with a specific name.'
             },
             {
               type: 'code',
-              caption: 'Declaring a variable with let:',
-              content: `// Creating a task-related variable
+              caption: 'Creating variables in JavaScript:',
+              content: `// Creating a variable to store a task name
 let taskName = "Complete project proposal";
+
+// Creating a variable to store a completion status
 let isCompleted = false;
-let dueDate = "2023-12-31";`
+
+// Creating a variable to store a due date
+let dueDate = "2023-12-15";`,
+              highlights: [
+                {
+                  lineNumbers: [2],
+                  explanation: "The 'let' keyword declares a new variable. 'taskName' is the variable name, and the string value is what's stored in it."
+                },
+                {
+                  lineNumbers: [5],
+                  explanation: "This variable stores a boolean value (true or false) that represents the completion status."
+                }
+              ]
+            },
+            {
+              type: 'advanced',
+              advancedTitle: 'How Variables Work in Memory',
+              content: 'When JavaScript runs your code, it allocates memory for variables. The variable name points to a location in memory where the value is stored. Different data types may use different amounts of memory. When you change a variable\'s value, JavaScript updates what\'s stored at that memory location.'
             },
             {
               type: 'tip',
               caption: 'Best Practice',
-              content: 'Use descriptive variable names that clearly indicate what information they store. For example, use taskName instead of just name.'
+              content: 'Use descriptive variable names that clearly indicate what information they store. For example, use firstName instead of just name.'
+            },
+            {
+              type: 'alternative-explanation',
+              alternativeTitle: 'If you\'re struggling with variables...',
+              content: 'Think of variables like name tags. If you have a box of toys and want to find your favorite toy quickly, you put a name tag on it. Variables are those name tags in code - they help you find and use your data whenever you need it.'
+            },
+            {
+              type: 'related-concepts',
+              relatedConcepts: [
+                {
+                  title: 'JavaScript Data Types',
+                  lessonId: 'javascript-data-types',
+                  description: 'Learn what kinds of data can be stored in variables.',
+                  isPrerequisite: false
+                },
+                {
+                  title: 'Introduction to JavaScript',
+                  lessonId: 'intro-to-javascript',
+                  description: 'Basics of the JavaScript language.',
+                  isPrerequisite: true
+                },
+                {
+                  title: 'Variable Scope',
+                  lessonId: 'undefined-undeclared',
+                  description: 'Understanding where variables can be accessed in your code.',
+                  isPrerequisite: false
+                }
+              ],
+              content: "Related concept links"
             }
           ]}
         />
@@ -521,31 +606,11 @@ let dueDate = "2023-12-31";`
           title="Variable Declaration"
           subtitle="Different ways to create variables"
           conceptNumber={2}
+          lessonId={lessonId}
           blocks={[
             {
               type: 'text',
               content: 'JavaScript provides three ways to declare variables: var, let, and const. Each has different scoping rules and behaviors.'
-            },
-            {
-              type: 'code',
-              caption: 'Modern JavaScript variable declarations:',
-              content: `// var - older way, function scoped (avoid using in modern code)
-var oldTask = "Legacy task"; 
-
-// let - block scoped, value can be changed (preferred)
-let currentTask = "In-progress task";
-currentTask = "Updated task"; // Can be reassigned
-
-// const - block scoped, value cannot be changed
-const PRIORITY_HIGH = 1;
-const PRIORITY_MEDIUM = 2;
-const PRIORITY_LOW = 3;
-// PRIORITY_HIGH = 0; // Error! Cannot reassign a constant`
-            },
-            {
-              type: 'note',
-              caption: 'Variable Scope',
-              content: 'Block scope means the variable is only accessible within the curly braces {} where it was defined. Function scope means the variable is accessible throughout the entire function regardless of block boundaries.'
             },
             {
               type: 'warning',
@@ -559,34 +624,16 @@ const PRIORITY_LOW = 3;
           title="Task Management Variables"
           subtitle="Applying variables to task tracking"
           conceptNumber={3}
+          lessonId={lessonId}
           blocks={[
             {
               type: 'text',
               content: 'In a task management system, variables help us track various properties of tasks and projects.'
             },
             {
-              type: 'code',
-              caption: 'Task management example:',
-              content: `// Task properties
-let taskTitle = "Implement login feature";
-let assignedTo = "Sarah";
-let taskPriority = "High";
-let isCompleted = false;
-let dueDate = "2023-09-30";
-let progressPercentage = 75;
-
-// Display task information
-console.log("Task: " + taskTitle);
-console.log("Assigned to: " + assignedTo);
-console.log("Priority: " + taskPriority);
-console.log("Completed: " + isCompleted);
-console.log("Due date: " + dueDate);
-console.log("Progress: " + progressPercentage + "%");`
-            },
-            {
               type: 'exercise',
               caption: 'Try it yourself',
-              content: 'Create variables for a new task in the code editor. Include at least the task name, status, and priority.'
+              content: `Create variables for a new task in the code editor. Create a containers to hold a Task name`
             }
           ]}
         />
@@ -602,6 +649,7 @@ console.log("Progress: " + progressPercentage + "%");`
           title="JavaScript Data Types"
           subtitle="Understanding different types of values"
           conceptNumber={1}
+          lessonId={lessonId}
           blocks={[
             {
               type: 'text',
@@ -643,6 +691,7 @@ console.log(typeof assignee);  // "object" (a quirk in JavaScript)`
           title="Complex Data Types"
           subtitle="Working with objects and arrays"
           conceptNumber={2}
+          lessonId={lessonId}
           blocks={[
             {
               type: 'text',
@@ -712,6 +761,7 @@ console.log(taskList[1].isCompleted);  // false`
           title="Updating Variables"
           subtitle="Modifying stored values"
           conceptNumber={1}
+          lessonId={lessonId}
           blocks={[
             {
               type: 'text',
@@ -749,6 +799,7 @@ console.log("Task completed:", isCompleted);`
           title="Working with Task Statuses"
           subtitle="Tracking task progression"
           conceptNumber={2}
+          lessonId={lessonId}
           blocks={[
             {
               type: 'code',
@@ -787,6 +838,7 @@ console.log("Task finished:", taskStatus);`
           title="Calculating Task Metrics"
           subtitle="Using variables in formulas"
           conceptNumber={3}
+          lessonId={lessonId}
           blocks={[
             {
               type: 'code',
@@ -833,6 +885,7 @@ console.log("On schedule?", isOnSchedule);`
           title="Managing Multiple Tasks"
           subtitle="Organizing task data"
           conceptNumber={1}
+          lessonId={lessonId}
           blocks={[
             {
               type: 'text',
@@ -879,6 +932,7 @@ console.log("Second task:", tasks[1].title);  // "Create wireframes"`
           title="Comparing and Filtering Tasks"
           subtitle="Finding specific tasks in collections"
           conceptNumber={2}
+          lessonId={lessonId}
           blocks={[
             {
               type: 'code',
@@ -912,6 +966,7 @@ console.log("Overdue tasks:", overdueTasks.length);`
           title="Task Summary Statistics"
           subtitle="Calculating project metrics"
           conceptNumber={3}
+          lessonId={lessonId}
           blocks={[
             {
               type: 'code',
@@ -992,6 +1047,17 @@ console.log("Project Summary:", projectSummary);`
         hasPrevious={hasPrevious}
         hasNext={hasNext}
       />
+
+      {/* Add progress tracking bar */}
+      <Box sx={{ mb: 3 }}>
+        <UserProgressBar
+          lessonId={lessonId}
+          completionPercentage={completionPercentage}
+          points={points}
+          streak={streak}
+          badges={badges}
+        />
+      </Box>
 
       <Box sx={{ 
         display: 'flex', 

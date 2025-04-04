@@ -16,10 +16,38 @@ import IncrementDecrementLesson from './lessons/IncrementDecrementLesson';
 import ConsoleLesson from './lessons/ConsoleLesson';
 import UndefinedLesson from './lessons/UndefinedLesson';
 import NullUndefinedLesson from './lessons/NullUndefinedLesson';
+import IntroToProgrammingLesson from './lessons/IntroToProgrammingLesson';
+import IntroToJavaScriptLesson from './lessons/IntroToJavaScriptLesson';
+import JavaScriptDataTypesLesson from './lessons/JavaScriptDataTypesLesson';
 import curriculum, { Chapter, Lesson } from './data/curriculum';
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import muiTheme, { darkTheme } from './theme/muiTheme';
 import MuiTextProvider from './components/MuiTextProvider';
+import { useProgress } from './utils/useProgress';
+import { UserProgress } from './services/progressService';
+
+// Create a context for progress data
+export const ProgressContext = React.createContext<{
+  progress: UserProgress;
+  completeConcept: (lessonId: string, conceptId: string | number) => void;
+  getCompletionPercentage: (lessonId: string, totalConcepts: number) => number;
+  checkConceptCompleted: (lessonId: string, conceptId: string | number) => boolean;
+  giveBadge: (badgeId: string) => void;
+  points: number;
+  streak: number;
+  badges: string[];
+} | null>(null);
+
+// Progress Provider component
+const ProgressProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
+  const progressData = useProgress();
+  
+  return (
+    <ProgressContext.Provider value={progressData}>
+      {children}
+    </ProgressContext.Provider>
+  );
+};
 
 const App: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -107,6 +135,15 @@ const App: React.FC = () => {
         return <TaskManagerDemoLesson darkMode={darkMode} />;
         
       // Chapter 1: JavaScript Fundamentals
+      case 'intro-to-programming':
+        return <MuiTextProvider><IntroToProgrammingLesson darkMode={darkMode} /></MuiTextProvider>;
+        
+      case 'intro-to-javascript':
+        return <MuiTextProvider><IntroToJavaScriptLesson darkMode={darkMode} /></MuiTextProvider>;
+        
+      case 'javascript-data-types':
+        return <MuiTextProvider><JavaScriptDataTypesLesson darkMode={darkMode} /></MuiTextProvider>;
+        
       case 'variables-intro':
         return <MuiTextProvider><VariablesLesson darkMode={darkMode} moduleId={1} /></MuiTextProvider>;
         
@@ -393,7 +430,9 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      <AppLayout />
+      <ProgressProvider>
+        <AppLayout />
+      </ProgressProvider>
     </Router>
   );
 };

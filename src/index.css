@@ -1,3 +1,32 @@
+/* Import global SCSS files */
+@import './styles/CodeBlockStyles.scss';
+
+/* Optimized Typography for Learning */
+body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Improve paragraph readability */
+p {
+  max-width: 75ch; /* Limit line length for better readability */
+  margin-bottom: 1.2em;
+  line-height: 1.6;
+}
+
+/* Code styling */
+code, pre {
+  font-family: "JetBrains Mono", Consolas, Monaco, "Courier New", monospace;
+}
+
+/* Keep code lines from breaking in the middle */
+code {
+  white-space: pre;
+  word-break: normal;
+  word-wrap: normal;
+}
+
 :root {
   /* Theme variables */
   --bg-primary: #fff;

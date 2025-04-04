@@ -1,0 +1,30 @@
+// Code block theme variables
+$code-dark-bg: #1e1e1e;
+$code-light-bg: #f5f5f5;
+$code-dark-text: #d4d4d4;
+$code-light-text: #333333;
+
+// Syntax highlighting colors - Dark theme
+$keyword-dark: #569cd6;
+$string-dark: #ce9178;
+$number-dark: #b5cea8;
+$function-dark: #dcdcaa;
+$comment-dark: #6a9955;
+$variable-dark: #9cdcfe;
+
+// Syntax highlighting colors - Light theme
+$keyword-light: #0000ff;
+$string-light: #a31515;
+$number-light: #098658;
+$function-light: #795e26;
+$comment-light: #57a64a;
+$variable-light: #1f77c7;
+
+// Font settings
+$code-font-family: 'JetBrains Mono', Consolas, Monaco, 'Courier New', monospace;
+$code-font-size: 0.9375rem;
+$code-line-height: 1.6;
+
+// Spacing
+$code-padding: 16px;
+$header-padding: 8px 16px; 

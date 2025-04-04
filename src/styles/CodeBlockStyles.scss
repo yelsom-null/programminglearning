@@ -1,0 +1,198 @@
+// Enhanced Code Block Styling inspired by modern code editors
+// This styling aims to make code more readable and approachable for beginners
+
+.code-block-container {
+  position: relative;
+  border-radius: 8px;
+  font-family: $code-font-family;
+  background-color: $code-dark-bg;
+  color: $code-dark-text;
+  line-height: $code-line-height;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  margin: 1.5rem 0;
+  
+  &.light-theme {
+    background-color: $code-light-bg;
+    color: $code-light-text;
+    
+    .code-block-header {
+      background-color: #e0e0e0;
+      color: $code-light-text;
+    }
+    
+    .line-number {
+      color: #8a8a8a;
+    }
+    
+    .comment-line {
+      color: $comment-light;
+    }
+    
+    .keyword {
+      color: $keyword-light;
+    }
+    
+    .string {
+      color: $string-light;
+    }
+    
+    .number {
+      color: $number-light;
+    }
+    
+    .function {
+      color: $function-light;
+    }
+    
+    .variable {
+      color: $variable-light;
+    }
+    
+    .output-line {
+      background-color: #f0f8ff;
+      border-left: 3px solid #4fc3f7;
+    }
+  }
+  
+  .code-block-header {
+    display: flex;
+    align-items: center;
+    padding: $header-padding;
+    background-color: #252526;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    
+    .language-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #cccccc;
+      text-transform: uppercase;
+    }
+    
+    .action-buttons {
+      margin-left: auto;
+      display: flex;
+      gap: 8px;
+      
+      .action-button {
+        background: none;
+        border: none;
+        color: #cccccc;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+      }
+    }
+  }
+  
+  .code-block-content {
+    padding: $code-padding;
+    overflow-x: auto;
+    
+    .code-line {
+      display: flex;
+      width: 100%;
+      min-height: 24px;
+      position: relative;
+      
+      .line-number {
+        width: 2rem;
+        padding-right: 1rem;
+        text-align: right;
+        color: #6e6e6e;
+        user-select: none;
+        flex-shrink: 0;
+      }
+      
+      .line-content {
+        flex-grow: 1;
+      }
+      
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+      }
+    }
+    
+    .comment-line {
+      color: $comment-dark;
+      font-style: italic;
+      
+      .comment-icon {
+        margin-right: 6px;
+        opacity: 0.7;
+        vertical-align: text-bottom;
+      }
+      
+      .comment-bar {
+        opacity: 0.6;
+        margin-right: 6px;
+        border-left: 2px solid $comment-dark;
+        padding-left: 8px;
+      }
+    }
+    
+    .output-line {
+      background-color: rgba(0, 122, 204, 0.1);
+      color: $variable-dark;
+      padding: 4px 8px;
+      margin: 4px 0;
+      border-left: 3px solid #007acc;
+      border-radius: 0 4px 4px 0;
+      
+      .output-arrow {
+        color: #4fc3f7;
+        margin-right: 8px;
+      }
+    }
+    
+    // Syntax highlighting
+    .keyword {
+      color: $keyword-dark;
+    }
+    
+    .string {
+      color: $string-dark;
+    }
+    
+    .number {
+      color: $number-dark;
+    }
+    
+    .function {
+      color: $function-dark;
+    }
+    
+    .variable {
+      color: $variable-dark;
+    }
+    
+    .operator {
+      color: $code-dark-text;
+    }
+  }
+}
+
+// Animation for code blocks
+.code-block-container {
+  .highlight-line {
+    background-color: rgba(255, 255, 200, 0.1);
+    animation: highlight-pulse 2s infinite;
+  }
+  
+  @keyframes highlight-pulse {
+    0% {
+      background-color: rgba(255, 255, 200, 0.05);
+    }
+    50% {
+      background-color: rgba(255, 255, 200, 0.15);
+    }
+    100% {
+      background-color: rgba(255, 255, 200, 0.05);
+    }
+  }
+} 
